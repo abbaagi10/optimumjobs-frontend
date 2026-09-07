@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { authApi } from '../api/auth';
 import { 
   Eye, EyeOff, Loader2, Mail, Lock, Briefcase, 
   ArrowRight, ShieldCheck, CheckCircle2, Sparkles,
@@ -133,7 +134,7 @@ const AnimatedInput = ({
       </div>
       <div className="relative group">
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 rounded-xl transition-all duration-300"
+          className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 rounded-xl transition-all duration-300 pointer-events-none"
           animate={{
             opacity: isFocused ? 0.1 : 0,
           }}
@@ -218,7 +219,7 @@ export const Login = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim() || !password.trim()) {
       toast.error('Veuillez remplir tous les champs');
       return;
@@ -227,36 +228,21 @@ export const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/auth/login/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await authApi.login({ email, password });
+      const data = response.data;
 
-      const data = await response.json();
-
-      if (response.status === 200 && data.access) {
+      if (data.access) {
         queryClient.clear();
         queryClient.resetQueries();
-        
+
         localStorage.removeItem('user');
         localStorage.removeItem('auth-storage');
-        
+
         localStorage.setItem('access_token', data.access);
         localStorage.setItem('refresh_token', data.refresh);
 
-        const userResponse = await fetch('http://127.0.0.1:8000/api/v1/auth/me/', {
-          headers: { 
-            'Authorization': `Bearer ${data.access}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (!userResponse.ok) {
-          throw new Error('Impossible de récupérer le profil');
-        }
-        
-        const userData = await userResponse.json();
+        const userResponse = await authApi.getMe();
+        const userData = userResponse.data;
 
         setUser(userData);
         setAuthenticated(true);
@@ -271,14 +257,11 @@ export const Login = () => {
 
         const redirectPath = redirectMap[userData.role as keyof typeof redirectMap] || '/';
         navigate(redirectPath, { replace: true });
-        
-      } else {
-        const errorMessage = data.detail || data.message || 'Email ou mot de passe incorrect';
-        toast.error(errorMessage);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur de connexion:', error);
-      toast.error('Erreur de connexion au serveur');
+      const errorMessage = error?.response?.data?.detail || error?.response?.data?.message || 'Email ou mot de passe incorrect';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
