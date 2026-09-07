@@ -9,7 +9,8 @@ import {
   Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
   Globe, MapPin, Phone, Mail, Link2, Info,
   CheckCircle2, AlertCircle, Award, Users, Briefcase,
-  TrendingUp, Calendar, Star, Plus, Minus
+  TrendingUp, Calendar, Star, Plus, Minus,
+  FileText // <-- AJOUTER FileText ICI
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -83,6 +84,62 @@ const FormInput = ({
           required={required}
           placeholder={placeholder}
           className={`w-full bg-slate-950/80 text-white px-4 py-3.5 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
+            error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
+          }`}
+        />
+        <motion.div
+          className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 transition-all duration-300 pointer-events-none"
+          animate={{
+            opacity: isFocused ? 0.05 : 0,
+          }}
+        />
+      </div>
+    </motion.div>
+  );
+};
+
+// Ajout du composant FormTextarea pour gérer correctement les textareas
+const FormTextarea = ({
+  icon: Icon,
+  label,
+  value,
+  onChange,
+  placeholder,
+  required,
+  rows = 4,
+  className = ''
+}: any) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  return (
+    <motion.div 
+      variants={fadeInUp}
+      className={`space-y-2 ${className}`}
+    >
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          {Icon && <Icon className="w-3.5 h-3.5 text-amber-400" />}
+          {label}
+          {required && <span className="text-rose-400">*</span>}
+        </label>
+        {error && (
+          <span className="text-xs text-rose-400 flex items-center gap-1">
+            <AlertCircle className="w-3 h-3" />
+            {error}
+          </span>
+        )}
+      </div>
+      
+      <div className="relative group">
+        <textarea
+          value={value}
+          onChange={onChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          required={required}
+          rows={rows}
+          placeholder={placeholder}
+          className={`w-full bg-slate-950/80 text-white px-4 py-3.5 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none ${
             error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
           }`}
         />
@@ -393,13 +450,13 @@ export const OrganizationCreatePage = () => {
               icon={Briefcase}
             />
 
-            <FormInput
-              type="textarea"
+            <FormTextarea
               label="Description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Présentation de votre organisation..."
               icon={FileText}
+              rows={4}
             />
           </FormSection>
 
