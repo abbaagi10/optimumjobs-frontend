@@ -13,9 +13,9 @@ import {
 import { 
   Users, Building2, Briefcase, FileText, CheckCircle2, 
   ShieldAlert, Check, X, Search, Loader2, Clock,
-  Eye, RefreshCw, ArrowLeft, UserCheck, UserX, Building,
+  Eye, ArrowLeft, UserCheck, UserX, Building,
   TrendingUp, TrendingDown, Zap, Sparkles, Filter, Grid3x3, List,
-  ChevronRight, MoreVertical, Bell, Settings,
+  MoreVertical, Bell, Settings,
   LayoutGrid, Sparkle, Circle, Crown, Star, Award,
   Activity, Globe, Fingerprint, Shield
 } from 'lucide-react';
@@ -248,8 +248,6 @@ export const AdminDashboardPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const debouncedSearch = useDebounce(searchTerm, 300);
@@ -281,7 +279,6 @@ export const AdminDashboardPage = () => {
   // ==========================================================
 
   const handleRefreshAll = useCallback(async () => {
-    setIsRefreshing(true);
     await Promise.all([
       refetchStats(),
       refetchPending(),
@@ -289,7 +286,6 @@ export const AdminDashboardPage = () => {
       refetchOrgs(),
       refetchUsers()
     ]);
-    setTimeout(() => setIsRefreshing(false), 500);
   }, []);
 
   // ==========================================================
@@ -526,7 +522,7 @@ export const AdminDashboardPage = () => {
       </div>
 
       {/* ========================================================== */}
-      {/* HEADER - Simplified (Layout handles navigation) */}
+      {/* HEADER - Simplified */}
       {/* ========================================================== */}
       
       <motion.div 
@@ -547,36 +543,9 @@ export const AdminDashboardPage = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <motion.button
-            whileHover={{ rotate: 180 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleRefreshAll}
-            className={`p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300 ${isRefreshing ? 'animate-spin' : ''}`}
-          >
-            <RefreshCw className="w-4 h-4" />
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowNotifications(!showNotifications)}
-            className="relative p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300"
-          >
-            <Bell className="w-4 h-4" />
-            {statsData.opportunities?.pending_review > 0 && (
-              <motion.span 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full text-[10px] font-bold text-slate-950 flex items-center justify-center"
-              >
-                {statsData.opportunities.pending_review}
-              </motion.span>
-            )}
-          </motion.button>
-
           <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Administration Niger</span>
+            <span className="text-xs text-slate-500 font-medium">Administration</span>
             <Crown className="w-3 h-3 text-amber-500" />
           </div>
         </div>
@@ -603,7 +572,7 @@ export const AdminDashboardPage = () => {
             <h1 className="text-3xl lg:text-4xl font-black text-white tracking-tight">
               Panneau d'Administration
               <span className="ml-3 text-sm font-normal text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800">
-                Niger v3.0.0
+                v1.0.0
               </span>
             </h1>
             <p className="text-slate-400 text-sm mt-1 flex items-center gap-2">
@@ -1283,7 +1252,7 @@ export const AdminDashboardPage = () => {
       </AnimatePresence>
 
       {/* ========================================================== */}
-      {/* FOOTER - Simplified (Layout handles footer) */}
+      {/* FOOTER */}
       {/* ========================================================== */}
       
       <motion.div 
