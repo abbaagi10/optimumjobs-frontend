@@ -1308,7 +1308,7 @@ export const AdminDashboardPage = () => {
             Sécurisé
           </span>
           <span className="w-px h-4 bg-slate-800" />
-          <span>v3.0.0</span>
+          <span>v1.0.0</span>
         </div>
       </motion.div>
     </motion.div>

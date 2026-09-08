@@ -1270,7 +1270,7 @@ export const OrganizationDashboardPage = () => {
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              Version 3.0.0
+              V1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Dashboard Organisation</span>

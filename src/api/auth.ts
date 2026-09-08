@@ -1,5 +1,5 @@
 // src/api/auth.ts
-// C:\optimumjobs-frontend\src\api\auth.ts
+
 
 import { AxiosResponse } from 'axios';
 import { apiClient } from './client';
