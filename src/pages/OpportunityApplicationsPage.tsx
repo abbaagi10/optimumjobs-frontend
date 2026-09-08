@@ -741,7 +741,7 @@ export const OpportunityApplicationsPage = () => {
                 <p className="text-sm mt-1">
                   {searchTerm || selectedStatus 
                     ? 'Essayez de modifier vos filtres de recherche' 
-                    : 'Partagez l\'offre pour attirer des candidats.'}
+                    : 'Partagez l\'offre pour attirer des candidats au Niger.'}
                 </p>
               </motion.div>
             ) : (
@@ -956,13 +956,13 @@ export const OpportunityApplicationsPage = () => {
             <span className="w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé</span>
+              <span className="text-emerald-400/70">Sécurisé - Niger</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              V1.0.0
+              v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Gestion des candidatures</span>

@@ -157,10 +157,7 @@ const FeatureCard = ({ icon: Icon, title, desc, index }: any) => (
     custom={index}
     className="group relative bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/50 rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10 backdrop-blur-xl overflow-hidden"
   >
-    {/* Animated gradient background */}
     <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/0 to-amber-500/0 group-hover:from-amber-500/5 group-hover:via-amber-500/10 group-hover:to-amber-500/5 transition-all duration-500" />
-    
-    {/* Glow orb */}
     <div className="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 opacity-0 group-hover:opacity-100" />
 
     <div className="relative z-10">
@@ -212,7 +209,7 @@ const RotatingBadge = () => {
         <Sparkles className="w-4 h-4 text-amber-400" />
       </motion.div>
       <span className="text-xs font-semibold text-amber-300 tracking-wide">
-        Plateforme de recrutement #1 en Afrique
+        Plateforme de recrutement #1 au Niger
       </span>
     </motion.div>
   );
@@ -229,7 +226,6 @@ export const HomePage = () => {
   const [isHoveringHero, setIsHoveringHero] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
-  // Scroll animations
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
   const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
@@ -266,7 +262,6 @@ export const HomePage = () => {
   };
 
   return (
-    // Suppression de overflow-x-hidden qui peut causer des problèmes
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950">
       
       {/* ========================================================== */}
@@ -281,7 +276,6 @@ export const HomePage = () => {
         className="relative pt-20 pb-28 md:pt-32 md:pb-40 overflow-hidden"
         style={{ opacity: heroOpacity, scale: heroScale }}
       >
-        {/* Decorative lights with parallax */}
         <motion.div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none"
           animate={{
@@ -318,7 +312,6 @@ export const HomePage = () => {
             initial="initial"
             animate="animate"
           >
-            {/* Badge Premium avec rotation */}
             <motion.div
               variants={fadeInUp}
               whileHover={{ scale: 1.05 }}
@@ -327,7 +320,6 @@ export const HomePage = () => {
               <RotatingBadge />
             </motion.div>
 
-            {/* Titre Principal avec effet de texte */}
             <motion.h1
               variants={fadeInUp}
               className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.1]"
@@ -345,18 +337,16 @@ export const HomePage = () => {
                   transition={{ delay: 0.8, duration: 0.8 }}
                 />
               </span>{" "}
-              votre carrière
+              votre carrière au Niger
             </motion.h1>
 
-            {/* Sous-titre avec apparition */}
             <motion.p
               variants={fadeInUp}
               className="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed"
             >
-              Connectez-vous aux meilleures entreprises et talents d'Afrique. Des milliers d'offres d'emploi, de stages et d'opportunités n'attendent que vous.
+              Connectez-vous aux meilleures entreprises et talents du Niger. Des milliers d'offres d'emploi, de stages et d'opportunités n'attendent que vous.
             </motion.p>
 
-            {/* Boutons d'action */}
             <motion.div
               variants={fadeInUp}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
@@ -431,17 +421,15 @@ export const HomePage = () => {
               )}
             </motion.div>
 
-            {/* Statistiques clés animées */}
             <motion.div
               variants={fadeInUp}
               className="pt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto"
             >
-              <AnimatedCounter value="10K+" label="Offres publiées" icon={Briefcase} delay={0.1} />
-              <AnimatedCounter value="5K+" label="Candidats actifs" icon={Users} delay={0.2} />
-              <AnimatedCounter value="1K+" label="Entreprises partenaires" icon={Building2} delay={0.3} />
+              <AnimatedCounter value="5K+" label="Offres publiées" icon={Briefcase} delay={0.1} />
+              <AnimatedCounter value="3K+" label="Candidats actifs" icon={Users} delay={0.2} />
+              <AnimatedCounter value="500+" label="Entreprises partenaires" icon={Building2} delay={0.3} />
             </motion.div>
 
-            {/* Trust indicators */}
             <motion.div
               variants={fadeInUp}
               className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-slate-500"
@@ -474,7 +462,6 @@ export const HomePage = () => {
         className="py-24 border-t border-slate-800/80 bg-slate-900/30 relative overflow-hidden"
         style={{ y: featuresY }}
       >
-        {/* Background decoration */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-transparent to-transparent pointer-events-none" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -515,7 +502,7 @@ export const HomePage = () => {
                 {" "}?
               </h2>
               <p className="text-slate-400 text-sm sm:text-base">
-                Une écosystème sur-mesure conçu pour propulser les talents et simplifier les recrutements.
+                Une écosystème sur-mesure conçu pour propulser les talents et simplifier les recrutements au Niger.
               </p>
             </motion.div>
 
@@ -523,13 +510,13 @@ export const HomePage = () => {
               <FeatureCard
                 icon={ShieldCheck}
                 title="Offres vérifiées"
-                desc="Toutes nos annonces sont minutieusement modérées par nos équipes pour garantir des opportunités authentiques et de qualité."
+                desc="Toutes nos annonces sont minutieusement modérées par nos équipes pour garantir des opportunités authentiques et de qualité au Niger."
                 index={0}
               />
               <FeatureCard
                 icon={Users}
                 title="Réseau de talents"
-                desc="Rejoignez un réseau dynamique de professionnels et d'entreprises leaders à travers tout le continent africain."
+                desc="Rejoignez un réseau dynamique de professionnels et d'entreprises leaders à travers tout le Niger."
                 index={1}
               />
               <FeatureCard
@@ -585,7 +572,7 @@ export const HomePage = () => {
               {" "}?
             </h2>
             <p className="text-slate-400 max-w-md mx-auto mb-8">
-              Rejoignez des milliers de professionnels qui ont déjà fait le choix d'OptimumJobs+.
+              Rejoignez des milliers de professionnels qui ont déjà fait le choix d'OptimumJobs+ au Niger.
             </p>
 
             <motion.div
@@ -647,7 +634,7 @@ export const HomePage = () => {
               { icon: Briefcase, label: "Toutes les offres", href: "/jobs" },
               { icon: Users, label: "Candidats", href: "/candidates" },
               { icon: Building2, label: "Entreprises", href: "/companies" },
-              { icon: Target, label: "Carrières", href: "/careers" },
+              { icon: Target, label: "Carrières au Niger", href: "/careers" },
             ].map((item, index) => (
               <motion.div
                 key={index}

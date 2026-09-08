@@ -553,7 +553,7 @@ export const OpportunityEditPage = () => {
                 </motion.span>
               </div>
               <p className="text-sm text-slate-400 mt-1">
-                Modifiez les informations de votre offre d'emploi
+                Modifiez les informations de votre offre d'emploi au Niger
               </p>
             </div>
           </div>
@@ -820,13 +820,13 @@ export const OpportunityEditPage = () => {
             <span className="w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé</span>
+              <span className="text-emerald-400/70">Sécurisé - Niger</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              V1.0.0
+              Niger v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Modification d'offre</span>

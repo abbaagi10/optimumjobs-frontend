@@ -576,7 +576,7 @@ export const AdminDashboardPage = () => {
 
           <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Administration</span>
+            <span className="text-xs text-slate-500 font-medium">Administration Niger</span>
             <Crown className="w-3 h-3 text-amber-500" />
           </div>
         </div>
@@ -603,12 +603,12 @@ export const AdminDashboardPage = () => {
             <h1 className="text-3xl lg:text-4xl font-black text-white tracking-tight">
               Panneau d'Administration
               <span className="ml-3 text-sm font-normal text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-800">
-                v3.0.0
+                Niger v3.0.0
               </span>
             </h1>
             <p className="text-slate-400 text-sm mt-1 flex items-center gap-2">
               <Sparkle className="w-3 h-3 text-amber-400" />
-              Gérez la modération des offres, les entreprises et les utilisateurs.
+              Gérez la modération des offres, les entreprises et les utilisateurs au Niger.
               <span className="text-slate-600">•</span>
               <span className="text-slate-500 text-xs">
                 {new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -647,7 +647,7 @@ export const AdminDashboardPage = () => {
             <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
             <input
               type="text"
-              placeholder={`Rechercher ${activeTab === 'organizations' ? 'une entreprise' : activeTab === 'users' ? 'un utilisateur' : 'une offre'}...`}
+              placeholder={`Rechercher ${activeTab === 'organizations' ? 'une entreprise' : activeTab === 'users' ? 'un utilisateur' : 'une offre'} au Niger...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-slate-900/80 text-white pl-12 pr-4 py-3.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
@@ -774,7 +774,7 @@ export const AdminDashboardPage = () => {
                   <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                 </div>
                 <p className="font-semibold text-white text-lg">Aucune offre à modérer</p>
-                <p className="text-sm text-slate-400 mt-1">Toutes les offres ont été traitées ou sont déjà publiées.</p>
+                <p className="text-sm text-slate-400 mt-1">Toutes les offres au Niger ont été traitées ou sont déjà publiées.</p>
               </motion.div>
             ) : (
               <motion.div variants={staggerContainer} initial="initial" animate="animate" className="space-y-4">
@@ -913,7 +913,7 @@ export const AdminDashboardPage = () => {
             ) : !allJobs || allJobs.results.length === 0 ? (
               <div className="text-center py-20 text-slate-400">
                 <Briefcase className="w-16 h-16 mx-auto mb-4 text-slate-700" />
-                <p className="text-lg font-semibold text-white">Aucune offre trouvée</p>
+                <p className="text-lg font-semibold text-white">Aucune offre trouvée au Niger</p>
                 <p className="text-sm">Essayez de modifier vos filtres de recherche</p>
               </div>
             ) : viewMode === 'table' ? (
@@ -1299,7 +1299,7 @@ export const AdminDashboardPage = () => {
           <span className="w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Activity className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Système opérationnel</span>
+            <span className="text-emerald-400/70">Système opérationnel - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -1314,3 +1314,5 @@ export const AdminDashboardPage = () => {
     </motion.div>
   );
 };
+
+export default AdminDashboardPage;

@@ -1,3 +1,5 @@
+// src/pages/Register.tsx
+
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../api/auth';
@@ -64,6 +66,9 @@ export const Register = () => {
               <span className="text-2xl font-black tracking-tight text-white">
                 Optimum<span className="text-amber-400">Jobs+</span>
               </span>
+              <span className="px-2 py-0.5 text-[8px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full">
+                NIGER
+              </span>
             </Link>
           </div>
 
@@ -72,17 +77,17 @@ export const Register = () => {
             <h2 className="text-3xl lg:text-4xl font-extrabold text-white leading-tight">
               Rejoignez l'élite du <br />
               <span className="bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent">
-                recrutement moderne.
+                recrutement au Niger.
               </span>
             </h2>
             <p className="mt-4 text-slate-400 text-sm leading-relaxed">
-              Que vous soyez à la recherche de votre prochain défi ou du talent idéal, créez votre profil sur-mesure en quelques clics.
+              Que vous soyez à la recherche de votre prochain défi ou du talent idéal au Niger, créez votre profil sur-mesure en quelques clics.
             </p>
 
             <ul className="mt-6 space-y-3">
               {[
                 'Inscription rapide en moins de 2 minutes',
-                'Visibilité auprès des meilleurs recuteurs',
+                'Visibilité auprès des meilleurs recruteurs du Niger',
                 'Espace personnalisé selon votre profil'
               ].map((text, idx) => (
                 <li key={idx} className="flex items-center gap-3 text-xs text-slate-300">
@@ -110,7 +115,7 @@ export const Register = () => {
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-white tracking-tight">Créer un compte</h3>
               <p className="text-sm text-slate-400 mt-1">
-                Choisissez votre profil et commencez dès aujourd'hui.
+                Choisissez votre profil et commencez dès aujourd'hui au Niger.
               </p>
             </div>
 

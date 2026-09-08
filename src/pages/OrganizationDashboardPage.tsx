@@ -646,7 +646,7 @@ export const OrganizationDashboardPage = () => {
                       {org.city && (
                         <span className="flex items-center gap-1.5">
                           <MapPin className="w-4 h-4 text-amber-400" />
-                          {org.city}{org.country ? `, ${org.country}` : ''}
+                          {org.city}{org.country ? `, ${org.country}` : ', Niger'}
                         </span>
                       )}
                       {org.website && (
@@ -1264,13 +1264,13 @@ export const OrganizationDashboardPage = () => {
             <span className="w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé</span>
+              <span className="text-emerald-400/70">Sécurisé - Niger</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              V1.0.0
+              v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Dashboard Organisation</span>

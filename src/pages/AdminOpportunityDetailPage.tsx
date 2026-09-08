@@ -1,5 +1,5 @@
 // src/pages/AdminOpportunityDetailPage.tsx
-// Page de détails d'offre pour l'administrateur - Version Ultra-Moderne
+// Page de détails d'offre pour l'administrateur - Version Niger
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -11,7 +11,8 @@ import {
   Shield, Award, Sparkles, Zap, TrendingUp, 
   Eye, Heart, Share2, Bookmark, ChevronRight,
   Crown, Star, UserCheck, UserX, Activity,
-  Link2, ExternalLink, Send, Copy, CheckCircle2
+  Link2, ExternalLink, Send, Copy, CheckCircle2,
+  GraduationCap
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
@@ -435,7 +436,7 @@ export const AdminOpportunityDetailPage = () => {
 
           <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
             <Crown className="w-3 h-3 text-amber-500" />
-            <span className="text-xs text-slate-500 font-medium">Admin</span>
+            <span className="text-xs text-slate-500 font-medium">Admin Niger</span>
           </div>
         </div>
       </motion.div>
@@ -481,7 +482,7 @@ export const AdminOpportunityDetailPage = () => {
               {job.city && (
                 <span className="text-sm text-slate-500 flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5" />
-                  {job.city}{job.country ? `, ${job.country}` : ''}
+                  {job.city}{job.country ? `, ${job.country}` : ', Niger'}
                 </span>
               )}
               {job.is_remote && (
@@ -837,7 +838,7 @@ export const AdminOpportunityDetailPage = () => {
           <span className="w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé</span>
+            <span className="text-emerald-400/70">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -846,7 +847,7 @@ export const AdminOpportunityDetailPage = () => {
             Statut: {job.status}
           </span>
           <span className="w-px h-4 bg-slate-800" />
-          <span>v2.0.0</span>
+          <span>v1.0.0</span>
         </div>
       </motion.div>
     </motion.div>

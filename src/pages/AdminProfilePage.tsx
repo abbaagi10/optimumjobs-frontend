@@ -196,7 +196,7 @@ export const AdminProfilePage: React.FC = () => {
     last_name: profData?.last_name || user?.last_name || '',
     phone: profData?.phone || user?.phone || '',
     city: profData?.city || user?.city || '',
-    country: profData?.country || user?.country || '',
+    country: profData?.country || user?.country || 'Niger',
     bio: profData?.bio || '',
   });
 
@@ -419,7 +419,7 @@ export const AdminProfilePage: React.FC = () => {
 
         <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
           <Crown className="w-3 h-3 text-amber-500" />
-          <span className="text-xs text-slate-500 font-medium">Admin</span>
+          <span className="text-xs text-slate-500 font-medium">Admin Niger</span>
         </div>
       </motion.div>
 
@@ -511,7 +511,7 @@ export const AdminProfilePage: React.FC = () => {
                   <span className="inline-flex items-center gap-1.5">
                     <MapPin className="w-4 h-4 shrink-0 text-slate-500" />
                     <span>
-                      {[profile?.city, profile?.country]
+                      {[profile?.city, profile?.country || 'Niger']
                         .filter(Boolean)
                         .join(', ')}
                     </span>
@@ -742,7 +742,7 @@ export const AdminProfilePage: React.FC = () => {
                 ) : (
                   <ProfileDisplayValue
                     icon={<Globe className="w-4 h-4 text-slate-500 shrink-0" />}
-                    value={profile?.country}
+                    value={profile?.country || 'Niger'}
                   />
                 )}
               </motion.div>
@@ -914,13 +914,13 @@ export const AdminProfilePage: React.FC = () => {
           <span className="w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé</span>
+            <span className="text-emerald-400/70">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <Activity className="w-3 h-3 text-amber-400" />
-            V1.0.0
+            v1.0.0
           </span>
           <span className="w-px h-4 bg-slate-800" />
           <span>Profil Admin</span>

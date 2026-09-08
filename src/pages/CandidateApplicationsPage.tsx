@@ -10,7 +10,7 @@ import {
   Sparkles, TrendingUp, Award, Star, Zap, Calendar,
   ChevronRight, Filter, Grid3x3, List, Search,
   Bell, Settings, HelpCircle, Activity, Shield,
-  Home // <-- AJOUT DE L'IMPORT MANQUANT
+  Home
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -525,7 +525,7 @@ export const CandidateApplicationsPage = () => {
           </motion.span>
         </div>
         <p className="text-sm text-slate-400">
-          Suivez l'état d'avancement de toutes vos postulations
+          Suivez l'état d'avancement de toutes vos postulations au Niger
         </p>
         <div className="flex flex-wrap gap-4 text-xs">
           <motion.span 
@@ -580,7 +580,7 @@ export const CandidateApplicationsPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${ 
                 statusFilter === status
                   ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
                   : 'bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800'
@@ -646,7 +646,7 @@ export const CandidateApplicationsPage = () => {
             <p className="text-sm text-slate-400 mt-1">
               {statusFilter !== 'all' 
                 ? 'Essayez de modifier votre filtre' 
-                : 'Vous n\'avez encore postulé à aucune offre d\'emploi.'}
+                : 'Vous n\'avez encore postulé à aucune offre d\'emploi au Niger.'}
             </p>
             {statusFilter === 'all' && (
               <Link 
@@ -748,13 +748,13 @@ export const CandidateApplicationsPage = () => {
           <span className="w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé</span>
+            <span className="text-emerald-400/70">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <Activity className="w-3 h-3 text-amber-400" />
-            Version 3.0.0
+            v1.0.0
           </span>
           <span className="w-px h-4 bg-slate-800" />
           <span>Mes candidatures</span>

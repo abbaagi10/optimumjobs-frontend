@@ -15,7 +15,8 @@ import {
   Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
   Globe, Calendar, Users, Award, Star, Eye,
   Filter, Grid3x3, List, TrendingUp, Heart,
-  Share2, Bookmark, CheckCircle2, AlertCircle
+  Share2, Bookmark, CheckCircle2, AlertCircle,
+  RefreshCw
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -330,7 +331,7 @@ const JobListingsPage = () => {
                   {jobs.length} offres
                 </span>
               </h1>
-              <p className="text-sm text-slate-400">Découvrez les meilleures offres d'emploi</p>
+              <p className="text-sm text-slate-400">Découvrez les meilleures offres d'emploi au Niger</p>
             </div>
           </div>
           
@@ -350,7 +351,7 @@ const JobListingsPage = () => {
               <MapPin className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
               <input
                 type="text"
-                placeholder="Ville, pays ou Télétravail..."
+                placeholder="Ville au Niger, ou Télétravail..."
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="w-full bg-slate-950/80 text-white pl-12 pr-4 py-3.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
@@ -431,7 +432,7 @@ const JobListingsPage = () => {
             >
               <div className="flex flex-col items-center gap-4">
                 <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-                <p className="text-sm text-slate-400">Chargement des offres...</p>
+                <p className="text-sm text-slate-400">Chargement des offres au Niger...</p>
                 <div className="flex gap-1">
                   {[0, 1, 2].map((i) => (
                     <motion.div
@@ -800,13 +801,13 @@ const JobListingsPage = () => {
             <span className="w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé</span>
+              <span className="text-emerald-400/70">Sécurisé - Niger</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              V1.0.0
+              v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Liste des offres</span>

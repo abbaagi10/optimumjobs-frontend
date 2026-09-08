@@ -455,7 +455,7 @@ export const OrganizationCreatePage = () => {
               label="Description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Présentation de votre organisation..."
+              placeholder="Présentation de votre organisation au Niger..."
               icon={FileText}
               rows={4}
             />
@@ -561,7 +561,7 @@ export const OrganizationCreatePage = () => {
             <div>
               <p className="text-xs text-slate-400">
                 <span className="font-semibold text-amber-400">Important</span> — 
-                Après la création, vous pourrez publier des offres d'emploi et gérer vos candidatures.
+                Après la création, vous pourrez publier des offres d'emploi et gérer vos candidatures au Niger.
               </p>
             </div>
           </motion.div>
@@ -585,13 +585,13 @@ export const OrganizationCreatePage = () => {
             <span className="w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé</span>
+              <span className="text-emerald-400/70">Sécurisé - Niger</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              Version 3.0.0
+              v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Création d'organisation</span>

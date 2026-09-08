@@ -11,7 +11,7 @@ import {
   Building2, MapPin, Globe, Calendar, Users, Award,
   FileText, CheckCircle2, AlertCircle, Star, Eye,
   Mail, Phone, Link2, Plus, Minus, Info,
-  TrendingUp, GraduationCap // <-- AJOUT DE TrendingUp ET GraduationCap
+  TrendingUp, GraduationCap
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -465,7 +465,7 @@ export const JobCreatePage = () => {
                 </motion.span>
               </h1>
               <p className="text-sm text-slate-400">
-                Créez une nouvelle opportunité d'emploi pour votre organisation
+                Créez une nouvelle opportunité d'emploi pour votre organisation au Niger
               </p>
             </div>
           </div>
@@ -725,13 +725,13 @@ export const JobCreatePage = () => {
             <span className="w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé</span>
+              <span className="text-emerald-400/70">Sécurisé - Niger</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Activity className="w-3 h-3 text-amber-400" />
-              V1.0.0
+              v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
             <span>Création d'offre</span>

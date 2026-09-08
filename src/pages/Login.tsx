@@ -1,3 +1,5 @@
+// src/pages/Login.tsx
+
 import { useState, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
@@ -348,7 +350,7 @@ export const Login = () => {
                   transition={{ delay: 0.8, type: "spring" }}
                   className="px-2 py-0.5 text-[8px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
                 >
-                  PRO
+                  NIGER
                 </motion.span>
               </Link>
             </motion.div>
@@ -374,7 +376,7 @@ export const Login = () => {
             <motion.div variants={fadeInUp}>
               <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full mb-4">
                 <Sparkles className="w-3 h-3 text-amber-400" />
-                <span className="text-[10px] font-semibold text-amber-400 tracking-wider">PLATEFORME PREMIUM</span>
+                <span className="text-[10px] font-semibold text-amber-400 tracking-wider">PLATEFORME PREMIUM NIGER</span>
               </div>
             </motion.div>
 
@@ -384,7 +386,7 @@ export const Login = () => {
             >
               Propulsez votre <br />
               <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
-                carrière professionnelle.
+                carrière au Niger.
               </span>
             </motion.h2>
 
@@ -392,14 +394,14 @@ export const Login = () => {
               variants={fadeInUp}
               className="mt-4 text-slate-400 text-sm leading-relaxed"
             >
-              Accédez aux meilleures opportunités de recrutement et développez votre réseau avec notre écosystème intelligent.
+              Accédez aux meilleures opportunités de recrutement au Niger et développez votre réseau avec notre écosystème intelligent.
             </motion.p>
 
             <motion.ul 
               variants={staggerContainer}
               className="mt-6 space-y-3"
             >
-              <FeatureItem icon={CheckCircle2} text="Accès exclusif aux offres qualifiées" delay={0.3} />
+              <FeatureItem icon={CheckCircle2} text="Accès exclusif aux offres qualifiées au Niger" delay={0.3} />
               <FeatureItem icon={CheckCircle2} text="Gestion de profil simplifiée" delay={0.4} />
               <FeatureItem icon={CheckCircle2} text="Tableau de bord haute performance" delay={0.5} />
             </motion.ul>
@@ -430,7 +432,7 @@ export const Login = () => {
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <Globe className="w-3 h-3" />
-                Afrique
+                Niger
               </span>
               <span>© 2026</span>
             </div>
@@ -643,7 +645,7 @@ export const Login = () => {
         </motion.div>
         <span className="text-xs text-slate-400 font-medium">Système en ligne</span>
         <span className="text-xs text-slate-600">•</span>
-        <span className="text-xs text-slate-500">v3.0</span>
+        <span className="text-xs text-slate-500">Niger v3.0</span>
       </motion.div>
 
     </div>

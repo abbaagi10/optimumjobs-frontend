@@ -421,7 +421,7 @@ export const CandidateDashboard = () => {
               {profile?.city && (
                 <span className="flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-amber-400" />
-                  {profile?.city}{profile?.country ? `, ${profile.country}` : ''}
+                  {profile?.city}{profile?.country ? `, ${profile.country}` : ', Niger'}
                 </span>
               )}
               {profile?.email && (
@@ -438,11 +438,10 @@ export const CandidateDashboard = () => {
           </div>
         </div>
 
-        {/* Suppression des icônes Bell et Settings en double */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
             <Crown className="w-3 h-3 text-amber-500" />
-            <span className="text-xs text-slate-500 font-medium">Dashboard</span>
+            <span className="text-xs text-slate-500 font-medium">Dashboard Niger</span>
           </div>
         </div>
       </motion.div>
@@ -462,7 +461,7 @@ export const CandidateDashboard = () => {
           value={stats.totalApplications} 
           icon={Briefcase} 
           color="amber"
-          subtitle={`${activeApplications.length} actives`}
+          subtitle={`${activeApplications.length} actives au Niger`}
           trend={12}
         />
         <StatCard 
@@ -478,7 +477,7 @@ export const CandidateDashboard = () => {
           value={stats.interviewsCount} 
           icon={Users} 
           color="purple"
-          subtitle="Présélections"
+          subtitle="Présélections au Niger"
           trend={25}
         />
         <StatCard 
@@ -513,7 +512,7 @@ export const CandidateDashboard = () => {
         >
           <LayoutGrid className="w-4 h-4" />
           Offres disponibles
-          <span className="text-xs opacity-60">({allJobs.length})</span>
+          <span className="text-xs opacity-60">({allJobs.length} au Niger)</span>
         </motion.button>
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -551,7 +550,7 @@ export const CandidateDashboard = () => {
                 <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
                 <input
                   type="text"
-                  placeholder="Rechercher un poste, une entreprise..."
+                  placeholder="Rechercher un poste, une entreprise au Niger..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full bg-slate-900/80 text-white text-sm pl-11 pr-4 py-3.5 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
@@ -561,7 +560,7 @@ export const CandidateDashboard = () => {
                 <MapPin className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
                 <input
                   type="text"
-                  placeholder="Ville, pays..."
+                  placeholder="Ville au Niger..."
                   value={locationFilter}
                   onChange={(e) => setLocationFilter(e.target.value)}
                   className="w-full bg-slate-900/80 text-white text-sm pl-11 pr-4 py-3.5 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
@@ -621,7 +620,7 @@ export const CandidateDashboard = () => {
                               {job.city && (
                                 <span className="flex items-center gap-1">
                                   <MapPin className="w-3.5 h-3.5" />
-                                  {job.city}{job.country ? `, ${job.country}` : ''}
+                                  {job.city}{job.country ? `, ${job.country}` : ', Niger'}
                                 </span>
                               )}
                               {job.is_remote && (
@@ -676,7 +675,7 @@ export const CandidateDashboard = () => {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
                     <Briefcase className="w-8 h-8 text-slate-600" />
                   </div>
-                  <p className="text-lg font-semibold text-white">Aucune offre trouvée</p>
+                  <p className="text-lg font-semibold text-white">Aucune offre trouvée au Niger</p>
                   <p className="text-sm text-slate-400 mt-1">Essayez de modifier vos critères de recherche</p>
                 </motion.div>
               )}
@@ -806,7 +805,7 @@ export const CandidateDashboard = () => {
                     <FileText className="w-8 h-8 text-slate-600" />
                   </div>
                   <p className="text-lg font-semibold text-white">Aucune candidature active</p>
-                  <p className="text-sm text-slate-400 mt-1">Vous n'avez pas encore postulé à des offres</p>
+                  <p className="text-sm text-slate-400 mt-1">Vous n'avez pas encore postulé à des offres au Niger</p>
                   <Link 
                     to="/jobs" 
                     className="inline-block mt-4 text-amber-400 hover:text-amber-300 font-semibold text-sm hover:underline transition-all"
@@ -837,13 +836,13 @@ export const CandidateDashboard = () => {
           <span className="w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé</span>
+            <span className="text-emerald-400/70">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
             <Activity className="w-3 h-3 text-amber-400" />
-            V1.0.0
+            v1.0.0
           </span>
           <span className="w-px h-4 bg-slate-800" />
           <span>Dashboard Candidat</span>
