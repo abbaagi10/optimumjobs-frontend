@@ -645,7 +645,7 @@ export const Login = () => {
         </motion.div>
         <span className="text-xs text-slate-400 font-medium">Système en ligne</span>
         <span className="text-xs text-slate-600">•</span>
-        <span className="text-xs text-slate-500">Niger v3.0</span>
+        <span className="text-xs text-slate-500">v1.0.0</span>
       </motion.div>
 
     </div>
