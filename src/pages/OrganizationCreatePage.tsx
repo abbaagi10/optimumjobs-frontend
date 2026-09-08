@@ -10,7 +10,7 @@ import {
   Globe, MapPin, Phone, Mail, Link2, Info,
   CheckCircle2, AlertCircle, Award, Users, Briefcase,
   TrendingUp, Calendar, Star, Plus, Minus,
-  FileText // <-- AJOUTER FileText ICI
+  FileText
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -98,7 +98,7 @@ const FormInput = ({
   );
 };
 
-// Ajout du composant FormTextarea pour gérer correctement les textareas
+// Composant FormTextarea pour gérer les zones de texte
 const FormTextarea = ({
   icon: Icon,
   label,
