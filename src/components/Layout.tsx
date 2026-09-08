@@ -768,7 +768,7 @@ export const Layout = ({ children }: LayoutProps) => {
               <span className="text-slate-800">•</span>
               <a href="#" className="hover:text-white transition-colors">Cookies</a>
               <span className="text-slate-800">•</span>
-              <span className="text-slate-600">v3.0.0</span>
+              <span className="text-slate-600">v1.0.0</span>
             </motion.div>
           </div>
         </footer>
