@@ -441,7 +441,7 @@ export const CandidateDashboard = () => {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
             <Crown className="w-3 h-3 text-amber-500" />
-            <span className="text-xs text-slate-500 font-medium">Dashboard Niger</span>
+            <span className="text-xs text-slate-500 font-medium">Dashboard</span>
           </div>
         </div>
       </motion.div>

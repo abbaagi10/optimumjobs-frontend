@@ -1273,7 +1273,7 @@ export const OrganizationDashboardPage = () => {
               v1.0.0
             </span>
             <span className="w-px h-4 bg-slate-800" />
-            <span>Dashboard Organisation</span>
+            <span>Dashboard</span>
           </div>
         </motion.div>
 
