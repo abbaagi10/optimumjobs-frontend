@@ -1,3 +1,5 @@
+// src/pages/HomePage.tsx
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { 
@@ -264,7 +266,8 @@ export const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
+    // Suppression de overflow-x-hidden qui peut causer des problèmes
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950">
       
       {/* ========================================================== */}
       {/* HERO SECTION */}
