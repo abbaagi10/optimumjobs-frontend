@@ -438,21 +438,8 @@ export const CandidateDashboard = () => {
           </div>
         </div>
 
+        {/* Suppression des icônes Bell et Settings en double */}
         <div className="flex items-center gap-2">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300"
-          >
-            <Bell className="w-4 h-4" />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300"
-          >
-            <Settings className="w-4 h-4" />
-          </motion.button>
           <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
             <Crown className="w-3 h-3 text-amber-500" />
             <span className="text-xs text-slate-500 font-medium">Dashboard</span>
