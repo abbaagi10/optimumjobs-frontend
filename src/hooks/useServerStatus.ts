@@ -5,6 +5,8 @@ import { useAuthStore } from '../store/authStore';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
+
 export const useServerStatus = () => {
   const [isServerOnline, setIsServerOnline] = useState(true);
   const { logout } = useAuthStore();
@@ -12,7 +14,7 @@ export const useServerStatus = () => {
 
   const checkServerStatus = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/', {
+      const response = await fetch(`${API_BASE_URL}/`, {
         method: 'HEAD',
         signal: AbortSignal.timeout(5000),
       });

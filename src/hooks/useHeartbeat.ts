@@ -1,10 +1,11 @@
 // src/hooks/useHeartbeat.ts
-// C:\optimumjobs-frontend\src\hooks\useHeartbeat.ts
 
 import { useEffect, useRef } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
 
 export const useHeartbeat = () => {
   const { isAuthenticated, logout } = useAuthStore();
@@ -15,7 +16,7 @@ export const useHeartbeat = () => {
     if (!isAuthenticated) return;
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/v1/auth/me/', {
+      const response = await fetch(`${API_BASE_URL}/auth/me/`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,

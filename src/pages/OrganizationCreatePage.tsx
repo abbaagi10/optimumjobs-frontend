@@ -106,6 +106,7 @@ const FormTextarea = ({
   onChange,
   placeholder,
   required,
+  error,
   rows = 4,
   className = ''
 }: any) => {
