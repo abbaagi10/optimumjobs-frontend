@@ -1,6 +1,6 @@
 // src/pages/Login.tsx
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
@@ -8,184 +8,9 @@ import { authApi } from '../api/auth';
 import {
   Eye, EyeOff, Loader2, Mail, Lock, Briefcase,
   ArrowRight, ShieldCheck, CheckCircle2, Sparkles,
-  Zap, Globe, Users, Building2, Rocket, Star,
-  ChevronRight, Fingerprint, Key, Shield, Crown
+  Users, Rocket, TrendingUp,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
-
-// ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const slideInLeft = {
-  initial: { opacity: 0, x: -30 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 30 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1
-    }
-  }
-};
-
-const floatAnimation = {
-  animate: {
-    y: [0, -8, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
-};
-
-const pulseGlow = {
-  animate: {
-    scale: [1, 1.05, 1],
-    opacity: [0.3, 0.6, 0.3],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
-};
-
-// ==========================================================
-// COMPONENTS
-// ==========================================================
-
-const FloatingParticles = () => {
-  const particles = Array.from({ length: 15 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2 + 1,
-    duration: Math.random() * 8 + 4,
-    delay: Math.random() * 4,
-  }));
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full bg-amber-400/20"
-          style={{
-            width: p.size,
-            height: p.size,
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-          }}
-          animate={{
-            y: [0, -25, 0],
-            x: [0, 15, 0],
-            opacity: [0.1, 0.5, 0.1],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-const AnimatedInput = ({
-  icon: Icon,
-  label,
-  type,
-  value,
-  onChange,
-  placeholder,
-  disabled,
-  autoComplete,
-  required,
-  endAdornment
-}: any) => {
-  const [isFocused, setIsFocused] = useState(false);
-
-  return (
-    <motion.div
-      className="space-y-1.5"
-      variants={fadeInUp}
-    >
-      <div className="flex items-center justify-between">
-        <label className="text-[10px] sm:text-xs font-semibold text-slate-300 tracking-wide uppercase">
-          {label}
-        </label>
-      </div>
-      <div className="relative group">
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 rounded-xl transition-all duration-300 pointer-events-none"
-          animate={{
-            opacity: isFocused ? 0.1 : 0,
-          }}
-        />
-        <Icon className={`absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${
-          isFocused ? 'text-amber-400 scale-110' : 'text-slate-500'
-        }`} />
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={placeholder}
-          className="w-full bg-slate-900/90 text-white pl-10 sm:pl-11 pr-10 sm:pr-11 py-3 sm:py-3.5 rounded-xl border transition-all duration-300 placeholder:text-slate-600 text-xs sm:text-sm focus:outline-none"
-          style={{
-            borderColor: isFocused ? 'rgba(251, 191, 36, 0.5)' : 'rgba(30, 41, 59, 0.8)',
-            boxShadow: isFocused ? '0 0 0 3px rgba(251, 191, 36, 0.1)' : 'none',
-          }}
-          disabled={disabled}
-          autoComplete={autoComplete}
-          required={required}
-        />
-        {endAdornment && (
-          <div className="absolute right-3 sm:right-3.5 top-1/2 -translate-y-1/2">
-            {endAdornment}
-          </div>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-
-const FeatureItem = ({ icon: Icon, text, delay }: any) => (
-  <motion.li
-    variants={fadeInUp}
-    custom={delay}
-    className="flex items-start sm:items-center gap-2.5 sm:gap-3 text-[10px] sm:text-xs text-slate-300 group"
-  >
-    <motion.div
-      whileHover={{ scale: 1.2, rotate: 180 }}
-      transition={{ duration: 0.3 }}
-      className="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors mt-0.5 sm:mt-0"
-    >
-      <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" />
-    </motion.div>
-    <span className="group-hover:text-white transition-colors">{text}</span>
-  </motion.li>
-);
 
 // ==========================================================
 // MAIN COMPONENT
@@ -200,24 +25,6 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-
-  const formRef = useRef<HTMLFormElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -270,385 +77,224 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex justify-center items-center relative overflow-hidden selection:bg-amber-500 selection:text-slate-950 p-3 sm:p-4">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-      {/* Background decorations */}
-      <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:24px_24px] opacity-5" />
+      {/* ==========================================================
+          GAUCHE : FORMULAIRE
+         ========================================================== */}
+      <div className="flex flex-col bg-white">
 
-      <motion.div
-        className="absolute -top-40 -left-40 w-72 sm:w-96 h-72 sm:h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          x: mousePosition.x * 20,
-          y: mousePosition.y * 20,
-        }}
-        transition={{ type: "spring", damping: 30, stiffness: 50 }}
-      />
-
-      <motion.div
-        className="absolute -bottom-40 -right-40 w-72 sm:w-96 h-72 sm:h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"
-        animate={{
-          x: -mousePosition.x * 15,
-          y: -mousePosition.y * 15,
-        }}
-        transition={{ type: "spring", damping: 30, stiffness: 50 }}
-      />
-
-      <FloatingParticles />
-
-      {/* Main Container */}
-      <motion.div
-        ref={containerRef}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, type: "spring" }}
-        className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 min-h-0 lg:min-h-[700px] rounded-2xl sm:rounded-3xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-2xl shadow-2xl shadow-slate-950/50 overflow-hidden relative"
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-      >
-
-        {/* ========================================================== */}
-        {/* LEFT PANEL - HERO SECTION */}
-        {/* ========================================================== */}
-
-        <motion.div
-          className="lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-5 sm:p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800/60"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          {/* Background grid pattern */}
-          <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:16px_16px] opacity-10" />
-
-          {/* Animated glow orb */}
-          <motion.div
-            className="absolute -top-20 -right-20 w-48 sm:w-64 h-48 sm:h-64 bg-amber-500/10 rounded-full blur-3xl"
-            animate={pulseGlow.animate}
-          />
-
-          {/* Brand Header */}
-          <div className="relative z-10">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Link to="/" className="inline-flex items-center gap-2 sm:gap-3 group flex-wrap">
-                <motion.div
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-all duration-300"
-                  whileHover={{ rotate: 180 }}
-                  transition={{ duration: 0.6, type: "spring" }}
-                >
-                  <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                    <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
-                  </div>
-                </motion.div>
-                <span className="text-lg sm:text-2xl font-black tracking-tight text-white group-hover:text-amber-400 transition-colors">
-                  OptimaPlus<span className="text-amber-400">-Jobs</span>
-                </span>
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.8, type: "spring" }}
-                  className="px-1.5 sm:px-2 py-0.5 text-[7px] sm:text-[8px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
-                >
-                  NIGER
-                </motion.span>
-              </Link>
-            </motion.div>
-
-            <motion.div
-              className="mt-2 flex items-center gap-1.5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-[10px] text-emerald-400/70 font-medium">Connexion sécurisée</span>
-            </motion.div>
-          </div>
-
-          {/* Content */}
-          <motion.div
-            className="relative z-10 my-6 sm:my-8"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            <motion.div variants={fadeInUp}>
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-2.5 sm:px-3 py-1 rounded-full mb-3 sm:mb-4">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span className="text-[9px] sm:text-[10px] font-semibold text-amber-400 tracking-wider">
-                  PLATEFORME PREMIUM NIGER
-                </span>
+        {/* Header logo */}
+        <header className="px-6 sm:px-12 py-5 border-b border-[#16A34A]/10">
+          <Link to="/" className="inline-flex items-center gap-2.5 group">
+            <div className="relative">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)] group-hover:scale-105 transition-transform">
+                <Briefcase className="w-4 h-4 text-white" strokeWidth={2.5} />
               </div>
-            </motion.div>
-
-            <motion.h2
-              variants={fadeInUp}
-              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight"
-            >
-              Propulsez votre <br />
-              <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
-                carrière au Niger.
-              </span>
-            </motion.h2>
-
-            <motion.p
-              variants={fadeInUp}
-              className="mt-3 sm:mt-4 text-slate-400 text-xs sm:text-sm leading-relaxed"
-            >
-              Accédez aux meilleures opportunités de recrutement au Niger et développez votre réseau avec notre écosystème intelligent.
-            </motion.p>
-
-            <motion.ul
-              variants={staggerContainer}
-              className="mt-4 sm:mt-6 space-y-2.5 sm:space-y-3"
-            >
-              <FeatureItem icon={CheckCircle2} text="Accès exclusif aux offres qualifiées au Niger" delay={0.3} />
-              <FeatureItem icon={CheckCircle2} text="Gestion de profil simplifiée" delay={0.4} />
-              <FeatureItem icon={CheckCircle2} text="Tableau de bord haute performance" delay={0.5} />
-            </motion.ul>
-          </motion.div>
-
-          {/* Footer */}
-          <motion.div
-            className="relative z-10 pt-4 sm:pt-6 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
-            <div className="flex items-center gap-2">
-              <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400/80" />
-              </motion.div>
-              <span>Connexion sécurisée SSL</span>
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FCD34D] rounded-full border-2 border-white" />
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <span className="flex items-center gap-1">
-                <Globe className="w-3 h-3" />
-                Niger
-              </span>
-              <span>© 2026</span>
-            </div>
-          </motion.div>
-        </motion.div>
+            <span className="text-base font-extrabold text-[#14532D] tracking-tight">
+              OptimaPlus<span className="text-[#FCD34D]">-Jobs</span>
+            </span>
+          </Link>
+        </header>
 
-        {/* ========================================================== */}
-        {/* RIGHT PANEL - LOGIN FORM */}
-        {/* ========================================================== */}
-
-        <motion.div
-          className="lg:col-span-7 p-5 sm:p-8 lg:p-12 flex flex-col justify-center bg-slate-950/40"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-        >
-          <motion.div
-            className="max-w-md w-full mx-auto"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
+        {/* Form centré */}
+        <div className="flex-1 flex items-center justify-center px-6 py-12">
+          <div className="w-full max-w-md">
 
             {/* Header */}
-            <motion.div
-              variants={fadeInUp}
-              className="mb-6 sm:mb-8"
-            >
-              <motion.div
-                className="flex items-center gap-2 mb-2"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <Crown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-                <span className="text-[10px] sm:text-xs font-semibold text-amber-400/70 tracking-wider">ESPACE MEMBRE</span>
-              </motion.div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                Bienvenue sur votre <br />
-                <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">
-                  espace sécurisé
-                </span>
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                Entrez vos identifiants pour accéder à votre tableau de bord.
+            <div className="text-center mb-8">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#14532D] tracking-tight">
+                Bon retour 👋
+              </h1>
+              <p className="mt-2 text-sm text-[#14532D]/60">
+                Connectez-vous à votre compte OptimaPlus-Jobs
               </p>
-            </motion.div>
+            </div>
 
             {/* Form */}
-            <form ref={formRef} onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
-              <AnimatedInput
-                icon={Mail}
-                label="Adresse email"
-                type="email"
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                placeholder="nom@exemple.com"
-                disabled={isLoading}
-                autoComplete="email"
-                required
-              />
+            <form onSubmit={handleLogin} className="space-y-5">
 
-              <AnimatedInput
-                icon={Lock}
-                label="Mot de passe"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                disabled={isLoading}
-                autoComplete="current-password"
-                required
-                endAdornment={
-                  <motion.button
+              {/* Email */}
+              <div className="space-y-1.5">
+                <label className="block text-sm font-semibold text-[#14532D]">
+                  Adresse email
+                </label>
+                <div className="relative group">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#14532D]/40 group-focus-within:text-[#16A34A] transition-colors" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="nom@exemple.com"
+                    className="w-full pl-11 pr-4 py-3 bg-white border border-[#16A34A]/20 rounded-xl text-sm text-[#14532D] placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all"
+                    disabled={isLoading}
+                    autoComplete="email"
+                  />
+                </div>
+              </div>
+
+              {/* Mot de passe */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-semibold text-[#14532D]">
+                    Mot de passe
+                  </label>
+                  <Link to="/forgot-password" className="text-xs text-[#16A34A] hover:underline font-semibold">
+                    Oublié ?
+                  </Link>
+                </div>
+                <div className="relative group">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#14532D]/40 group-focus-within:text-[#16A34A] transition-colors" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Votre mot de passe"
+                    className="w-full pl-11 pr-11 py-3 bg-white border border-[#16A34A]/20 rounded-xl text-sm text-[#14532D] placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all"
+                    disabled={isLoading}
+                    autoComplete="current-password"
+                  />
+                  <button
                     type="button"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-slate-500 hover:text-slate-300 transition-colors p-1"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#14532D]/40 hover:text-[#16A34A] transition-colors p-1"
                     aria-label="Afficher ou masquer le mot de passe"
                   >
-                    {showPassword ? <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-                  </motion.button>
-                }
-              />
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
 
-              {/* Forgot password link */}
-              <motion.div
-                variants={fadeInUp}
-                className="flex justify-end"
+              {/* Bouton submit */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="group w-full mt-2 py-3.5 px-4 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-sm rounded-xl shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
               >
-                <Link
-                  to="/forgot-password"
-                  className="text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-medium transition-all hover:underline flex items-center gap-1 group"
-                >
-                  <Key className="w-3 h-3" />
-                  Mot de passe oublié ?
-                </Link>
-              </motion.div>
-
-              {/* Submit Button */}
-              <motion.div
-                variants={fadeInUp}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-              >
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full mt-2 py-3.5 sm:py-4 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Connexion en cours...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Fingerprint className="w-4 h-4" />
-                        <span>Se connecter</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
-                  </span>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-300"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: 0 }}
-                    transition={{ duration: 0.4 }}
-                  />
-                </button>
-              </motion.div>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Connexion en cours...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Se connecter</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
             </form>
 
             {/* Register link */}
-            <motion.div
-              variants={fadeInUp}
-              className="mt-6 sm:mt-8 text-center"
-            >
-              <p className="text-xs sm:text-sm text-slate-400">
-                Vous n'avez pas de compte ?{' '}
-                <Link
-                  to="/register"
-                  className="text-amber-400 hover:text-amber-300 font-semibold transition-all hover:underline inline-flex items-center gap-1 group"
-                >
+            <div className="mt-6 text-center">
+              <p className="text-sm text-[#14532D]/70">
+                Pas encore de compte ?{' '}
+                <Link to="/register" className="text-[#16A34A] hover:underline font-bold">
                   S'inscrire
-                  <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </p>
-            </motion.div>
+            </div>
 
             {/* Terms */}
-            <motion.div
-              variants={fadeInUp}
-              className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-800/80 text-center"
-            >
-              <p className="text-[10px] sm:text-xs text-slate-500 leading-relaxed">
+            <div className="mt-8 pt-6 border-t border-[#16A34A]/10 text-center">
+              <p className="text-xs text-[#14532D]/50 leading-relaxed">
                 En continuant, vous acceptez nos{' '}
-                <a href="#" className="text-amber-400/70 hover:text-amber-400 transition-colors hover:underline">
-                  Conditions d'utilisation
-                </a>{' '}
+                <a href="#" className="underline hover:text-[#16A34A]">Conditions d'utilisation</a>{' '}
                 et notre{' '}
-                <a href="#" className="text-amber-400/70 hover:text-amber-400 transition-colors hover:underline">
-                  Politique de confidentialité
-                </a>.
+                <a href="#" className="underline hover:text-[#16A34A]">Politique de confidentialité</a>.
               </p>
-              <motion.div
-                className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[10px] text-slate-600"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-              >
-                <span className="flex items-center gap-1">
-                  <Shield className="w-3 h-3" />
-                  Chiffré SSL
-                </span>
-                <span className="w-px h-3 bg-slate-800" />
-                <span className="flex items-center gap-1">
-                  <Zap className="w-3 h-3 text-amber-400" />
-                  Sécurisé
-                </span>
-              </motion.div>
-            </motion.div>
+            </div>
 
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
+      </div>
 
-      </motion.div>
+      {/* ==========================================================
+          DROITE : PANNEAU VERT + FORMES ABSTRAITES + CITATION
+         ========================================================== */}
+      <div className="hidden lg:block relative bg-gradient-to-br from-[#16A34A] via-[#15803D] to-[#14532D] overflow-hidden">
 
-      {/* Floating decorative elements */}
-      <motion.div
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        whileHover={{ scale: 1.05 }}
-      >
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div className="w-2 h-2 rounded-full bg-emerald-400" />
-        </motion.div>
-        <span className="text-[10px] sm:text-xs text-slate-400 font-medium">Système en ligne</span>
-        <span className="text-[10px] sm:text-xs text-slate-600 hidden xs:inline">•</span>
-        <span className="text-[10px] sm:text-xs text-slate-500 hidden xs:inline">v1.0.0</span>
-      </motion.div>
+        {/* Formes décoratives */}
+        <div className="absolute top-20 -right-20 w-80 h-80 rounded-full border-[40px] border-white/5" />
+        <div className="absolute bottom-10 -left-20 w-96 h-96 rounded-full border-[30px] border-[#FCD34D]/10" />
+        <div className="absolute top-1/3 left-20 w-24 h-24 rounded-2xl bg-[#FCD34D]/10 rotate-45" />
+        <div className="absolute top-12 left-1/4 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+        <div className="absolute bottom-1/4 right-1/4 w-2 h-2 rounded-full bg-white/40" />
+        <div className="absolute top-2/3 right-12 w-4 h-4 rounded-full bg-[#FCD34D]/40" />
+
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:32px_32px] opacity-40" />
+
+        {/* Contenu */}
+        <div className="relative h-full flex flex-col justify-between p-12 lg:p-16 text-white">
+
+          {/* Header */}
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-[#FCD34D]" />
+            </div>
+            <span className="text-xs font-bold tracking-wider uppercase text-white/80">
+              Bienvenue à nouveau
+            </span>
+          </div>
+
+          {/* Contenu central */}
+          <div className="max-w-md">
+            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.15] tracking-tight">
+              Votre prochaine
+              <br />
+              <span className="text-[#FCD34D]">
+                opportunité
+              </span>
+              {" "}commence
+              <br />
+              ici.
+            </h2>
+
+            <p className="mt-6 text-base text-white/80 leading-relaxed">
+              Retrouvez toutes vos candidatures, vos offres favorites et
+              votre profil en un seul endroit.
+            </p>
+
+            <div className="mt-8 space-y-4">
+              {[
+                { icon: ShieldCheck, text: 'Connexion sécurisée SSL' },
+                { icon: Users, text: '2 500+ candidats actifs au Niger' },
+                { icon: TrendingUp, text: 'Suivi en temps réel de vos candidatures' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center shrink-0">
+                    <item.icon className="w-4 h-4 text-[#FCD34D]" />
+                  </div>
+                  <span className="text-sm text-white/85">{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Citation */}
+          <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-5">
+            <p className="text-sm italic text-white/90 leading-relaxed">
+              "Chaque grande carrière commence par une seule candidature."
+            </p>
+            <div className="mt-3 flex items-center gap-3">
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces&q=80"
+                alt="Amina"
+                className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FCD34D]/30"
+              />
+              <div>
+                <p className="text-xs font-bold text-white">Amina Diallo</p>
+                <p className="text-[11px] text-white/60">Développeuse à Niamey</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
   );

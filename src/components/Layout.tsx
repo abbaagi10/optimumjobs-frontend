@@ -1,325 +1,246 @@
 // src/components/Layout.tsx
 
-import { ReactNode, useState, useEffect, useRef, useCallback } from 'react';
+import { ReactNode, useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useLogout } from '../hooks/useLogout';
 import { useHeartbeat } from '../hooks/useHeartbeat';
 import {
-  Home,
-  Briefcase,
-  User,
-  LogOut,
-  Building2,
-  ShieldCheck,
-  Menu,
-  X,
-  LogIn,
-  UserPlus,
-  FileText,
-  PlusCircle,
-  Globe,
-  Linkedin,
-  Twitter,
-  Facebook,
-  Instagram,
-  Youtube,
-  ChevronDown,
-  Sparkles,
-  Bell,
-  Settings,
-  HelpCircle,
-  Award,
-  Star,
-  Zap,
-  ChevronRight,
-  Moon,
-  Sun,
-  Activity,
-  CheckCircle2,
-  AlertCircle
+  Home, Briefcase, User, LogOut, Building2, ShieldCheck,
+  Menu, X, LogIn, UserPlus, FileText, PlusCircle,
+  Linkedin, Twitter, Facebook, Instagram, Youtube,
+  ChevronDown, Bell, Settings, HelpCircle, Search,
 } from 'lucide-react';
 import { NetworkErrorHandler } from './NetworkErrorHandler';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 
 // ==========================================================
-// ANIMATION VARIANTS
+// TOP BAR
 // ==========================================================
 
-const fadeInDown = {
-  initial: { opacity: 0, y: -10 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const slideIn = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 }
-};
-
-const scaleIn = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.9 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.05
-    }
-  }
-};
-
-const menuItemVariants = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -20 }
-};
-
-// ==========================================================
-// COMPONENTS
-// ==========================================================
-
-const ThemeToggle = () => {
-  const [isDark, setIsDark] = useState(true);
-
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
-  };
+const TopBar = () => {
+  const [visible, setVisible] = useState(true);
+  if (!visible) return null;
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.1, rotate: isDark ? 0 : 180 }}
-      whileTap={{ scale: 0.9 }}
-      onClick={toggleTheme}
-      className="p-2 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all duration-300"
-      aria-label="Toggle theme"
-    >
-      {isDark ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-    </motion.button>
-  );
-};
-
-const NotificationBell = () => {
-  const [hasNotifications, setHasNotifications] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition-all duration-300"
-      >
-        <Bell className="w-4 h-4" />
-        {hasNotifications && (
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-amber-500 rounded-full border-2 border-slate-950"
-          >
-            <span className="absolute inset-0 rounded-full bg-amber-500 animate-ping opacity-75" />
-          </motion.span>
-        )}
-      </motion.button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl shadow-slate-950/50 overflow-hidden z-50"
-          >
-            <div className="p-3 border-b border-slate-800">
-              <span className="text-xs font-semibold text-slate-300">Notifications</span>
-            </div>
-            <div className="p-3 space-y-2 max-h-64 overflow-y-auto">
-              <div className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-800/50 transition-colors cursor-pointer">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-white font-medium">Nouvelle offre publiée</p>
-                  <p className="text-xs text-slate-400">Il y a 2 heures</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-800/50 transition-colors cursor-pointer">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-white font-medium">Candidature acceptée</p>
-                  <p className="text-xs text-slate-400">Il y a 5 heures</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-2 rounded-xl hover:bg-slate-800/50 transition-colors cursor-pointer">
-                <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center shrink-0">
-                  <AlertCircle className="w-4 h-4 text-rose-400" />
-                </div>
-                <div>
-                  <p className="text-xs text-white font-medium">Offre expirée</p>
-                  <p className="text-xs text-slate-400">Il y a 1 jour</p>
-                </div>
-              </div>
-            </div>
-            <div className="p-3 border-t border-slate-800 text-center">
-              <button className="text-xs text-amber-400 hover:text-amber-300 font-medium transition-colors">
-                Voir toutes les notifications
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="bg-[#14532D] text-white text-sm">
+      <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-center relative">
+        <p className="text-center font-medium text-xs sm:text-sm">
+          🎉 <strong className="text-[#FCD34D]">500 nouvelles offres</strong> publiées ce mois-ci.{' '}
+          <a href="#" className="underline font-semibold hover:text-[#FCD34D] transition-colors">
+            Découvrez-les
+          </a>
+        </p>
+        <button
+          onClick={() => setVisible(false)}
+          className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded transition-colors"
+          aria-label="Fermer"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 };
 
-const UserMenu = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
+// ==========================================================
+// NOTIFICATION BELL
+// ==========================================================
+
+const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
 
-  const menuItems = [
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 text-[#14532D]/70 hover:text-[#16A34A] rounded-lg hover:bg-[#F0FDF4] transition-colors"
+        aria-label="Notifications"
+      >
+        <Bell className="w-5 h-5" strokeWidth={1.75} />
+        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FCD34D] rounded-full ring-2 ring-white" />
+      </button>
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white border border-[#16A34A]/10 rounded-xl shadow-xl overflow-hidden z-50">
+          <div className="p-4 border-b border-[#16A34A]/10">
+            <span className="text-sm font-bold text-[#14532D]">Notifications</span>
+          </div>
+          <div className="p-6 text-center text-sm text-[#14532D]/60">Aucune notification.</div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==========================================================
+// USER MENU
+// ==========================================================
+
+const UserMenu = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setIsOpen(false);
+    };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  const items = [
     { icon: User, label: 'Mon profil', to: '/profile' },
     { icon: Settings, label: 'Paramètres', to: '/settings' },
     { icon: HelpCircle, label: 'Aide', to: '/help' },
   ];
 
+  const initials = (user?.first_name?.[0] || user?.email?.[0] || 'U').toUpperCase();
+
   return (
-    <div className="relative" ref={menuRef}>
-      <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+    <div className="relative" ref={ref}>
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 sm:gap-2.5 px-2 sm:px-3 py-1.5 bg-slate-900/80 border border-slate-800 hover:border-amber-500/30 rounded-xl transition-all duration-300 group"
+        className="flex items-center gap-2 p-1 pr-2 rounded-full hover:bg-[#F0FDF4] transition-colors"
       >
-        <div className="relative">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold group-hover:scale-110 transition-transform">
-            {user?.first_name?.[0] || user?.email?.[0] || 'U'}
-          </div>
-          <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-900" />
+        <div className="w-8 h-8 rounded-full bg-[#16A34A] text-white flex items-center justify-center text-xs font-bold">
+          {initials}
         </div>
-        <span className="hidden sm:inline text-sm font-medium text-slate-200 max-w-[100px] truncate">
-          {user?.first_name || user?.email || 'Utilisateur'}
-        </span>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-        </motion.div>
-      </motion.button>
+        <ChevronDown className="w-4 h-4 text-[#14532D]/60" />
+      </button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1rem)] bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl shadow-slate-950/50 overflow-hidden z-50"
-          >
-            <div className="p-3 border-b border-slate-800">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
-                  {user?.first_name?.[0] || user?.email?.[0] || 'U'}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-white truncate">
-                    {user?.first_name || 'Utilisateur'}
-                  </p>
-                  <p className="text-xs text-slate-400 truncate">
-                    {user?.email || ''}
-                  </p>
-                </div>
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center"
-                >
-                  <Award className="w-3.5 h-3.5 text-emerald-400" />
-                </motion.div>
-              </div>
-            </div>
-
-            <div className="p-2 space-y-1">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.to}
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl transition-all duration-200 group"
-                >
-                  <item.icon className="w-4 h-4 text-slate-400 group-hover:text-amber-400 transition-colors" />
-                  {item.label}
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-500 ml-auto group-hover:translate-x-0.5 transition-transform" />
-                </Link>
-              ))}
-            </div>
-
-            <div className="p-2 border-t border-slate-800">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  onLogout();
-                }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-all duration-200 group"
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-64 bg-white border border-[#16A34A]/10 rounded-xl shadow-xl overflow-hidden z-50">
+          <div className="p-4 border-b border-[#16A34A]/10">
+            <p className="text-sm font-bold text-[#14532D] truncate">
+              {user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : 'Utilisateur'}
+            </p>
+            <p className="text-xs text-[#14532D]/60 truncate mt-0.5">{user?.email}</p>
+          </div>
+          <div className="py-1">
+            {items.map((it) => (
+              <Link
+                key={it.label}
+                to={it.to}
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#14532D]/80 hover:bg-[#F0FDF4] transition-colors"
               >
-                <LogOut className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                Déconnexion
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                <it.icon className="w-4 h-4 text-[#16A34A]" />
+                {it.label}
+              </Link>
+            ))}
+          </div>
+          <div className="border-t border-[#16A34A]/10 py-1">
+            <button
+              onClick={() => { setIsOpen(false); onLogout(); }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#14532D]/80 hover:bg-[#F0FDF4] transition-colors"
+            >
+              <LogOut className="w-4 h-4 text-[#16A34A]" />
+              Déconnexion
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-const NavLink = ({ to, icon: Icon, label, isActive, onClick }: any) => {
+// ==========================================================
+// FOOTER
+// ==========================================================
+
+const Footer = () => {
+  const socials = [
+    { icon: Linkedin, href: '#' },
+    { icon: Twitter, href: '#' },
+    { icon: Facebook, href: '#' },
+    { icon: Instagram, href: '#' },
+    { icon: Youtube, href: '#' },
+  ];
+
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <Link
-        to={to}
-        onClick={onClick}
-        className={`relative flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-          isActive
-            ? 'text-white bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 shadow-lg shadow-amber-500/5'
-            : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-        }`}
-      >
-        <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400 group-hover:text-amber-400'} transition-colors`} />
-        {label}
-        {isActive && (
-          <motion.div
-            layoutId="activeNavIndicator"
-            className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-amber-500 to-amber-400 rounded-full"
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          />
-        )}
-      </Link>
-    </motion.div>
+    <footer className="bg-[#14532D] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          <div>
+            <Link to="/" className="inline-flex items-center gap-2 mb-4">
+              <div className="w-9 h-9 rounded-lg bg-[#FCD34D] flex items-center justify-center">
+                <Briefcase className="w-5 h-5 text-[#14532D]" strokeWidth={2.5} />
+              </div>
+              <span className="font-extrabold text-white tracking-tight">
+                OptimaPlus-Jobs
+              </span>
+            </Link>
+            <p className="text-sm text-white/70 leading-relaxed mb-5">
+              La plateforme qui connecte les talents aux entreprises qui recrutent au Niger.
+            </p>
+            <p className="text-xs text-white/50">
+              © {new Date().getFullYear()} OptimaPlus-Jobs.
+              <br />Tous droits réservés.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-white mb-5">Candidats</h4>
+            <ul className="space-y-3">
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Rechercher un emploi</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Créer mon profil</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Mes candidatures</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Conseils carrière</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-white mb-5">Recruteurs</h4>
+            <ul className="space-y-3">
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Publier une offre</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Gérer mes annonces</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Consulter les candidats</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Solutions entreprise</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-white mb-5">Restez informé</h4>
+            <div className="flex items-center bg-white/10 rounded-lg p-1 focus-within:ring-2 focus-within:ring-[#FCD34D]/50 transition-all">
+              <input
+                type="email"
+                placeholder="Votre email"
+                className="flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none"
+              />
+              <button className="bg-[#FCD34D] text-[#14532D] text-xs font-bold px-4 py-2 rounded-md transition-colors hover:bg-white">
+                OK
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2 mt-5">
+              {socials.map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#FCD34D] hover:text-[#14532D] flex items-center justify-center transition-colors"
+                >
+                  <s.icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 
 // ==========================================================
-// MAIN COMPONENT
+// MAIN LAYOUT
 // ==========================================================
 
 interface LayoutProps {
@@ -330,479 +251,233 @@ export const Layout = ({ children }: LayoutProps) => {
   const { user } = useAuthStore();
   const { handleLogout } = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-
   useHeartbeat();
 
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  useEffect(() => { setIsMobileMenuOpen(false); }, [location.pathname]);
 
-  // Close mobile menu on route change
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  // Prevent scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isMobileMenuOpen]);
 
-  const getNavigationLinks = () => {
+  const navLinks = () => {
     if (!user) return [];
-
     const links = [];
-
-    switch (user.role) {
-      case 'admin':
-        links.push(
-          { to: '/admin/dashboard', icon: ShieldCheck, label: 'Dashboard' },
-          { to: '/admin/profile', icon: User, label: 'Profil' }
-        );
-        break;
-
-      case 'organization':
-        links.push(
-          { to: '/organization/dashboard', icon: Building2, label: 'Dashboard' },
-          { to: '/jobs/create', icon: PlusCircle, label: 'Publier une offre' }
-        );
-        break;
-
-      case 'candidate':
-        links.push(
-          { to: '/candidate/dashboard', icon: Home, label: 'Accueil' },
-          { to: '/applications', icon: FileText, label: 'Mes candidatures' },
-          { to: '/profile', icon: User, label: 'Mon profil' }
-        );
-        break;
-
-      default:
-        break;
+    if (user.role === 'admin') {
+      links.push(
+        { to: '/admin/dashboard', icon: ShieldCheck, label: 'Dashboard' },
+        { to: '/admin/profile', icon: User, label: 'Profil' }
+      );
+    } else if (user.role === 'organization') {
+      links.push(
+        { to: '/organization/dashboard', icon: Building2, label: 'Dashboard' },
+        { to: '/jobs/create', icon: PlusCircle, label: 'Publier' }
+      );
+    } else if (user.role === 'candidate') {
+      links.push(
+        { to: '/candidate/dashboard', icon: Home, label: 'Accueil' },
+        { to: '/applications', icon: FileText, label: 'Candidatures' },
+        { to: '/profile', icon: User, label: 'Profil' }
+      );
     }
-
     return links;
   };
 
-  const navigationLinks = getNavigationLinks();
-
-  const socialLinks = [
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com' },
-    { name: 'X / Twitter', icon: Twitter, href: 'https://twitter.com' },
-    { name: 'Facebook', icon: Facebook, href: 'https://facebook.com' },
-    { name: 'Instagram', icon: Instagram, href: 'https://instagram.com' },
-    { name: 'YouTube', icon: Youtube, href: 'https://youtube.com' },
-  ];
-
-  const isActiveLink = (to: string) => location.pathname === to || location.pathname.startsWith(to + '/');
-
-  // Vérifier si la page actuelle est la page d'accueil
+  const navigation = navLinks();
+  const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(to + '/');
   const isHomePage = location.pathname === '/';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
+    <div className="min-h-screen bg-white text-[#1A1A1A] flex flex-col overflow-x-hidden">
       <NetworkErrorHandler />
 
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 z-[100]"
-        style={{ scaleX, transformOrigin: "0%" }}
-      />
+      <TopBar />
 
-      {/* ========================================================== */}
-      {/* NAVIGATION */}
-      {/* ========================================================== */}
+      {/* HEADER v3 — avec indicateur actif + logo retravaillé */}
+      <header
+        className={`sticky top-0 z-50 bg-white/90 backdrop-blur-lg transition-all duration-300 ${
+          isScrolled ? 'shadow-[0_1px_3px_rgba(0,0,0,0.06),0_8px_24px_-8px_rgba(22,163,74,0.08)] border-b border-[#16A34A]/5' : 'border-b border-transparent'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 gap-4">
 
-      <nav className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/80 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
-
-            {/* Logo */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="min-w-0"
-            >
-              <Link
-                to="/"
-                className="flex items-center gap-1.5 sm:gap-2.5 text-base sm:text-xl font-bold text-amber-400 hover:text-amber-300 transition-colors group"
-              >
-                <motion.div
-                  whileHover={{ rotate: 180 }}
-                  transition={{ duration: 0.6, type: "spring" }}
-                  className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors shrink-0"
-                >
-                  <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                </motion.div>
-                <span className="font-extrabold tracking-tight text-white group-hover:text-amber-400 transition-colors truncate">
-                  OptimaPlus<span className="text-amber-400">-Jobs</span>
+            {/* Logo avec badge vert */}
+            <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)] group-hover:scale-105 group-hover:shadow-[0_6px_16px_-2px_rgba(22,163,74,0.4)] transition-all duration-300">
+                  <Briefcase className="w-5 h-5 text-white" strokeWidth={2.5} />
+                </div>
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#FCD34D] rounded-full border-2 border-white" />
+              </div>
+              <div className="flex flex-col leading-none">
+                <span className="text-base font-extrabold text-[#14532D] tracking-tight">
+                  OptimaPlus<span className="text-[#FCD34D]">-Jobs</span>
                 </span>
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.5, type: "spring" }}
-                  className="hidden xs:inline-block px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
-                >
-                  NIGER
-                </motion.span>
-              </Link>
-            </motion.div>
+                <span className="text-[9px] font-semibold text-[#16A34A] tracking-wider uppercase mt-0.5">
+                  Niger
+                </span>
+              </div>
+            </Link>
 
-            {/* Links Desktop */}
-            <div className="hidden md:flex items-center gap-1">
-              {navigationLinks.map((link) => (
-                <NavLink
+            {/* Navigation desktop */}
+            <nav className="hidden md:flex items-center gap-0.5 ml-6">
+              {navigation.map((link) => (
+                <Link
                   key={link.to}
                   to={link.to}
-                  icon={link.icon}
-                  label={link.label}
-                  isActive={isActiveLink(link.to)}
-                />
+                  className={`relative flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                    isActive(link.to)
+                      ? 'text-[#16A34A] bg-[#F0FDF4]'
+                      : 'text-[#14532D]/70 hover:text-[#16A34A] hover:bg-[#F0FDF4]'
+                  }`}
+                >
+                  <link.icon className="w-4 h-4" />
+                  {link.label}
+                  {isActive(link.to) && (
+                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#16A34A] rounded-full" />
+                  )}
+                </Link>
               ))}
-            </div>
 
-            {/* Auth Actions Desktop */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              <div className="hidden sm:flex items-center gap-2">
-                <ThemeToggle />
-                <NotificationBell />
-              </div>
+              {!user && (
+                <>
+                  <Link
+                    to="/jobs"
+                    className="relative flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#14532D]/70 hover:text-[#16A34A] hover:bg-[#F0FDF4] rounded-lg transition-all duration-200"
+                  >
+                    Offres
+                  </Link>
+                  <Link
+                    to="/companies"
+                    className="relative flex items-center gap-2 px-4 py-2 text-sm font-semibold text-[#14532D]/70 hover:text-[#16A34A] hover:bg-[#F0FDF4] rounded-lg transition-all duration-200"
+                  >
+                    Entreprises
+                  </Link>
+                </>
+              )}
+            </nav>
 
+            {/* Actions droite */}
+            <div className="flex items-center gap-2 shrink-0">
               {user ? (
-                <UserMenu user={user} onLogout={handleLogout} />
+                <>
+                  <NotificationBell />
+                  <UserMenu user={user} onLogout={handleLogout} />
+                </>
               ) : (
                 <>
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="hidden xs:block"
+                  <Link
+                    to="/login"
+                    className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold text-[#14532D]/80 hover:text-[#16A34A] transition-colors"
                   >
-                    <Link
-                      to="/login"
-                      className="flex items-center gap-2 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl transition-all duration-300"
-                    >
-                      <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span className="hidden sm:inline">Connexion</span>
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.95 }}
+                    Connexion
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="group inline-flex items-center gap-1.5 px-5 py-2.5 text-sm font-bold bg-[#16A34A] text-white rounded-lg hover:bg-[#15803D] shadow-[0_2px_8px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_4px_12px_-2px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all duration-200"
                   >
-                    <Link
-                      to="/register"
-                      className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 active:scale-95 relative overflow-hidden group"
-                    >
-                      <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
-                        <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        <span className="hidden sm:inline">S'inscrire</span>
-                      </span>
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-300"
-                        initial={{ x: "-100%" }}
-                        whileHover={{ x: 0 }}
-                        transition={{ duration: 0.4 }}
-                      />
-                    </Link>
-                  </motion.div>
+                    S'inscrire
+                    <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-xs group-hover:translate-x-0.5 transition-transform">
+                      →
+                    </span>
+                  </Link>
                 </>
               )}
 
-              {/* Mobile Menu Toggle Button */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors relative shrink-0"
+                className="md:hidden p-2 text-[#14532D]/70 hover:text-[#16A34A] rounded-lg hover:bg-[#F0FDF4] transition-colors"
                 aria-label="Menu"
               >
-                <AnimatePresence mode="wait">
-                  {isMobileMenuOpen ? (
-                    <motion.div
-                      key="close"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <X className="w-5 h-5" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="menu"
-                      initial={{ rotate: 90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Menu className="w-5 h-5" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="md:hidden border-t border-slate-800/80 bg-slate-900/95 backdrop-blur-2xl overflow-hidden"
-            >
-              <motion.div
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
-                className="px-4 py-4 space-y-2"
-              >
-                {user ? (
-                  <>
-                    <motion.div
-                      variants={menuItemVariants}
-                      className="flex items-center gap-3 px-3 py-2.5 bg-slate-800/60 border border-slate-700/50 rounded-xl mb-3"
+        {/* Menu mobile */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-[#16A34A]/10 bg-white">
+            <div className="px-4 py-3 space-y-1">
+              {user ? (
+                <>
+                  <div className="flex items-center gap-3 px-3 py-3 border-b border-[#16A34A]/10 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-[#16A34A] text-white flex items-center justify-center text-sm font-bold">
+                      {(user?.first_name?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-[#14532D] truncate">
+                        {user?.first_name || 'Utilisateur'}
+                      </p>
+                      <p className="text-xs text-[#14532D]/60 truncate">{user?.email}</p>
+                    </div>
+                  </div>
+
+                  {navigation.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className={`flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-lg transition-colors ${
+                        isActive(link.to)
+                          ? 'text-[#16A34A] bg-[#F0FDF4]'
+                          : 'text-[#14532D]/70 hover:bg-[#F0FDF4]'
+                      }`}
                     >
-                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm font-bold shrink-0">
-                        {user?.first_name?.[0] || user?.email?.[0] || 'U'}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-white truncate">
-                          {user?.first_name || 'Utilisateur'}
-                        </p>
-                        <p className="text-xs text-slate-400 truncate">
-                          {user?.email || ''}
-                        </p>
-                      </div>
-                      <motion.div
-                        whileHover={{ scale: 1.1 }}
-                        className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0"
-                      >
-                        <Star className="w-3.5 h-3.5 text-emerald-400" />
-                      </motion.div>
-                    </motion.div>
+                      <link.icon className="w-4 h-4" />
+                      {link.label}
+                    </Link>
+                  ))}
 
-                    {navigationLinks.map((link) => (
-                      <motion.div
-                        key={link.to}
-                        variants={menuItemVariants}
-                      >
-                        <Link
-                          to={link.to}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
-                            isActiveLink(link.to)
-                              ? 'text-white bg-amber-500/10 border border-amber-500/20'
-                              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                          }`}
-                        >
-                          <link.icon className={`w-4 h-4 shrink-0 ${isActiveLink(link.to) ? 'text-amber-400' : 'text-slate-400'}`} />
-                          {link.label}
-                          {isActiveLink(link.to) && (
-                            <motion.div
-                              layoutId="activeMobileNav"
-                              className="ml-auto w-1.5 h-1.5 rounded-full bg-amber-400"
-                            />
-                          )}
-                        </Link>
-                      </motion.div>
-                    ))}
-
-                    <motion.div variants={menuItemVariants}>
-                      <button
-                        onClick={() => {
-                          setIsMobileMenuOpen(false);
-                          handleLogout();
-                        }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-all duration-200"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Déconnexion
-                      </button>
-                    </motion.div>
-
-                    {/* Préférences dans le menu mobile */}
-                    <motion.div
-                      variants={menuItemVariants}
-                      className="flex items-center justify-between pt-3 mt-2 border-t border-slate-800"
-                    >
-                      <span className="text-xs text-slate-500">Préférences</span>
-                      <div className="flex items-center gap-2">
-                        <ThemeToggle />
-                        <NotificationBell />
-                      </div>
-                    </motion.div>
-                  </>
-                ) : (
-                  <>
-                    <motion.div variants={menuItemVariants}>
-                      <Link
-                        to="/"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors ${
-                          location.pathname === '/'
-                            ? 'text-white bg-amber-500/10 border border-amber-500/20'
-                            : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                        }`}
-                      >
-                        <Home className="w-4 h-4 text-amber-400" />
-                        Accueil
-                      </Link>
-                    </motion.div>
-                    <motion.div variants={menuItemVariants}>
-                      <Link
-                        to="/jobs"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800/60 rounded-xl transition-colors"
-                      >
-                        <Briefcase className="w-4 h-4 text-amber-400" />
-                        Offres
-                      </Link>
-                    </motion.div>
-                    <motion.div variants={menuItemVariants}>
-                      <Link
-                        to="/login"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-amber-400 hover:bg-amber-500/10 rounded-xl transition-colors"
-                      >
-                        <LogIn className="w-4 h-4" />
-                        Connexion
-                      </Link>
-                    </motion.div>
-                    <motion.div variants={menuItemVariants}>
-                      <Link
-                        to="/register"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2.5 text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl transition-colors justify-center"
-                      >
-                        <UserPlus className="w-4 h-4" />
-                        S'inscrire
-                      </Link>
-                    </motion.div>
-
-                    <motion.div
-                      variants={menuItemVariants}
-                      className="flex items-center justify-between pt-3 mt-2 border-t border-slate-800"
-                    >
-                      <span className="text-xs text-slate-500">Préférences</span>
-                      <div className="flex items-center gap-2">
-                        <ThemeToggle />
-                        <NotificationBell />
-                      </div>
-                    </motion.div>
-                  </>
-                )}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-
-      {/* ========================================================== */}
-      {/* MAIN CONTENT */}
-      {/* ========================================================== */}
-
-      <motion.main
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1"
-      >
-        {children}
-      </motion.main>
-
-      {/* ========================================================== */}
-      {/* FOOTER - UNIQUEMENT SUR LA PAGE D'ACCUEIL */}
-      {/* ========================================================== */}
-
-      {isHomePage && (
-        <footer className="border-t border-slate-800/80 bg-slate-900/40 py-6 sm:py-8 mt-8 sm:mt-12 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
-
-              {/* Brand & Rights */}
-              <motion.div
-                className="flex flex-col xs:flex-row flex-wrap items-center gap-2 sm:gap-3 text-center xs:text-left"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 animate-pulse" />
-                  <span className="font-extrabold text-white text-sm sm:text-base">OptimaPlus-Jobs</span>
-                  <span className="text-[10px] sm:text-xs text-slate-500">Niger</span>
-                </div>
-                <span className="hidden xs:inline text-slate-700">•</span>
-                <p className="text-[10px] sm:text-xs text-slate-400">
-                  &copy; {new Date().getFullYear()} OptimaPlus-Jobs. Tous droits réservés.
-                </p>
-                <span className="hidden xs:inline text-slate-700">•</span>
-                <div className="flex items-center gap-1.5">
-                  <Activity className="w-3 h-3 text-emerald-400 animate-pulse" />
-                  <span className="text-[10px] sm:text-xs text-emerald-400/70">En ligne - Niger</span>
-                </div>
-              </motion.div>
-
-              {/* Social Networks Icons */}
-              <motion.div
-                className="flex items-center gap-1.5 sm:gap-2"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                {socialLinks.map((social, idx) => (
-                  <motion.a
-                    key={idx}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.name}
-                    whileHover={{
-                      scale: 1.1,
-                      y: -2,
-                      rotate: [0, -5, 5, 0],
-                      transition: { duration: 0.3 }
-                    }}
-                    whileTap={{ scale: 0.9 }}
-                    className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 hover:bg-slate-800 transition-all duration-300"
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[#14532D]/70 hover:bg-[#F0FDF4] rounded-lg transition-colors"
                   >
-                    <social.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </motion.a>
-                ))}
-              </motion.div>
-
+                    <LogOut className="w-4 h-4 text-[#16A34A]" />
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/jobs" className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[#14532D]/70 hover:bg-[#F0FDF4] rounded-lg">
+                    <Briefcase className="w-4 h-4" />
+                    Offres
+                  </Link>
+                  <Link to="/companies" className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[#14532D]/70 hover:bg-[#F0FDF4] rounded-lg">
+                    <Building2 className="w-4 h-4" />
+                    Entreprises
+                  </Link>
+                  <Link to="/login" className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-[#14532D]/70 hover:bg-[#F0FDF4] rounded-lg">
+                    <LogIn className="w-4 h-4" />
+                    Connexion
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="flex items-center justify-center gap-3 px-4 py-3 text-sm font-bold bg-[#16A34A] text-white rounded-lg"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    S'inscrire
+                  </Link>
+                </>
+              )}
             </div>
-
-            {/* Footer Links */}
-            <motion.div
-              className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-500"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <a href="#" className="hover:text-white transition-colors">Conditions d'utilisation</a>
-              <span className="text-slate-800">•</span>
-              <a href="#" className="hover:text-white transition-colors">Politique de confidentialité</a>
-              <span className="text-slate-800">•</span>
-              <a href="#" className="hover:text-white transition-colors">Cookies</a>
-              <span className="text-slate-800">•</span>
-              <span className="text-slate-600">v2.0.0</span>
-            </motion.div>
           </div>
-        </footer>
-      )}
+        )}
+      </header>
+
+      <main className="flex-1">
+        {children}
+      </main>
+
+      {isHomePage && <Footer />}
     </div>
   );
 };

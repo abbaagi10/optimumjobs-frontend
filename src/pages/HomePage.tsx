@@ -3,217 +3,160 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import {
-  Briefcase, Building2, Users, ChevronRight, Sparkles,
-  ShieldCheck, Clock, ArrowUpRight, Search,
-  Rocket, Zap, Star, Award, Globe,
-  TrendingUp, Target, ArrowRight, CheckCircle2,
-  MapPin, Mail, ExternalLink, CircleDollarSign
+  ArrowRight, Sparkles, ShieldCheck, Users, Zap,
+  Star, TrendingUp, Building2, CheckCircle2, Briefcase,
+  Rocket, Target, BarChart3, Award,
 } from 'lucide-react';
-import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 // ==========================================================
-// ANIMATION VARIANTS
+// AVATARS TÉMOIGNAGES
 // ==========================================================
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
+const TESTIMONIALS = [
+  {
+    name: 'Amina Diallo',
+    role: 'Développeuse Full-Stack',
+    city: 'Niamey',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces&q=80',
+    text: "J'ai trouvé un poste en 2 semaines. La plateforme est intuitive et les offres sont vraiment sérieuses.",
+  },
+  {
+    name: 'Ibrahim Souley',
+    role: 'Chef de projet',
+    city: 'Zinder',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces&q=80',
+    text: "Grâce à OptimaPlus-Jobs, je suis passé d'un petit boulot à un vrai poste de responsable.",
+  },
+  {
+    name: 'Fatouma Amadou',
+    role: 'Comptable',
+    city: 'Maradi',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces&q=80',
+    text: "Un service client réactif. J'ai été accompagnée à chaque étape de ma candidature.",
+  },
+];
 
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
-};
-
-const floatAnimation = {
-  animate: {
-    y: [0, -10, 0],
-    transition: {
-      duration: 4,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
-};
+const PARTNERS = ['TechCorp', 'Sahel Group', 'Niamey Digital', 'Africa Bank', 'Niger Telecom'];
 
 // ==========================================================
-// COMPONENTS
+// COMPOSANT — COMPTEUR ANIMÉ
 // ==========================================================
 
-const FloatingParticles = () => {
-  const particles = Array.from({ length: 25 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 10 + 5,
-    delay: Math.random() * 5,
-  }));
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full bg-amber-400/20"
-          style={{
-            width: p.size,
-            height: p.size,
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 20, 0],
-            opacity: [0.2, 0.6, 0.2],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-const AnimatedCounter = ({ value, label, icon: Icon, delay = 0 }: any) => {
+const AnimatedCounter = ({ value, label, icon: Icon, duration = 2000 }: any) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-        }
-      },
-      { threshold: 0.5 }
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      { threshold: 0.3 }
     );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
+    if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     if (!inView) return;
-
-    const target = parseInt(value.replace('+', ''));
+    const target = parseInt(value.replace(/\s/g, ''));
     let start = 0;
-    const duration = 2000;
     const step = Math.max(1, Math.floor(target / (duration / 16)));
-
     const timer = setInterval(() => {
       start += step;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(start);
-      }
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(start);
     }, 16);
-
     return () => clearInterval(timer);
-  }, [inView, value]);
+  }, [inView, value, duration]);
+
+  const formatted = count.toLocaleString('fr-FR').replace(/,/g, ' ');
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay }}
-      className="group bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/5 hover:-translate-y-1"
-    >
-      <div className="flex items-center gap-2 sm:gap-3 text-2xl sm:text-3xl md:text-4xl font-black text-white">
-        <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-400 group-hover:scale-110 transition-transform duration-300 shrink-0" />
-        <span>{count}+</span>
+    <div ref={ref} className="flex items-center gap-4">
+      <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.15)]">
+        <Icon className="w-6 h-6 text-[#16A34A]" />
       </div>
-      <div className="text-[10px] sm:text-xs font-medium text-slate-400 mt-2 uppercase tracking-wider">{label}</div>
-      <div className="mt-3 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-amber-500 to-transparent transition-all duration-700" />
-    </motion.div>
-  );
-};
-
-const FeatureCard = ({ icon: Icon, title, desc, index }: any) => (
-  <motion.div
-    variants={fadeInUp}
-    custom={index}
-    className="group relative bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/50 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10 backdrop-blur-xl overflow-hidden"
-  >
-    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/0 to-amber-500/0 group-hover:from-amber-500/5 group-hover:via-amber-500/10 group-hover:to-amber-500/5 transition-all duration-500" />
-    <div className="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 opacity-0 group-hover:opacity-100" />
-
-    <div className="relative z-10">
-      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-amber-500/20">
-        <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400 group-hover:scale-110 transition-transform" />
+      <div className="min-w-0">
+        <div className="text-3xl sm:text-4xl font-extrabold text-[#14532D] tracking-tight leading-none tabular-nums">
+          {formatted}
+        </div>
+        <div className="text-xs text-[#14532D]/60 mt-1.5 uppercase tracking-wider font-semibold">
+          {label}
+        </div>
       </div>
-
-      <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-amber-400 transition-colors duration-300">
-        {title}
-      </h3>
-      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
-        {desc}
-      </p>
-
-      <motion.div
-        className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-800/50 flex items-center gap-2 text-[10px] sm:text-xs font-semibold text-amber-400"
-        initial={{ opacity: 0, x: -10 }}
-        whileHover={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <span>En savoir plus</span>
-        <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-      </motion.div>
     </div>
-  </motion.div>
-);
-
-const RotatingBadge = () => {
-  const [rotation, setRotation] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRotation(prev => (prev + 1) % 360);
-    }, 30);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <motion.div
-      className="inline-flex items-center gap-2 bg-slate-900/80 border border-amber-500/30 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg shadow-amber-500/5 backdrop-blur-xl hover:border-amber-500/50 transition-all cursor-default max-w-full"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <motion.div
-        animate={{ rotate: rotation }}
-        transition={{ duration: 0.1 }}
-        className="w-4 h-4 shrink-0"
-      >
-        <Sparkles className="w-4 h-4 text-amber-400" />
-      </motion.div>
-      <span className="text-[10px] sm:text-xs font-semibold text-amber-300 tracking-wide truncate">
-        Plateforme de recrutement #1 au Niger
-      </span>
-    </motion.div>
   );
 };
+
+// ==========================================================
+// COMPOSANT — HERO DÉCORATION GÉOMÉTRIQUE
+// ==========================================================
+
+const GeometricDecoration = () => (
+  <div className="relative w-full h-full min-h-[400px] flex items-center justify-center">
+
+    {/* Cercle plein vert clair en arrière-plan */}
+    <div className="absolute w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] rounded-full bg-[#16A34A]/5" />
+
+    {/* 3 cercles concentriques */}
+    <div className="absolute w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] rounded-full border-2 border-[#16A34A]/20 animate-[spin_40s_linear_infinite]" />
+    <div className="absolute w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] rounded-full border-2 border-dashed border-[#FCD34D]/60 animate-[spin_30s_linear_infinite_reverse]" />
+    <div className="absolute w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-full border-2 border-[#16A34A]/30" />
+
+    {/* Hexagone ambre central */}
+    <div className="relative z-10 w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center animate-float">
+      <div
+        className="w-full h-full bg-gradient-to-br from-[#16A34A] to-[#15803D] shadow-[0_20px_40px_-10px_rgba(22,163,74,0.4)]"
+        style={{
+          clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+        }}
+      >
+        <div className="w-full h-full flex items-center justify-center">
+          <Briefcase className="w-12 h-12 sm:w-16 sm:h-16 text-white" strokeWidth={2} />
+        </div>
+      </div>
+    </div>
+
+    {/* Badge flottant — Note */}
+    <div className="absolute top-8 right-4 sm:top-12 sm:right-12 bg-white rounded-xl p-3 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.1)] border border-[#16A34A]/10 flex items-center gap-2 z-20 animate-float" style={{ animationDelay: '0.5s' }}>
+      <div className="w-9 h-9 rounded-lg bg-[#FCD34D] flex items-center justify-center shrink-0">
+        <Star className="w-4 h-4 text-[#14532D] fill-current" />
+      </div>
+      <div>
+        <p className="text-xs font-extrabold text-[#14532D] leading-none">4.9/5</p>
+        <p className="text-[10px] text-[#14532D]/60 leading-none mt-1">2 500 avis</p>
+      </div>
+    </div>
+
+    {/* Badge flottant — Candidats */}
+    <div className="absolute bottom-12 left-4 sm:bottom-20 sm:left-8 bg-white rounded-xl p-3 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.1)] border border-[#16A34A]/10 flex items-center gap-2 z-20 animate-float" style={{ animationDelay: '1s' }}>
+      <div className="w-9 h-9 rounded-lg bg-[#F0FDF4] flex items-center justify-center shrink-0">
+        <Users className="w-4 h-4 text-[#16A34A]" />
+      </div>
+      <div>
+        <p className="text-xs font-extrabold text-[#14532D] leading-none">+2500</p>
+        <p className="text-[10px] text-[#14532D]/60 leading-none mt-1">Candidats</p>
+      </div>
+    </div>
+
+    {/* Badge flottant — Entreprises */}
+    <div className="absolute top-1/2 -right-2 sm:-right-4 bg-white rounded-xl p-3 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.1)] border border-[#16A34A]/10 flex items-center gap-2 z-20 animate-float" style={{ animationDelay: '1.5s' }}>
+      <div className="w-9 h-9 rounded-lg bg-[#F0FDF4] flex items-center justify-center shrink-0">
+        <Building2 className="w-4 h-4 text-[#16A34A]" />
+      </div>
+      <div>
+        <p className="text-xs font-extrabold text-[#14532D] leading-none">+500</p>
+        <p className="text-[10px] text-[#14532D]/60 leading-none mt-1">Entreprises</p>
+      </div>
+    </div>
+
+    {/* Petits points décoratifs */}
+    <div className="absolute top-16 left-8 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+    <div className="absolute bottom-24 right-16 w-2 h-2 rounded-full bg-[#16A34A]/40" />
+    <div className="absolute top-1/3 left-4 w-2 h-2 rounded-full bg-[#FCD34D]/40" />
+  </div>
+);
 
 // ==========================================================
 // MAIN COMPONENT
@@ -222,439 +165,446 @@ const RotatingBadge = () => {
 export const HomePage = () => {
   const { isAuthenticated, user } = useAuthStore();
   const navigate = useNavigate();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHoveringHero, setIsHoveringHero] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
-  const featuresY = useTransform(scrollYProgress, [0.2, 0.5], [50, 0]);
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const dashboardMap = {
+      const map = {
         admin: '/admin/dashboard',
         organization: '/organization/dashboard',
         candidate: '/candidate/dashboard',
       };
-      const redirectPath = dashboardMap[user.role as keyof typeof dashboardMap] || '/';
-      navigate(redirectPath, { replace: true });
+      navigate(map[user.role as keyof typeof map] || '/', { replace: true });
     }
   }, [isAuthenticated, user, navigate]);
 
-  const getDashboardLink = () => {
-    if (!user) return '/login';
-    switch (user.role) {
-      case 'admin': return '/admin/dashboard';
-      case 'organization': return '/organization/dashboard';
-      case 'candidate': return '/candidate/dashboard';
-      default: return '/';
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    setMousePosition({ x, y });
-  };
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
+    <div>
 
-      {/* ========================================================== */}
-      {/* HERO SECTION */}
-      {/* ========================================================== */}
+      {/* ==========================================================
+          SECTION 1 — HERO ABSTRAIT
+         ========================================================== */}
 
-      <motion.section
-        ref={heroRef}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setIsHoveringHero(true)}
-        onMouseLeave={() => setIsHoveringHero(false)}
-        className="relative pt-12 sm:pt-20 pb-16 sm:pb-28 md:pt-32 md:pb-40 overflow-hidden"
-        style={{ opacity: heroOpacity, scale: heroScale }}
-      >
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[800px] md:w-[1000px] h-[300px] sm:h-[400px] md:h-[500px] bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none"
-          animate={{
-            scale: isHoveringHero ? 1.1 : 1,
-            opacity: isHoveringHero ? 0.8 : 0.5,
-          }}
-          transition={{ duration: 0.5 }}
-        />
+      <section className="bg-[#F0FDF4] relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-soft opacity-40 pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#16A34A]/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#FCD34D]/10 rounded-full blur-3xl pointer-events-none" />
 
-        <motion.div
-          className="absolute top-1/3 -right-40 w-64 sm:w-96 h-64 sm:h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-        <motion.div
-          className="absolute bottom-10 -left-40 w-64 sm:w-96 h-64 sm:h-96 bg-slate-800/40 rounded-full blur-3xl pointer-events-none"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-
-        <FloatingParticles />
-
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            className="text-center max-w-4xl mx-auto space-y-6 sm:space-y-8"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-          >
-            <motion.div
-              variants={fadeInUp}
-              whileHover={{ scale: 1.05 }}
-              className="flex justify-center"
-            >
-              <RotatingBadge />
-            </motion.div>
-
-            <motion.h1
-              variants={fadeInUp}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.15] sm:leading-[1.1] px-2"
-            >
-              Trouvez l'opportunité qui{" "}
-              <br className="hidden sm:inline" />
-              <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
-                  transforme
+            {/* Texte gauche — 55% */}
+            <div className="lg:col-span-7">
+              {/* Badge discret */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-[#16A34A]/15 rounded-full mb-6 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
                 </span>
-                <motion.span
-                  className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: "100%" }}
-                  transition={{ delay: 0.8, duration: 0.8 }}
-                />
-              </span>{" "}
-              votre carrière au Niger
-            </motion.h1>
+                <span className="text-xs font-bold text-[#14532D]">
+                  500+ nouvelles offres ce mois-ci
+                </span>
+              </div>
 
-            <motion.p
-              variants={fadeInUp}
-              className="text-sm sm:text-base md:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed px-4"
-            >
-              Connectez-vous aux meilleures entreprises et talents du Niger. Des milliers d'offres d'emploi, de stages et d'opportunités n'attendent que vous.
-            </motion.p>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#14532D] leading-[1.05] tracking-tight">
+                Trouvez votre
+                <br />
+                prochaine opportunité
+                <br />
+                <span className="relative inline-block">
+                  <span className="text-[#16A34A]">
+                    au Niger.
+                  </span>
+                  <span className="absolute bottom-1 left-0 right-0 h-2 bg-[#FCD34D] -z-10 rounded-sm" />
+                </span>
+              </h1>
 
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 px-4"
-            >
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full sm:w-auto"
-              >
+              <p className="mt-7 text-base sm:text-lg text-[#14532D]/70 leading-relaxed max-w-xl">
+                La plateforme qui connecte les meilleurs talents
+                aux entreprises qui recrutent, partout au Niger.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  to={isAuthenticated ? '/candidate/dashboard' : '/register'}
+                  className="group inline-flex items-center gap-2 px-6 py-4 bg-[#16A34A] text-white text-sm font-bold rounded-xl hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.5)] hover:-translate-y-1 transition-all duration-300"
+                >
+                  {isAuthenticated ? 'Mon espace' : "S'inscrire gratuitement"}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
                 <Link
                   to="/jobs"
-                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl transition-all duration-300 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden text-sm sm:text-base"
+                  className="inline-flex items-center gap-2 px-6 py-4 text-[#16A34A] text-sm font-bold rounded-xl bg-white border-2 border-[#16A34A]/20 hover:border-[#16A34A] hover:bg-[#F0FDF4] transition-all duration-200"
                 >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>Voir les offres</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-300"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: 0 }}
-                    transition={{ duration: 0.4 }}
-                  />
+                  Voir les offres
                 </Link>
-              </motion.div>
+              </div>
 
-              {isAuthenticated ? (
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="w-full sm:w-auto"
-                >
-                  <Link
-                    to={getDashboardLink()}
-                    className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-2xl transition-all duration-300 border border-slate-800 hover:border-slate-700 active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden text-sm sm:text-base"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      Accéder au dashboard
-                      <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </span>
-                    <motion.div
-                      className="absolute inset-0 bg-white/5"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: 0 }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </Link>
-                </motion.div>
-              ) : (
-                <motion.div
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="w-full sm:w-auto"
-                >
-                  <Link
-                    to="/register"
-                    className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-semibold rounded-2xl transition-all duration-300 border border-slate-800 hover:border-slate-700 backdrop-blur-xl active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden text-sm sm:text-base"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      Créer un compte
-                      <Rocket className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                    </span>
-                    <motion.div
-                      className="absolute inset-0 bg-white/5"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: 0 }}
-                      transition={{ duration: 0.4 }}
-                    />
-                  </Link>
-                </motion.div>
-              )}
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp}
-              className="pt-10 sm:pt-16 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 max-w-4xl mx-auto px-4"
-            >
-              <AnimatedCounter value="5K+" label="Offres publiées" icon={Briefcase} delay={0.1} />
-              <AnimatedCounter value="3K+" label="Candidats actifs" icon={Users} delay={0.2} />
-              <AnimatedCounter value="500+" label="Entreprises partenaires" icon={Building2} delay={0.3} />
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-4 text-[10px] sm:text-xs text-slate-500 px-4"
-            >
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
-                Offres vérifiées
-              </span>
-              <span className="hidden xs:block w-px h-4 bg-slate-800" />
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
-                Confiance & sécurité
-              </span>
-              <span className="hidden xs:block w-px h-4 bg-slate-800" />
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
-                Support 24/7
-              </span>
-            </motion.div>
-
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* ========================================================== */}
-      {/* FEATURES SECTION */}
-      {/* ========================================================== */}
-
-      <motion.section
-        className="py-16 sm:py-24 border-t border-slate-800/80 bg-slate-900/30 relative overflow-hidden"
-        style={{ y: featuresY }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            <motion.div
-              variants={fadeInUp}
-              className="text-center max-w-2xl mx-auto space-y-3 mb-10 sm:mb-16 px-4"
-            >
-              <motion.div
-                className="inline-flex items-center gap-2 bg-slate-900/80 border border-slate-800 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full"
-                whileHover={{ scale: 1.02 }}
-              >
-                <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-                <span className="text-[10px] sm:text-xs font-medium text-slate-400 tracking-wide">Pourquoi nous choisir</span>
-              </motion.div>
-
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-                Pourquoi choisir{" "}
-                <span className="relative">
-                  <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
-                    OptimaPlus-Jobs
-                  </span>
-                  <motion.span
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-500"
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    transition={{ delay: 0.3, duration: 0.8 }}
-                    viewport={{ once: true }}
-                  />
+              {/* Trust inline */}
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-[#14532D]/70">
+                <span className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-[#16A34A]/10 flex items-center justify-center">
+                    <CheckCircle2 className="w-3 h-3 text-[#16A34A]" />
+                  </div>
+                  Offres vérifiées
                 </span>
-                {" "}?
-              </h2>
-              <p className="text-slate-400 text-xs sm:text-sm md:text-base px-4">
-                Un écosystème sur-mesure conçu pour propulser les talents et simplifier les recrutements au Niger.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-              <FeatureCard
-                icon={ShieldCheck}
-                title="Offres vérifiées"
-                desc="Toutes nos annonces sont minutieusement modérées par nos équipes pour garantir des opportunités authentiques et de qualité au Niger."
-                index={0}
-              />
-              <FeatureCard
-                icon={Users}
-                title="Réseau de talents"
-                desc="Rejoignez un réseau dynamique de professionnels et d'entreprises leaders à travers tout le Niger."
-                index={1}
-              />
-              <FeatureCard
-                icon={Clock}
-                title="Suivi en temps réel"
-                desc="Suivez facilement l'état de vos candidatures et recevez des notifications instantanées à chaque étape de votre processus."
-                index={2}
-              />
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* ========================================================== */}
-      {/* CTA SECTION */}
-      {/* ========================================================== */}
-
-      <section className="py-12 sm:py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto px-3 sm:px-4 text-center relative z-10"
-        >
-          <motion.div
-            className="bg-slate-900/60 border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-12 backdrop-blur-xl hover:border-amber-500/30 transition-all duration-500 shadow-2xl shadow-amber-500/5"
-            whileHover={{ y: -4 }}
-          >
-            <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 5, -5, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 bg-gradient-to-br from-amber-500/20 to-amber-500/5 rounded-2xl flex items-center justify-center border border-amber-500/30"
-            >
-              <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-amber-400" />
-            </motion.div>
-
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3 sm:mb-4">
-              Prêt à {""}
-              <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">
-                décoller
-              </span>
-              {" "}?
-            </h2>
-            <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-md mx-auto mb-6 sm:mb-8 px-4">
-              Rejoignez des milliers de professionnels qui ont déjà fait le choix d'OptimaPlus-Jobs au Niger.
-            </p>
-
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block w-full sm:w-auto px-4 sm:px-0"
-            >
-              <Link
-                to={isAuthenticated ? getDashboardLink() : "/register"}
-                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl transition-all duration-300 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 relative overflow-hidden text-sm sm:text-base"
-              >
-                <span className="relative z-10 flex items-center gap-2 sm:gap-3">
-                  {isAuthenticated ? "Accéder au dashboard" : "Commencer maintenant"}
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-[#16A34A]/10 flex items-center justify-center">
+                    <CheckCircle2 className="w-3 h-3 text-[#16A34A]" />
+                  </div>
+                  Inscription gratuite
                 </span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-300"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.4 }}
-                />
-              </Link>
-            </motion.div>
-
-            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
-                Inscription gratuite
-              </span>
-              <span className="hidden xs:block w-px h-4 bg-slate-800" />
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
-                Sans engagement
-              </span>
-              <span className="hidden xs:block w-px h-4 bg-slate-800" />
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
-                Accès immédiat
-              </span>
+                <span className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-[#16A34A]/10 flex items-center justify-center">
+                    <CheckCircle2 className="w-3 h-3 text-[#16A34A]" />
+                  </div>
+                  Support 24/7
+                </span>
+              </div>
             </div>
-          </motion.div>
-        </motion.div>
+
+            {/* Décoration abstraite droite — 45% */}
+            <div className="lg:col-span-5 hidden lg:block">
+              <GeometricDecoration />
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* ========================================================== */}
-      {/* QUICK LINKS SECTION */}
-      {/* ========================================================== */}
+      {/* ==========================================================
+          SECTION 2 — PARTENAIRES
+         ========================================================== */}
 
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="py-8 sm:py-12 border-t border-slate-800/80"
-      >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {[
-              { icon: Briefcase, label: "Toutes les offres", href: "/jobs" },
-              { icon: Users, label: "Candidats", href: "/candidates" },
-              { icon: Building2, label: "Entreprises", href: "/companies" },
-              { icon: Target, label: "Carrières au Niger", href: "/careers" },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link
-                  to={item.href}
-                  className="flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 bg-slate-900/40 border border-slate-800/80 rounded-xl hover:border-amber-500/30 transition-all duration-300 group"
-                >
-                  <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] sm:text-sm font-medium text-slate-400 group-hover:text-white transition-colors text-center">
-                    {item.label}
-                  </span>
-                </Link>
-              </motion.div>
+      <section className="py-14 bg-white border-b border-[#16A34A]/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xs font-bold text-[#14532D]/40 uppercase tracking-wider mb-8">
+            Ils nous font confiance
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-60">
+            {PARTNERS.map((p) => (
+              <div key={p} className="text-[#14532D] text-base sm:text-lg font-bold tracking-tight hover:opacity-100 transition-opacity">
+                {p}
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
+
+      {/* ==========================================================
+          SECTION 3 — 3 CARTES FEATURES SIGNATURE
+         ========================================================== */}
+
+      <section className="py-20 sm:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="max-w-2xl mx-auto text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#14532D] tracking-tight leading-tight">
+              Gérez toute votre carrière
+              <br />
+              <span className="text-[#14532D]/50">sur une seule plateforme</span>
+            </h2>
+            <p className="mt-5 text-base text-[#14532D]/60 max-w-xl mx-auto">
+              Une solution complète pour les candidats et les recruteurs au Niger.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            {/* Carte 1 — Candidats */}
+            <div className="group relative bg-white rounded-2xl overflow-hidden border border-[#16A34A]/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:border-[#16A34A]/20">
+              <div className="h-1 bg-[#16A34A]" />
+              <div className="p-8">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center mb-5 shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)] group-hover:scale-105 transition-transform">
+                  <Users className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-extrabold text-[#14532D] mb-3">
+                  Candidats
+                </h3>
+                <p className="text-sm text-[#14532D]/60 leading-relaxed mb-6">
+                  Créez votre profil, trouvez les offres qui vous correspondent
+                  et postulez en un clic.
+                </p>
+                <Link
+                  to="/register"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#16A34A] group-hover:gap-3 transition-all"
+                >
+                  Créer mon profil
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Carte 2 — Entreprises (Populaire) */}
+            <div className="group relative bg-white rounded-2xl overflow-hidden border border-[#FCD34D]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-8px_rgba(252,211,77,0.25)]">
+              <div className="h-1 bg-[#FCD34D]" />
+              <div className="absolute top-4 right-4 px-2.5 py-1 bg-[#FCD34D] text-[#14532D] text-[10px] font-bold rounded-full">
+                POPULAIRE
+              </div>
+              <div className="p-8">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FCD34D] to-[#EAB308] flex items-center justify-center mb-5 shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)] group-hover:scale-105 transition-transform">
+                  <Building2 className="w-7 h-7 text-[#14532D]" />
+                </div>
+                <h3 className="text-xl font-extrabold text-[#14532D] mb-3">
+                  Entreprises
+                </h3>
+                <p className="text-sm text-[#14532D]/60 leading-relaxed mb-6">
+                  Publiez vos offres, gérez vos candidatures et trouvez
+                  les talents qui feront grandir votre équipe.
+                </p>
+                <Link
+                  to="/register"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#14532D] group-hover:gap-3 transition-all"
+                >
+                  Espace recruteur
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Carte 3 — Statistiques */}
+            <div className="group relative bg-white rounded-2xl overflow-hidden border border-[#16A34A]/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:border-[#16A34A]/20">
+              <div className="h-1 bg-[#16A34A]" />
+              <div className="p-8">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center mb-5 shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)] group-hover:scale-105 transition-transform">
+                  <BarChart3 className="w-7 h-7 text-white" />
+                </div>
+                <h3 className="text-xl font-extrabold text-[#14532D] mb-3">
+                  Statistiques
+                </h3>
+                <p className="text-sm text-[#14532D]/60 leading-relaxed mb-6">
+                  Suivez en temps réel l'état de vos candidatures et recevez
+                  des notifications à chaque étape.
+                </p>
+                <Link
+                  to="/jobs"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#16A34A] group-hover:gap-3 transition-all"
+                >
+                  Voir les offres
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================
+          SECTION 4 — COMMENT ÇA MARCHE (3 étapes)
+         ========================================================== */}
+
+      <section className="py-20 sm:py-28 bg-[#FAFAF9]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="max-w-2xl mx-auto text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#16A34A]/10 rounded-full mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-[#16A34A]" />
+              <span className="text-xs font-bold text-[#16A34A] uppercase tracking-wider">
+                Simple et rapide
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#14532D] tracking-tight">
+              Comment ça marche ?
+            </h2>
+            <p className="mt-5 text-base text-[#14532D]/60">
+              3 étapes suffisent pour décrocher votre prochain emploi.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+
+            {[
+              { num: '01', icon: Users, title: 'Créez votre profil', desc: 'Inscription gratuite en moins de 2 minutes.' },
+              { num: '02', icon: Target, title: 'Trouvez les offres', desc: 'Filtrez par ville, secteur et type de contrat.' },
+              { num: '03', icon: Rocket, title: 'Postulez et décrochez', desc: 'Suivez vos candidatures et recevez des réponses.' },
+            ].map((step, i) => (
+              <div key={i} className="relative text-center">
+                {/* Ligne de connexion (desktop) */}
+                {i < 2 && (
+                  <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-[#16A34A]/30 to-[#16A34A]/5" />
+                )}
+
+                <div className="relative inline-flex items-center justify-center mb-6">
+                  <div className="w-20 h-20 rounded-2xl bg-white border-2 border-[#16A34A]/15 flex items-center justify-center shadow-[0_8px_24px_-8px_rgba(22,163,74,0.2)] relative z-10">
+                    <step.icon className="w-8 h-8 text-[#16A34A]" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#FCD34D] flex items-center justify-center text-xs font-extrabold text-[#14532D] border-2 border-white shadow-md z-20">
+                    {step.num}
+                  </div>
+                </div>
+
+                <h3 className="text-lg font-extrabold text-[#14532D] mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[#14532D]/60 max-w-xs mx-auto leading-relaxed">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================
+          SECTION 5 — STATS XXL avec compteurs animés
+         ========================================================== */}
+
+      <section className="py-20 sm:py-28 bg-[#F0FDF4] relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-soft opacity-40 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#16A34A]/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#14532D] tracking-tight">
+              OptimaPlus-Jobs en chiffres
+            </h2>
+            <p className="mt-4 text-base text-[#14532D]/60">
+              La plateforme de référence pour l'emploi au Niger.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+
+            <AnimatedCounter value="2245341" label="Membres actifs" icon={Users} />
+            <AnimatedCounter value="46328" label="Entreprises" icon={Building2} />
+            <AnimatedCounter value="845341" label="Candidatures" icon={Briefcase} />
+            <AnimatedCounter value="1926436" label="Recrutements" icon={Award} />
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================
+          SECTION 6 — TÉMOIGNAGES
+         ========================================================== */}
+
+      <section className="py-20 sm:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FCD34D]/20 rounded-full mb-4">
+              <Star className="w-3.5 h-3.5 text-[#B88400] fill-current" />
+              <span className="text-xs font-bold text-[#7A5800] uppercase tracking-wider">
+                Témoignages
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#14532D] tracking-tight">
+              Ils ont trouvé leur job
+            </h2>
+            <p className="mt-5 text-base text-[#14532D]/60">
+              Des milliers de professionnels nous font confiance au Niger.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            {TESTIMONIALS.map((t, i) => (
+              <div
+                key={i}
+                className="group relative bg-white rounded-2xl border border-[#16A34A]/10 p-6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:border-[#16A34A]/20"
+              >
+                {/* Bordure gauche verte */}
+                <div className="absolute left-0 top-6 bottom-6 w-1 bg-[#16A34A] rounded-r" />
+
+                {/* Étoiles */}
+                <div className="flex items-center gap-0.5 mb-4">
+                  {[...Array(5)].map((_, k) => (
+                    <Star key={k} className="w-4 h-4 text-[#FCD34D] fill-current" />
+                  ))}
+                </div>
+
+                {/* Texte */}
+                <p className="text-sm text-[#14532D]/75 leading-relaxed mb-6 italic">
+                  "{t.text}"
+                </p>
+
+                {/* Auteur */}
+                <div className="flex items-center gap-3 pt-4 border-t border-[#16A34A]/10">
+                  <img
+                    src={t.avatar}
+                    alt={t.name}
+                    className="w-11 h-11 rounded-full object-cover ring-2 ring-[#16A34A]/10"
+                    loading="lazy"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-extrabold text-[#14532D] truncate">{t.name}</p>
+                    <p className="text-xs text-[#14532D]/60 truncate">
+                      {t.role} • {t.city}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==========================================================
+          SECTION 7 — CTA FINAL (gradient vert + formes abstraites)
+         ========================================================== */}
+
+      <section className="py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-3xl bg-gradient-to-br from-[#16A34A] via-[#15803D] to-[#14532D] overflow-hidden px-8 sm:px-12 lg:px-20 py-16 sm:py-20 text-center">
+
+            {/* Formes abstraites */}
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#FCD34D]/10 blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white/5 blur-3xl" />
+            <div className="absolute top-8 left-12 w-16 h-16 rounded-2xl border-2 border-white/10 rotate-45" />
+            <div className="absolute bottom-12 right-16 w-12 h-12 rounded-full border-2 border-[#FCD34D]/30" />
+            <div className="absolute top-1/2 left-8 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+            <div className="absolute bottom-1/3 right-1/3 w-2 h-2 rounded-full bg-white/40" />
+
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/10 backdrop-blur rounded-full mb-6 border border-white/20">
+                <Sparkles className="w-3.5 h-3.5 text-[#FCD34D]" />
+                <span className="text-xs font-bold text-white">
+                  Rejoignez-nous
+                </span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight max-w-2xl mx-auto">
+                Prêt à décoller ?
+              </h2>
+              <p className="mt-5 text-base sm:text-lg text-white/80 max-w-lg mx-auto">
+                Rejoignez des milliers de professionnels qui ont déjà fait
+                le choix d'OptimaPlus-Jobs au Niger.
+              </p>
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  to={isAuthenticated ? '/candidate/dashboard' : '/register'}
+                  className="group inline-flex items-center gap-2 px-7 py-4 bg-white text-[#14532D] text-sm font-bold rounded-xl hover:bg-[#FCD34D] shadow-[0_12px_32px_-8px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300"
+                >
+                  {isAuthenticated ? 'Accéder à mon espace' : 'Démarrer maintenant'}
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+                <Link
+                  to="/jobs"
+                  className="inline-flex items-center gap-2 px-7 py-4 text-white text-sm font-bold rounded-xl border-2 border-white/30 hover:bg-white/10 transition-all duration-200"
+                >
+                  Voir les offres
+                </Link>
+              </div>
+
+              {/* Trust */}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-white/70">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FCD34D]" />
+                  Inscription gratuite
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FCD34D]" />
+                  Sans engagement
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FCD34D]" />
+                  Accès immédiat
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   );
