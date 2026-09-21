@@ -55,25 +55,25 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => (
     initial="initial"
     animate="animate"
     whileHover="hover"
-    className="relative group bg-slate-900/80 border border-slate-800 p-4 rounded-2xl transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-slate-900/50 cursor-pointer overflow-hidden"
+    className="relative group bg-slate-900/80 border border-slate-800 p-3 sm:p-4 rounded-2xl transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-slate-900/50 cursor-pointer overflow-hidden"
   >
     <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
     <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${color}-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700`} />
-    
+
     <div className="relative z-10">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+      <div className="flex items-center justify-between mb-1 gap-2">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 truncate">
           {title}
         </span>
-        <div className={`p-1.5 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300`}>
+        <div className={`p-1.5 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
           <Icon className="w-3.5 h-3.5" />
         </div>
       </div>
-      <div className="text-2xl font-black text-white tracking-tight">
+      <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
         {value}
       </div>
       {subtitle && (
-        <div className="mt-0.5 text-[10px] text-slate-500">{subtitle}</div>
+        <div className="mt-0.5 text-[10px] text-slate-500 line-clamp-1">{subtitle}</div>
       )}
       <div className="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-${color}-500 to-transparent transition-all duration-700" />
     </div>
@@ -91,7 +91,7 @@ const LevelBadge = ({ level }: { level: string }) => {
   const config = levels[level as keyof typeof levels] || levels.intermediate;
 
   return (
-    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${config.color}`}>
+    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${config.color} whitespace-nowrap`}>
       {config.label}
     </span>
   );
@@ -169,7 +169,7 @@ export const PublicProfilePage = () => {
       a.click();
       a.remove();
       window.URL.revokeObjectURL(url);
-      
+
       toast.success('Téléchargement réussi !');
     } catch (error: any) {
       console.error('Erreur de téléchargement:', error);
@@ -199,13 +199,13 @@ export const PublicProfilePage = () => {
 
   if (isLoading) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
       >
-        <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-        <p className="text-sm text-slate-400">Chargement du profil...</p>
+        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-amber-500" />
+        <p className="text-xs sm:text-sm text-slate-400">Chargement du profil...</p>
         <div className="flex gap-1">
           {[0, 1, 2].map((i) => (
             <motion.div
@@ -233,12 +233,12 @@ export const PublicProfilePage = () => {
 
   if (error || !profile) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-4 py-12"
+        className="max-w-4xl mx-auto px-3 sm:px-4 py-12"
       >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-12 text-center backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-rose-500/20 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -249,17 +249,17 @@ export const PublicProfilePage = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
           >
-            <User className="w-10 h-10 text-rose-400" />
+            <User className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
           </motion.div>
-          <p className="text-lg font-semibold text-white">Profil non trouvé</p>
-          <p className="text-sm text-slate-400 mt-2">Le profil que vous recherchez n'existe pas ou est inaccessible.</p>
+          <p className="text-base sm:text-lg font-semibold text-white">Profil non trouvé</p>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2">Le profil que vous recherchez n'existe pas ou est inaccessible.</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoBack}
-            className="mt-6 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-xs sm:text-sm"
           >
             Retour
           </motion.button>
@@ -284,31 +284,31 @@ export const PublicProfilePage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative"
+      className="relative space-y-4 sm:space-y-6"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 10,
             y: mousePosition.y * 10,
@@ -317,25 +317,25 @@ export const PublicProfilePage = () => {
         />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
 
         {/* ======================================================
             NAVIGATION
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoBack}
-              className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
             >
-              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span className="hidden sm:inline">Retour</span>
             </motion.button>
 
@@ -343,16 +343,16 @@ export const PublicProfilePage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoHome}
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
             >
-              <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
               <span className="hidden sm:inline">Accueil</span>
             </motion.button>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Profil public</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Profil public</span>
             <Eye className="w-3 h-3 text-amber-400" />
           </div>
         </motion.div>
@@ -364,63 +364,65 @@ export const PublicProfilePage = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
         >
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <motion.div 
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
-              className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-4xl font-bold text-amber-400 shadow-xl shadow-amber-500/10 shrink-0"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-2xl sm:text-4xl font-bold text-amber-400 shadow-xl shadow-amber-500/10 shrink-0"
             >
               {profile.first_name?.[0] || profile.email?.[0] || 'C'}
             </motion.div>
 
-            <div className="flex-1 text-center md:text-left">
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                <h1 className="text-3xl font-extrabold text-white">
+            <div className="flex-1 text-center sm:text-left min-w-0 w-full">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white break-words">
                   {profile.first_name || ''} {profile.last_name || ''}
                 </h1>
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="px-3 py-1 text-xs font-bold bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20"
+                  className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-400 rounded-full border border-amber-500/20 shrink-0"
                 >
                   CANDIDAT
                 </motion.span>
               </div>
-              <p className="text-sm text-slate-400 flex items-center justify-center md:justify-start gap-2">
-                <Mail className="w-4 h-4" />
-                {profile.email}
+              <p className="text-xs sm:text-sm text-slate-400 flex items-center justify-center sm:justify-start gap-2 mt-1 min-w-0">
+                <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                <span className="truncate">{profile.email}</span>
               </p>
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-3 text-sm text-slate-400">
+              <div className="flex flex-wrap justify-center sm:justify-start gap-x-3 gap-y-2 mt-3 text-[10px] sm:text-sm text-slate-400">
                 {profile.phone && (
                   <span className="flex items-center gap-1.5">
-                    <Phone className="w-4 h-4 text-slate-500" />
+                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
                     {profile.phone}
                   </span>
                 )}
                 {(profile.city || profile.country) && (
                   <span className="flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-amber-400" />
-                    {[profile.city, profile.country || 'Niger'].filter(Boolean).join(', ')}
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
+                    <span className="truncate">
+                      {[profile.city, profile.country || 'Niger'].filter(Boolean).join(', ')}
+                    </span>
                   </span>
                 )}
                 {profile.created_at && (
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-slate-500" />
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
                     Membre depuis {new Date(profile.created_at).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
                   </span>
                 )}
               </div>
 
               {profile.bio && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="mt-4 p-4 bg-slate-950/60 rounded-xl border border-slate-800"
+                  className="mt-4 p-3 sm:p-4 bg-slate-950/60 rounded-xl border border-slate-800"
                 >
-                  <p className="text-sm text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                     {profile.bio}
                   </p>
                 </motion.div>
@@ -429,40 +431,40 @@ export const PublicProfilePage = () => {
           </div>
 
           {/* Actions rapides */}
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-6 pt-6 border-t border-slate-800">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-800">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleSaveProfile}
-              className={`p-2.5 rounded-xl transition-all duration-300 flex items-center gap-2 text-sm ${
-                isSaved 
-                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' 
+              className={`p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm ${
+                isSaved
+                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                   : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
               }`}
             >
-              <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-400' : ''}`} />
-              {isSaved ? 'Sauvegardé' : 'Sauvegarder'}
+              <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSaved ? 'fill-rose-400' : ''}`} />
+              <span>{isSaved ? 'Sauvegardé' : 'Sauvegarder'}</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleCopyProfileLink}
-              className="p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-2 text-sm"
+              className="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm"
             >
               {isCopied ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
               ) : (
-                <Copy className="w-4 h-4" />
+                <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               )}
-              {isCopied ? 'Copié !' : 'Copier le lien'}
+              <span>{isCopied ? 'Copié !' : 'Copier le lien'}</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-2 text-sm ml-auto"
+              className="p-2 sm:p-2.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm sm:ml-auto"
             >
-              <Share2 className="w-4 h-4" />
-              Partager
+              <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Partager</span>
             </motion.button>
           </div>
         </motion.div>
@@ -471,11 +473,11 @@ export const PublicProfilePage = () => {
             STATISTIQUES
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           variants={staggerContainer}
           initial="initial"
           animate="animate"
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
         >
           <StatCard title="Expériences" value={stats.experiences} icon={Briefcase} color="amber" />
           <StatCard title="Formations" value={stats.education} icon={GraduationCap} color="blue" />
@@ -492,20 +494,20 @@ export const PublicProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Award className="w-4 h-4 text-amber-400" />
+            <h2 className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
+              <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
               Compétences
             </h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {profile.skills.map((skill: any) => (
                 <motion.span
                   key={skill.id}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
+                  className="px-2.5 sm:px-4 py-1 sm:py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-[10px] sm:text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
                 >
                   {skill.name}
                 </motion.span>
@@ -523,41 +525,48 @@ export const PublicProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Briefcase className="w-4 h-4 text-amber-400" />
+            <h2 className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
+              <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
               Expériences professionnelles
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {profile.experiences.map((exp: any, index: number) => (
-                <motion.div 
+                <motion.div
                   key={exp.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="border-b border-slate-800 pb-4 last:border-0 last:pb-0 group hover:bg-slate-800/20 px-3 -mx-3 rounded-lg transition-colors duration-200"
+                  className="border-b border-slate-800 pb-3 sm:pb-4 last:border-0 last:pb-0 group hover:bg-slate-800/20 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-lg transition-colors duration-200"
                 >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-white group-hover:text-amber-400 transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-white group-hover:text-amber-400 transition-colors text-sm sm:text-base break-words">
                         {exp.title}
                       </h3>
-                      <p className="text-sm text-amber-400">{exp.company}</p>
+                      <p className="text-xs sm:text-sm text-amber-400 break-words">{exp.company}</p>
                     </div>
                     {exp.is_current && (
-                      <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
+                      <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20 shrink-0">
                         Actuel
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 mt-1 flex items-center gap-3">
-                    <Calendar className="w-3 h-3" />
-                    {exp.start_date} - {exp.is_current ? 'Présent' : exp.end_date || 'En cours'}
-                    {exp.location && <span>• <MapPin className="w-3 h-3 inline" /> {exp.location}</span>}
+                  <p className="text-[10px] sm:text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3 shrink-0" />
+                      {exp.start_date} - {exp.is_current ? 'Présent' : exp.end_date || 'En cours'}
+                    </span>
+                    {exp.location && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 shrink-0" />
+                        {exp.location}
+                      </span>
+                    )}
                   </p>
                   {exp.description && (
-                    <p className="text-sm text-slate-400 mt-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">
                       {exp.description}
                     </p>
                   )}
@@ -576,39 +585,39 @@ export const PublicProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <GraduationCap className="w-4 h-4 text-amber-400" />
+            <h2 className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
+              <GraduationCap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
               Formations
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {profile.education.map((edu: any, index: number) => (
-                <motion.div 
+                <motion.div
                   key={edu.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
-                  className="border-b border-slate-800 pb-4 last:border-0 last:pb-0 group hover:bg-slate-800/20 px-3 -mx-3 rounded-lg transition-colors duration-200"
+                  className="border-b border-slate-800 pb-3 sm:pb-4 last:border-0 last:pb-0 group hover:bg-slate-800/20 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-lg transition-colors duration-200"
                 >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-white group-hover:text-amber-400 transition-colors">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-white group-hover:text-amber-400 transition-colors text-sm sm:text-base break-words">
                         {edu.degree}
                       </h3>
-                      <p className="text-sm text-amber-400">{edu.institution}</p>
+                      <p className="text-xs sm:text-sm text-amber-400 break-words">{edu.institution}</p>
                       {edu.field_of_study && (
-                        <p className="text-xs text-slate-500">{edu.field_of_study}</p>
+                        <p className="text-[10px] sm:text-xs text-slate-500">{edu.field_of_study}</p>
                       )}
                     </div>
                     {edu.is_current && (
-                      <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
+                      <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20 shrink-0">
                         En cours
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 mt-1 flex items-center gap-3">
-                    <Calendar className="w-3 h-3" />
+                  <p className="text-[10px] sm:text-xs text-slate-500 mt-1 flex items-center gap-2">
+                    <Calendar className="w-3 h-3 shrink-0" />
                     {edu.start_date} - {edu.is_current ? 'En cours' : edu.end_date || 'Terminé'}
                   </p>
                 </motion.div>
@@ -626,23 +635,23 @@ export const PublicProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Languages className="w-4 h-4 text-amber-400" />
+            <h2 className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
+              <Languages className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
               Langues
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {profile.languages.map((lang: any) => (
-                <motion.div 
+                <motion.div
                   key={lang.id}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   whileHover={{ scale: 1.02 }}
-                  className="bg-slate-950/60 p-3 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
+                  className="bg-slate-950/60 p-2.5 sm:p-3 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white">{lang.name}</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-semibold text-white text-xs sm:text-base truncate">{lang.name}</span>
                     <LevelBadge level={lang.level} />
                   </div>
                 </motion.div>
@@ -660,10 +669,10 @@ export const PublicProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <FileText className="w-4 h-4 text-amber-400" />
+            <h2 className="text-[10px] sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
               Documents
             </h2>
             <div className="space-y-2">
@@ -674,34 +683,34 @@ export const PublicProfilePage = () => {
                   animate={{ opacity: 1, x: 0 }}
                   whileHover={{ scale: 1.01 }}
                   onClick={() => handleDownload(doc.id, doc.original_filename)}
-                  className="w-full flex items-center justify-between p-3.5 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 group cursor-pointer"
+                  className="w-full flex items-center justify-between p-2.5 sm:p-3.5 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 group cursor-pointer gap-3"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-amber-500/10">
-                      <FileText className="w-5 h-5 text-amber-400" />
+                  <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 shrink-0">
+                      <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
                     </div>
-                    <div className="text-left">
-                      <span className="text-sm text-white group-hover:text-amber-400 transition-colors">
+                    <div className="text-left min-w-0 flex-1">
+                      <span className="text-xs sm:text-sm text-white group-hover:text-amber-400 transition-colors block truncate">
                         {doc.original_filename}
                       </span>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] uppercase text-slate-500 bg-slate-800 px-2 py-0.5 rounded-full">
+                        <span className="text-[9px] sm:text-[10px] uppercase text-slate-500 bg-slate-800 px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap">
                           {doc.document_type === 'cv' ? 'CV' : doc.document_type}
                         </span>
                         {doc.file_size && (
-                          <span className="text-[10px] text-slate-500">
+                          <span className="text-[9px] sm:text-[10px] text-slate-500">
                             {(doc.file_size / 1024).toFixed(1)} KB
                           </span>
                         )}
                       </div>
                     </div>
                   </div>
-                  <motion.div 
+                  <motion.div
                     whileHover={{ scale: 1.1 }}
-                    className="flex items-center gap-2 text-slate-400 group-hover:text-amber-400 transition-colors"
+                    className="flex items-center gap-1.5 sm:gap-2 text-slate-400 group-hover:text-amber-400 transition-colors shrink-0"
                   >
-                    <span className="text-xs font-medium">Télécharger</span>
-                    <Download className="w-4 h-4" />
+                    <span className="text-[10px] sm:text-xs font-medium hidden xs:inline">Télécharger</span>
+                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </motion.div>
                 </motion.button>
               ))}
@@ -713,17 +722,17 @@ export const PublicProfilePage = () => {
             FOOTER
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
         >
-          <div className="flex items-center gap-4">
-            <span className="text-slate-500">
+          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
+            <span className="text-slate-500 truncate max-w-[200px] sm:max-w-none">
               <span className="text-amber-400 font-medium">{profile.first_name || 'Candidat'}</span> • Profil public
             </span>
-            <span className="w-px h-4 bg-slate-800" />
+            <span className="hidden xs:block w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
               <span className="text-emerald-400/70">Sécurisé - Niger</span>

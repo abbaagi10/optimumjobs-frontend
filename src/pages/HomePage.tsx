@@ -2,10 +2,10 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
-import { 
-  Briefcase, Building2, Users, ChevronRight, Sparkles, 
+import {
+  Briefcase, Building2, Users, ChevronRight, Sparkles,
   ShieldCheck, Clock, ArrowUpRight, Search,
-  Rocket, Zap, Star, Award, Globe, 
+  Rocket, Zap, Star, Award, Globe,
   TrendingUp, Target, ArrowRight, CheckCircle2,
   MapPin, Mail, ExternalLink, CircleDollarSign
 } from 'lucide-react';
@@ -139,13 +139,13 @@ const AnimatedCounter = ({ value, label, icon: Icon, delay = 0 }: any) => {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay }}
-      className="group bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/5 hover:-translate-y-1"
+      className="group bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-amber-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/5 hover:-translate-y-1"
     >
-      <div className="flex items-center gap-3 text-4xl font-black text-white">
-        <Icon className="w-8 h-8 text-amber-400 group-hover:scale-110 transition-transform duration-300" />
+      <div className="flex items-center gap-2 sm:gap-3 text-2xl sm:text-3xl md:text-4xl font-black text-white">
+        <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-amber-400 group-hover:scale-110 transition-transform duration-300 shrink-0" />
         <span>{count}+</span>
       </div>
-      <div className="text-xs font-medium text-slate-400 mt-2 uppercase tracking-wider">{label}</div>
+      <div className="text-[10px] sm:text-xs font-medium text-slate-400 mt-2 uppercase tracking-wider">{label}</div>
       <div className="mt-3 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-amber-500 to-transparent transition-all duration-700" />
     </motion.div>
   );
@@ -155,25 +155,25 @@ const FeatureCard = ({ icon: Icon, title, desc, index }: any) => (
   <motion.div
     variants={fadeInUp}
     custom={index}
-    className="group relative bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/50 rounded-3xl p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10 backdrop-blur-xl overflow-hidden"
+    className="group relative bg-slate-900/60 border border-slate-800/80 hover:border-amber-500/50 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-amber-500/10 backdrop-blur-xl overflow-hidden"
   >
     <div className="absolute inset-0 bg-gradient-to-br from-amber-500/0 via-amber-500/0 to-amber-500/0 group-hover:from-amber-500/5 group-hover:via-amber-500/10 group-hover:to-amber-500/5 transition-all duration-500" />
     <div className="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/20 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 opacity-0 group-hover:opacity-100" />
 
     <div className="relative z-10">
-      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-amber-500/20">
-        <Icon className="w-7 h-7 text-amber-400 group-hover:scale-110 transition-transform" />
+      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-amber-500/20">
+        <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400 group-hover:scale-110 transition-transform" />
       </div>
-      
-      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-amber-400 transition-colors duration-300">
+
+      <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-amber-400 transition-colors duration-300">
         {title}
       </h3>
-      <p className="text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
+      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-300">
         {desc}
       </p>
 
       <motion.div
-        className="mt-6 pt-4 border-t border-slate-800/50 flex items-center gap-2 text-xs font-semibold text-amber-400"
+        className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-800/50 flex items-center gap-2 text-[10px] sm:text-xs font-semibold text-amber-400"
         initial={{ opacity: 0, x: -10 }}
         whileHover={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
@@ -197,18 +197,18 @@ const RotatingBadge = () => {
 
   return (
     <motion.div
-      className="inline-flex items-center gap-2 bg-slate-900/80 border border-amber-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-amber-500/5 backdrop-blur-xl hover:border-amber-500/50 transition-all cursor-default"
+      className="inline-flex items-center gap-2 bg-slate-900/80 border border-amber-500/30 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full shadow-lg shadow-amber-500/5 backdrop-blur-xl hover:border-amber-500/50 transition-all cursor-default max-w-full"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
       <motion.div
         animate={{ rotate: rotation }}
         transition={{ duration: 0.1 }}
-        className="w-4 h-4"
+        className="w-4 h-4 shrink-0"
       >
         <Sparkles className="w-4 h-4 text-amber-400" />
       </motion.div>
-      <span className="text-xs font-semibold text-amber-300 tracking-wide">
+      <span className="text-[10px] sm:text-xs font-semibold text-amber-300 tracking-wide truncate">
         Plateforme de recrutement #1 au Niger
       </span>
     </motion.div>
@@ -262,40 +262,40 @@ export const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950">
-      
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950 overflow-x-hidden">
+
       {/* ========================================================== */}
       {/* HERO SECTION */}
       {/* ========================================================== */}
-      
-      <motion.section 
+
+      <motion.section
         ref={heroRef}
         onMouseMove={handleMouseMove}
         onMouseEnter={() => setIsHoveringHero(true)}
         onMouseLeave={() => setIsHoveringHero(false)}
-        className="relative pt-20 pb-28 md:pt-32 md:pb-40 overflow-hidden"
+        className="relative pt-12 sm:pt-20 pb-16 sm:pb-28 md:pt-32 md:pb-40 overflow-hidden"
         style={{ opacity: heroOpacity, scale: heroScale }}
       >
         <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[800px] md:w-[1000px] h-[300px] sm:h-[400px] md:h-[500px] bg-gradient-to-b from-amber-500/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none"
           animate={{
             scale: isHoveringHero ? 1.1 : 1,
             opacity: isHoveringHero ? 0.8 : 0.5,
           }}
           transition={{ duration: 0.5 }}
         />
-        
+
         <motion.div
-          className="absolute top-1/3 -right-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
+          className="absolute top-1/3 -right-40 w-64 sm:w-96 h-64 sm:h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        
+
         <motion.div
-          className="absolute bottom-10 -left-40 w-96 h-96 bg-slate-800/40 rounded-full blur-3xl pointer-events-none"
+          className="absolute bottom-10 -left-40 w-64 sm:w-96 h-64 sm:h-96 bg-slate-800/40 rounded-full blur-3xl pointer-events-none"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
@@ -305,9 +305,9 @@ export const HomePage = () => {
 
         <FloatingParticles />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div 
-            className="text-center max-w-4xl mx-auto space-y-8"
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="text-center max-w-4xl mx-auto space-y-6 sm:space-y-8"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
@@ -322,7 +322,7 @@ export const HomePage = () => {
 
             <motion.h1
               variants={fadeInUp}
-              className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.1]"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.15] sm:leading-[1.1] px-2"
             >
               Trouvez l'opportunité qui{" "}
               <br className="hidden sm:inline" />
@@ -342,14 +342,14 @@ export const HomePage = () => {
 
             <motion.p
               variants={fadeInUp}
-              className="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed"
+              className="text-sm sm:text-base md:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed px-4"
             >
               Connectez-vous aux meilleures entreprises et talents du Niger. Des milliers d'offres d'emploi, de stages et d'opportunités n'attendent que vous.
             </motion.p>
 
             <motion.div
               variants={fadeInUp}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
+              className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 px-4"
             >
               <motion.div
                 whileHover={{ scale: 1.03 }}
@@ -358,10 +358,10 @@ export const HomePage = () => {
               >
                 <Link
                   to="/jobs"
-                  className="group w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl transition-all duration-300 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden"
+                  className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl transition-all duration-300 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden text-sm sm:text-base"
                 >
                   <span className="relative z-10 flex items-center gap-2">
-                    <Search className="w-5 h-5" />
+                    <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>Voir les offres</span>
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
@@ -382,7 +382,7 @@ export const HomePage = () => {
                 >
                   <Link
                     to={getDashboardLink()}
-                    className="group w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-2xl transition-all duration-300 border border-slate-800 hover:border-slate-700 active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden"
+                    className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-2xl transition-all duration-300 border border-slate-800 hover:border-slate-700 active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden text-sm sm:text-base"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Accéder au dashboard
@@ -404,7 +404,7 @@ export const HomePage = () => {
                 >
                   <Link
                     to="/register"
-                    className="group w-full sm:w-auto px-8 py-4 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-semibold rounded-2xl transition-all duration-300 border border-slate-800 hover:border-slate-700 backdrop-blur-xl active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden"
+                    className="group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-semibold rounded-2xl transition-all duration-300 border border-slate-800 hover:border-slate-700 backdrop-blur-xl active:scale-95 flex items-center justify-center gap-2 relative overflow-hidden text-sm sm:text-base"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Créer un compte
@@ -423,7 +423,7 @@ export const HomePage = () => {
 
             <motion.div
               variants={fadeInUp}
-              className="pt-16 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto"
+              className="pt-10 sm:pt-16 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 max-w-4xl mx-auto px-4"
             >
               <AnimatedCounter value="5K+" label="Offres publiées" icon={Briefcase} delay={0.1} />
               <AnimatedCounter value="3K+" label="Candidats actifs" icon={Users} delay={0.2} />
@@ -432,20 +432,20 @@ export const HomePage = () => {
 
             <motion.div
               variants={fadeInUp}
-              className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-slate-500"
+              className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-4 text-[10px] sm:text-xs text-slate-500 px-4"
             >
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                 Offres vérifiées
               </span>
-              <span className="w-px h-4 bg-slate-800" />
+              <span className="hidden xs:block w-px h-4 bg-slate-800" />
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                 Confiance & sécurité
               </span>
-              <span className="w-px h-4 bg-slate-800" />
+              <span className="hidden xs:block w-px h-4 bg-slate-800" />
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                 Support 24/7
               </span>
             </motion.div>
@@ -457,39 +457,39 @@ export const HomePage = () => {
       {/* ========================================================== */}
       {/* FEATURES SECTION */}
       {/* ========================================================== */}
-      
-      <motion.section 
-        className="py-24 border-t border-slate-800/80 bg-slate-900/30 relative overflow-hidden"
+
+      <motion.section
+        className="py-16 sm:py-24 border-t border-slate-800/80 bg-slate-900/30 relative overflow-hidden"
         style={{ y: featuresY }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div 
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
             variants={staggerContainer}
             initial="initial"
             whileInView="animate"
             viewport={{ once: true, margin: "-100px" }}
           >
-            <motion.div 
+            <motion.div
               variants={fadeInUp}
-              className="text-center max-w-2xl mx-auto space-y-3 mb-16"
+              className="text-center max-w-2xl mx-auto space-y-3 mb-10 sm:mb-16 px-4"
             >
               <motion.div
-                className="inline-flex items-center gap-2 bg-slate-900/80 border border-slate-800 px-4 py-2 rounded-full"
+                className="inline-flex items-center gap-2 bg-slate-900/80 border border-slate-800 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full"
                 whileHover={{ scale: 1.02 }}
               >
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-medium text-slate-400 tracking-wide">Pourquoi nous choisir</span>
+                <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+                <span className="text-[10px] sm:text-xs font-medium text-slate-400 tracking-wide">Pourquoi nous choisir</span>
               </motion.div>
-              
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
                 Pourquoi choisir{" "}
                 <span className="relative">
                   <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
-                    OptimumJobs+
+                    OptimaPlus-Jobs
                   </span>
                   <motion.span
                     className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-amber-500"
@@ -501,12 +501,12 @@ export const HomePage = () => {
                 </span>
                 {" "}?
               </h2>
-              <p className="text-slate-400 text-sm sm:text-base">
-                Une écosystème sur-mesure conçu pour propulser les talents et simplifier les recrutements au Niger.
+              <p className="text-slate-400 text-xs sm:text-sm md:text-base px-4">
+                Un écosystème sur-mesure conçu pour propulser les talents et simplifier les recrutements au Niger.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               <FeatureCard
                 icon={ShieldCheck}
                 title="Offres vérifiées"
@@ -533,20 +533,20 @@ export const HomePage = () => {
       {/* ========================================================== */}
       {/* CTA SECTION */}
       {/* ========================================================== */}
-      
-      <section className="py-20 relative overflow-hidden">
+
+      <section className="py-12 sm:py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto px-4 text-center relative z-10"
+          className="max-w-4xl mx-auto px-3 sm:px-4 text-center relative z-10"
         >
           <motion.div
-            className="bg-slate-900/60 border border-slate-800/80 rounded-3xl p-12 backdrop-blur-xl hover:border-amber-500/30 transition-all duration-500 shadow-2xl shadow-amber-500/5"
+            className="bg-slate-900/60 border border-slate-800/80 rounded-2xl sm:rounded-3xl p-6 sm:p-12 backdrop-blur-xl hover:border-amber-500/30 transition-all duration-500 shadow-2xl shadow-amber-500/5"
             whileHover={{ y: -4 }}
           >
             <motion.div
@@ -559,32 +559,32 @@ export const HomePage = () => {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-amber-500/20 to-amber-500/5 rounded-2xl flex items-center justify-center border border-amber-500/30"
+              className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 bg-gradient-to-br from-amber-500/20 to-amber-500/5 rounded-2xl flex items-center justify-center border border-amber-500/30"
             >
-              <Rocket className="w-8 h-8 text-amber-400" />
+              <Rocket className="w-6 h-6 sm:w-8 sm:h-8 text-amber-400" />
             </motion.div>
 
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3 sm:mb-4">
               Prêt à {""}
               <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">
                 décoller
               </span>
               {" "}?
             </h2>
-            <p className="text-slate-400 max-w-md mx-auto mb-8">
-              Rejoignez des milliers de professionnels qui ont déjà fait le choix d'OptimumJobs+ au Niger.
+            <p className="text-xs sm:text-sm md:text-base text-slate-400 max-w-md mx-auto mb-6 sm:mb-8 px-4">
+              Rejoignez des milliers de professionnels qui ont déjà fait le choix d'OptimaPlus-Jobs au Niger.
             </p>
 
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block"
+              className="inline-block w-full sm:w-auto px-4 sm:px-0"
             >
               <Link
                 to={isAuthenticated ? getDashboardLink() : "/register"}
-                className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl transition-all duration-300 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 relative overflow-hidden"
+                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl transition-all duration-300 shadow-xl shadow-amber-500/20 hover:shadow-amber-500/40 relative overflow-hidden text-sm sm:text-base"
               >
-                <span className="relative z-10 flex items-center gap-3">
+                <span className="relative z-10 flex items-center gap-2 sm:gap-3">
                   {isAuthenticated ? "Accéder au dashboard" : "Commencer maintenant"}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
@@ -597,19 +597,19 @@ export const HomePage = () => {
               </Link>
             </motion.div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
+            <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500">
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                 Inscription gratuite
               </span>
-              <span className="w-px h-4 bg-slate-800 hidden sm:inline" />
+              <span className="hidden xs:block w-px h-4 bg-slate-800" />
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                 Sans engagement
               </span>
-              <span className="w-px h-4 bg-slate-800 hidden sm:inline" />
+              <span className="hidden xs:block w-px h-4 bg-slate-800" />
               <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 shrink-0" />
                 Accès immédiat
               </span>
             </div>
@@ -620,16 +620,16 @@ export const HomePage = () => {
       {/* ========================================================== */}
       {/* QUICK LINKS SECTION */}
       {/* ========================================================== */}
-      
+
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
-        className="py-12 border-t border-slate-800/80"
+        className="py-8 sm:py-12 border-t border-slate-800/80"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {[
               { icon: Briefcase, label: "Toutes les offres", href: "/jobs" },
               { icon: Users, label: "Candidats", href: "/candidates" },
@@ -643,10 +643,10 @@ export const HomePage = () => {
               >
                 <Link
                   to={item.href}
-                  className="flex flex-col items-center gap-2 p-4 bg-slate-900/40 border border-slate-800/80 rounded-xl hover:border-amber-500/30 transition-all duration-300 group"
+                  className="flex flex-col items-center gap-1.5 sm:gap-2 p-3 sm:p-4 bg-slate-900/40 border border-slate-800/80 rounded-xl hover:border-amber-500/30 transition-all duration-300 group"
                 >
-                  <item.icon className="w-5 h-5 text-amber-400 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm font-medium text-slate-400 group-hover:text-white transition-colors">
+                  <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 group-hover:scale-110 transition-transform" />
+                  <span className="text-[10px] sm:text-sm font-medium text-slate-400 group-hover:text-white transition-colors text-center">
                     {item.label}
                   </span>
                 </Link>

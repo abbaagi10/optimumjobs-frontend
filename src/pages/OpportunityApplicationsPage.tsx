@@ -105,10 +105,10 @@ const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
   };
 
   return (
-    <motion.span 
+    <motion.span
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${config.className}`}
+      className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${config.className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
@@ -121,25 +121,25 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => (
   <motion.div
     variants={fadeInUp}
     whileHover={{ scale: 1.02, y: -2 }}
-    className="relative group bg-slate-900/80 border border-slate-800 p-4 rounded-2xl transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-slate-900/50 cursor-pointer overflow-hidden"
+    className="relative group bg-slate-900/80 border border-slate-800 p-3 sm:p-4 rounded-2xl transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-slate-900/50 cursor-pointer overflow-hidden"
   >
     <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
     <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${color}-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700`} />
-    
+
     <div className="relative z-10">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+      <div className="flex items-center justify-between mb-1 gap-2">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 truncate">
           {title}
         </span>
-        <div className={`p-1.5 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300`}>
+        <div className={`p-1.5 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
           <Icon className="w-3.5 h-3.5" />
         </div>
       </div>
-      <div className="text-2xl font-black text-white tracking-tight">
+      <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
         {value}
       </div>
       {subtitle && (
-        <div className="mt-0.5 text-[10px] text-slate-500">{subtitle}</div>
+        <div className="mt-0.5 text-[10px] text-slate-500 line-clamp-1">{subtitle}</div>
       )}
       <div className="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-${color}-500 to-transparent transition-all duration-700" />
     </div>
@@ -323,13 +323,13 @@ export const OpportunityApplicationsPage = () => {
 
   if (isLoadingOpp || isLoadingApps) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
       >
-        <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-        <p className="text-sm text-slate-400">Chargement des candidatures...</p>
+        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-amber-500" />
+        <p className="text-xs sm:text-sm text-slate-400">Chargement des candidatures...</p>
         <div className="flex gap-1">
           {[0, 1, 2].map((i) => (
             <motion.div
@@ -357,12 +357,12 @@ export const OpportunityApplicationsPage = () => {
 
   if (oppError || !opportunity) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-4 py-12"
+        className="max-w-4xl mx-auto px-3 sm:px-4 py-12"
       >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-12 text-center backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-rose-500/20 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -373,17 +373,17 @@ export const OpportunityApplicationsPage = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
           >
-            <Building2 className="w-10 h-10 text-rose-400" />
+            <Building2 className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
           </motion.div>
-          <p className="text-lg font-semibold text-white">Offre non trouvée</p>
-          <p className="text-sm text-slate-400 mt-2">Vous n'avez pas accès à cette offre ou elle n'existe pas.</p>
+          <p className="text-base sm:text-lg font-semibold text-white">Offre non trouvée</p>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2">Vous n'avez pas accès à cette offre ou elle n'existe pas.</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoToDashboard}
-            className="mt-6 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-xs sm:text-sm"
           >
             Retour au dashboard
           </motion.button>
@@ -397,31 +397,31 @@ export const OpportunityApplicationsPage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative"
+      className="relative space-y-4 sm:space-y-6"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 10,
             y: mousePosition.y * 10,
@@ -430,25 +430,25 @@ export const OpportunityApplicationsPage = () => {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
 
         {/* ======================================================
             NAVIGATION
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoBack}
-              className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
             >
-              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span className="hidden sm:inline">Retour</span>
             </motion.button>
 
@@ -456,9 +456,9 @@ export const OpportunityApplicationsPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoHome}
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
             >
-              <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
               <span className="hidden sm:inline">Accueil</span>
             </motion.button>
 
@@ -466,16 +466,16 @@ export const OpportunityApplicationsPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoToDashboard}
-              className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white"
             >
-              <Building2 className="h-4 w-4" />
+              <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Dashboard</span>
             </motion.button>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Gestion des candidatures</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Gestion des candidatures</span>
             <Crown className="w-3 h-3 text-amber-400" />
           </div>
         </motion.div>
@@ -487,17 +487,19 @@ export const OpportunityApplicationsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300 space-y-6"
+          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300 space-y-4 sm:space-y-6"
         >
-          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-            <div className="space-y-3 flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl lg:text-3xl font-black text-white">{opportunity.title}</h1>
+          <div className="flex flex-col gap-4">
+            <div className="space-y-2 sm:space-y-3 flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <h1 className="text-lg sm:text-2xl lg:text-3xl font-black text-white break-words">
+                  {opportunity.title}
+                </h1>
                 {opportunity.status === 'active' && (
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-1"
+                    className="text-[10px] sm:text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1"
                   >
                     <CheckCircle className="w-3 h-3" />
                     Active
@@ -507,7 +509,7 @@ export const OpportunityApplicationsPage = () => {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full flex items-center gap-1"
+                    className="text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1"
                   >
                     <Clock className="w-3 h-3" />
                     En attente
@@ -517,7 +519,7 @@ export const OpportunityApplicationsPage = () => {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="text-xs font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20 px-3 py-1 rounded-full flex items-center gap-1"
+                    className="text-[10px] sm:text-xs font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1"
                   >
                     <XCircle className="w-3 h-3" />
                     Fermée
@@ -527,50 +529,52 @@ export const OpportunityApplicationsPage = () => {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="text-xs font-bold text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded-full border border-rose-500/20 flex items-center gap-1"
+                    className="text-[10px] sm:text-xs font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20 flex items-center gap-1"
                   >
                     <Zap className="w-3 h-3" /> Urgent
                   </motion.span>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-4 text-sm text-slate-400">
+              <div className="flex flex-wrap gap-x-3 gap-y-2 text-[10px] sm:text-sm text-slate-400">
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-amber-400" />
-                  {opportunity.organization_name || 'Mon organisation'}
+                  <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
+                  <span className="truncate">{opportunity.organization_name || 'Mon organisation'}</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-slate-500" />
-                  {opportunity.city || opportunity.location || 'Non spécifié'}
+                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
+                  <span className="truncate">{opportunity.city || opportunity.location || 'Non spécifié'}</span>
                 </span>
                 {opportunity.salary_min && opportunity.salary_max && (
                   <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                    <TrendingUp className="w-4 h-4" />
-                    {opportunity.salary_min.toLocaleString()} - {opportunity.salary_max.toLocaleString()} FCFA
+                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                    <span className="truncate">
+                      {opportunity.salary_min.toLocaleString()} - {opportunity.salary_max.toLocaleString()} FCFA
+                    </span>
                   </span>
                 )}
                 {opportunity.is_remote && (
-                  <span className="flex items-center gap-1.5 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
                     <Globe className="w-3 h-3" />
                     Télétravail
                   </span>
                 )}
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-slate-500" />
+                  <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
                   Publiée le {new Date(opportunity.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </span>
               </div>
             </div>
 
-            {/* Actions sur l'offre */}
-            <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            {/* Actions sur l'offre : grid sur mobile */}
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 shrink-0">
               {opportunity.status === 'pending_review' && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handlePublish}
                   disabled={publishOpportunityMutation.isPending}
-                  className="px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl text-sm font-semibold transition-all duration-300 border border-emerald-500/20 hover:border-emerald-500/40 flex items-center gap-2 disabled:opacity-50"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50"
                 >
                   {publishOpportunityMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -587,7 +591,7 @@ export const OpportunityApplicationsPage = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleClose}
                   disabled={closeOpportunityMutation.isPending}
-                  className="px-4 py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-xl text-sm font-semibold transition-all duration-300 border border-amber-500/20 hover:border-amber-500/40 flex items-center gap-2 disabled:opacity-50"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-amber-500/20 hover:border-amber-500/40 flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50"
                 >
                   {closeOpportunityMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -600,7 +604,7 @@ export const OpportunityApplicationsPage = () => {
 
               <Link
                 to={`/organization/opportunities/${opportunity.id}/edit`}
-                className="px-4 py-2.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-xl text-sm font-semibold transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 flex items-center gap-2"
+                className="px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 flex items-center justify-center gap-1.5 sm:gap-2"
               >
                 <Edit2 className="w-4 h-4" />
                 Modifier
@@ -611,7 +615,7 @@ export const OpportunityApplicationsPage = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleDelete}
                 disabled={deleteOpportunityMutation.isPending}
-                className="px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl text-sm font-semibold transition-all duration-300 border border-rose-500/20 hover:border-rose-500/40 flex items-center gap-2 disabled:opacity-50"
+                className="px-3 sm:px-4 py-2 sm:py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-rose-500/20 hover:border-rose-500/40 flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50"
               >
                 {deleteOpportunityMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -625,12 +629,12 @@ export const OpportunityApplicationsPage = () => {
 
           {/* Description */}
           {opportunity.description && (
-            <div className="pt-4 border-t border-slate-800">
-              <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
+            <div className="pt-3 sm:pt-4 border-t border-slate-800">
+              <h2 className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
                 <FileText className="w-3.5 h-3.5 text-amber-400" />
                 Description
               </h2>
-              <p className="text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
                 {opportunity.description}
               </p>
             </div>
@@ -639,18 +643,18 @@ export const OpportunityApplicationsPage = () => {
           {/* Prérequis */}
           {opportunity.requirements && opportunity.requirements.length > 0 && (
             <div>
-              <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
+              <h2 className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
                 <Award className="w-3.5 h-3.5 text-amber-400" />
                 Prérequis
               </h2>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {opportunity.requirements.map((req: string, index: number) => (
-                  <motion.span 
+                  <motion.span
                     key={index}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.05 }}
-                    className="px-3 py-1 bg-slate-950/60 border border-slate-800 rounded-lg text-xs text-slate-300"
+                    className="px-2 sm:px-3 py-0.5 sm:py-1 bg-slate-950/60 border border-slate-800 rounded-lg text-[10px] sm:text-xs text-slate-300"
                   >
                     {req}
                   </motion.span>
@@ -660,7 +664,7 @@ export const OpportunityApplicationsPage = () => {
           )}
 
           {/* Stats rapides */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-800">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-slate-800">
             <StatCard title="Total" value={stats.total} icon={Users} color="amber" />
             <StatCard title="En attente" value={stats.pending} icon={Clock} color="blue" />
             <StatCard title="Présélectionnés" value={stats.shortlisted} icon={Star} color="purple" />
@@ -676,18 +680,18 @@ export const OpportunityApplicationsPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-amber-500/10">
-                <Users className="w-5 h-5 text-amber-400" />
+          <div className="flex flex-col gap-3 sm:gap-4 border-b border-slate-800 pb-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 shrink-0">
+                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
               </div>
-              <h2 className="text-lg font-bold text-white">Candidatures reçues</h2>
-              <motion.span 
+              <h2 className="text-base sm:text-lg font-bold text-white truncate">Candidatures reçues</h2>
+              <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="text-xs font-bold bg-amber-500/10 text-amber-400 px-2.5 py-0.5 rounded-full border border-amber-500/20"
+                className="text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-400 px-2 sm:px-2.5 py-0.5 rounded-full border border-amber-500/20 shrink-0"
               >
                 {applications.length}
               </motion.span>
@@ -697,7 +701,7 @@ export const OpportunityApplicationsPage = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="bg-slate-950/80 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 cursor-pointer hover:border-slate-700"
+                className="flex-1 sm:flex-none bg-slate-950/80 text-slate-300 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 cursor-pointer hover:border-slate-700"
               >
                 <option value="">📊 Tous les statuts</option>
                 <option value="submitted">📩 En attente</option>
@@ -711,45 +715,45 @@ export const OpportunityApplicationsPage = () => {
           </div>
 
           {/* Recherche */}
-          <div className="relative mt-4">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+          <div className="relative mt-3 sm:mt-4">
+            <Search className="w-4 h-4 absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
             <input
               type="text"
               placeholder="Rechercher un candidat..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950/80 text-white pl-10 pr-4 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 text-sm placeholder:text-slate-600"
+              className="w-full bg-slate-950/80 text-white pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 text-xs sm:text-sm placeholder:text-slate-600"
             />
           </div>
 
           <AnimatePresence mode="wait">
             {filteredApplications.length === 0 ? (
-              <motion.div 
+              <motion.div
                 key="empty"
                 variants={fadeInScale}
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="text-center py-16 text-slate-400"
+                className="text-center py-10 sm:py-16 text-slate-400 px-4"
               >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-                  <Users className="w-8 h-8 text-slate-600" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
+                  <Users className="w-7 h-7 sm:w-8 sm:h-8 text-slate-600" />
                 </div>
-                <p className="text-lg font-semibold text-white">
+                <p className="text-base sm:text-lg font-semibold text-white">
                   {searchTerm || selectedStatus ? 'Aucun candidat ne correspond à vos filtres' : 'Aucune candidature reçue'}
                 </p>
-                <p className="text-sm mt-1">
-                  {searchTerm || selectedStatus 
-                    ? 'Essayez de modifier vos filtres de recherche' 
+                <p className="text-xs sm:text-sm mt-1">
+                  {searchTerm || selectedStatus
+                    ? 'Essayez de modifier vos filtres de recherche'
                     : 'Partagez l\'offre pour attirer des candidats au Niger.'}
                 </p>
               </motion.div>
             ) : (
-              <motion.div 
+              <motion.div
                 variants={staggerContainer}
                 initial="initial"
                 animate="animate"
-                className="mt-4 space-y-3"
+                className="mt-3 sm:mt-4 space-y-2 sm:space-y-3"
               >
                 {filteredApplications.map((app: any, index: number) => (
                   <motion.div
@@ -760,37 +764,39 @@ export const OpportunityApplicationsPage = () => {
                     transition={{ delay: index * 0.03 }}
                     whileHover="hover"
                     className={`bg-slate-950/50 border rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5 ${
-                      expandedApplication === app.id 
-                        ? 'border-amber-500/40' 
+                      expandedApplication === app.id
+                        ? 'border-amber-500/40'
                         : 'border-slate-800 hover:border-amber-500/20'
                     }`}
                   >
                     {/* En-tête cliquable */}
-                    <div 
-                      className="p-4 cursor-pointer hover:bg-slate-900/30 transition-colors duration-200"
+                    <div
+                      className="p-3 sm:p-4 cursor-pointer hover:bg-slate-900/30 transition-colors duration-200"
                       onClick={() => handleToggleExpand(app.id)}
                     >
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
-                          <motion.div 
+                      <div className="flex items-start sm:items-center justify-between gap-3">
+                        <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <motion.div
                             whileHover={{ scale: 1.05 }}
-                            className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-sm shrink-0"
+                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs sm:text-sm shrink-0"
                           >
                             {app.candidate_details?.first_name?.[0] || 'C'}
                           </motion.div>
                           <div className="flex-1 min-w-0">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-semibold text-white text-sm group-hover:text-amber-400 transition-colors">
+                              <span className="font-semibold text-white text-xs sm:text-sm group-hover:text-amber-400 transition-colors truncate">
                                 {app.candidate_details?.first_name || 'Candidat'} {app.candidate_details?.last_name || ''}
                               </span>
                               <StatusBadge status={app.status} />
                             </div>
-                            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-0.5">
-                              <span className="flex items-center gap-1 truncate">
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] sm:text-xs text-slate-400 mt-0.5">
+                              <span className="flex items-center gap-1 min-w-0">
                                 <Mail className="w-3 h-3 shrink-0" />
-                                {app.candidate_details?.email || 'Email non disponible'}
+                                <span className="truncate max-w-[180px] sm:max-w-none">
+                                  {app.candidate_details?.email || 'Email non disponible'}
+                                </span>
                               </span>
-                              <span className="flex items-center gap-1">
+                              <span className="flex items-center gap-1 shrink-0">
                                 <Calendar className="w-3 h-3" />
                                 {new Date(app.submitted_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                               </span>
@@ -816,27 +822,29 @@ export const OpportunityApplicationsPage = () => {
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
-                          className="border-t border-slate-800 p-4 bg-slate-900/30 overflow-hidden"
+                          className="border-t border-slate-800 p-3 sm:p-4 bg-slate-900/30 overflow-hidden"
                         >
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Colonne de gauche */}
                             <div className="space-y-3">
-                              <h4 className="text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                              <h4 className="text-[10px] sm:text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
                                 <User className="w-3.5 h-3.5" />
                                 Informations
                               </h4>
-                              <div className="space-y-1.5 text-sm">
+                              <div className="space-y-1.5 text-xs sm:text-sm">
                                 {app.candidate_details?.phone && (
                                   <p className="flex items-center gap-2 text-slate-300">
-                                    <Phone className="w-3.5 h-3.5 text-slate-500" />
-                                    {app.candidate_details.phone}
+                                    <Phone className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                                    <span className="truncate">{app.candidate_details.phone}</span>
                                   </p>
                                 )}
                                 {app.candidate_details?.city && (
                                   <p className="flex items-center gap-2 text-slate-300">
-                                    <MapPin className="w-3.5 h-3.5 text-slate-500" />
-                                    {app.candidate_details.city}
-                                    {app.candidate_details.country && `, ${app.candidate_details.country}`}
+                                    <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                                    <span className="truncate">
+                                      {app.candidate_details.city}
+                                      {app.candidate_details.country && `, ${app.candidate_details.country}`}
+                                    </span>
                                   </p>
                                 )}
                               </div>
@@ -846,7 +854,7 @@ export const OpportunityApplicationsPage = () => {
                                   <h5 className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                                     Lettre de motivation
                                   </h5>
-                                  <p className="text-xs text-slate-300 bg-slate-950/60 p-3 rounded-lg border border-slate-800 mt-1 leading-relaxed">
+                                  <p className="text-xs text-slate-300 bg-slate-950/60 p-2.5 sm:p-3 rounded-lg border border-slate-800 mt-1 leading-relaxed">
                                     {app.cover_note}
                                   </p>
                                 </div>
@@ -855,7 +863,7 @@ export const OpportunityApplicationsPage = () => {
 
                             {/* Colonne de droite */}
                             <div className="space-y-3">
-                              <h4 className="text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                              <h4 className="text-[10px] sm:text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
                                 <Briefcase className="w-3.5 h-3.5" />
                                 Compétences & CV
                               </h4>
@@ -881,11 +889,11 @@ export const OpportunityApplicationsPage = () => {
                                       href={`/api/v1/documents/${doc.document}/download/`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      className="text-xs text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 bg-slate-950/60 px-3 py-1.5 rounded-lg border border-slate-800 hover:border-amber-500/30"
+                                      className="text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 bg-slate-950/60 px-2 sm:px-3 py-1.5 rounded-lg border border-slate-800 hover:border-amber-500/30"
                                     >
-                                      <FileText className="w-3 h-3" />
-                                      {doc.document_name || 'CV'}
-                                      <Download className="w-3 h-3" />
+                                      <FileText className="w-3 h-3 shrink-0" />
+                                      <span className="truncate max-w-[100px]">{doc.document_name || 'CV'}</span>
+                                      <Download className="w-3 h-3 shrink-0" />
                                     </a>
                                   ))}
                                 </div>
@@ -893,7 +901,7 @@ export const OpportunityApplicationsPage = () => {
 
                               <Link
                                 to={`/profile/${app.candidate}`}
-                                className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors group/link"
+                                className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-blue-400 hover:text-blue-300 transition-colors group/link"
                               >
                                 <ExternalLink className="w-3 h-3 group-hover/link:scale-110 transition-transform" />
                                 Voir le profil complet
@@ -903,9 +911,9 @@ export const OpportunityApplicationsPage = () => {
                           </div>
 
                           {/* Actions */}
-                          <div className="mt-4 pt-3 border-t border-slate-800 flex flex-wrap items-center gap-2">
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-slate-400">Statut :</span>
+                          <div className="mt-3 sm:mt-4 pt-3 border-t border-slate-800 flex flex-col xs:flex-row items-start xs:items-center gap-2 sm:gap-3">
+                            <div className="flex items-center gap-2 w-full xs:w-auto">
+                              <span className="text-[10px] sm:text-xs text-slate-400 shrink-0">Statut :</span>
                               <select
                                 value={app.status}
                                 onChange={(e) => {
@@ -915,7 +923,7 @@ export const OpportunityApplicationsPage = () => {
                                   });
                                 }}
                                 disabled={updateStatusMutation.isPending}
-                                className="bg-slate-950/80 text-white px-3 py-1.5 rounded-lg border border-slate-800 text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:border-slate-700"
+                                className="flex-1 xs:flex-none bg-slate-950/80 text-white px-2 sm:px-3 py-1.5 rounded-lg border border-slate-800 text-[10px] sm:text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:border-slate-700"
                               >
                                 <option value="submitted">📩 En attente</option>
                                 <option value="under_review">🔍 En examen</option>
@@ -943,17 +951,17 @@ export const OpportunityApplicationsPage = () => {
             FOOTER
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
         >
-          <div className="flex items-center gap-4">
-            <span className="text-slate-500">
-              <span className="text-amber-400 font-medium">{opportunity.title}</span> • Gestion des candidatures
+          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
+            <span className="text-slate-500 truncate max-w-[200px] sm:max-w-none">
+              <span className="text-amber-400 font-medium truncate">{opportunity.title}</span> • Candidatures
             </span>
-            <span className="w-px h-4 bg-slate-800" />
+            <span className="hidden xs:block w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
               <span className="text-emerald-400/70">Sécurisé - Niger</span>

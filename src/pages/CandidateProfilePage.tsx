@@ -48,7 +48,8 @@ import {
   Share2,
   Settings,
   Bell,
-  HelpCircle
+  HelpCircle,
+  Camera
 } from 'lucide-react';
 
 import toast from 'react-hot-toast';
@@ -143,7 +144,7 @@ const getErrorMessage = (error: any, fallback: string) => {
   console.error('❌ Erreur complète:', error);
   console.error('❌ Response:', error?.response);
   console.error('❌ Response data:', error?.response?.data);
-  
+
   const data = error?.response?.data;
 
   if (!data) {
@@ -207,7 +208,7 @@ const cleanExperienceData = (form: ExperienceForm) => {
 
   if (form.location?.trim()) data.location = form.location.trim();
   if (form.description?.trim()) data.description = form.description.trim();
-  
+
   if (!form.is_current) {
     data.end_date = form.end_date || null;
   } else {
@@ -226,7 +227,7 @@ const cleanEducationData = (form: EducationForm) => {
   };
 
   if (form.field_of_study?.trim()) data.field_of_study = form.field_of_study.trim();
-  
+
   if (!form.is_current) {
     data.end_date = form.end_date || null;
   } else {
@@ -285,21 +286,21 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => (
   >
     <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
     <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${color}-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700`} />
-    
+
     <div className="relative z-10">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+      <div className="flex items-center justify-between mb-2 gap-2">
+        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">
           {title}
         </span>
-        <div className={`p-2 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300`}>
-          <Icon className="w-4 h-4" />
+        <div className={`p-1.5 sm:p-2 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
+          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </div>
       </div>
-      <div className="text-2xl font-black text-white tracking-tight">
+      <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
         {value}
       </div>
       {subtitle && (
-        <div className="mt-1 text-xs text-slate-500">{subtitle}</div>
+        <div className="mt-1 text-[10px] sm:text-xs text-slate-500 line-clamp-2">{subtitle}</div>
       )}
       <div className="mt-3 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-${color}-500 to-transparent transition-all duration-700" />
     </div>
@@ -453,7 +454,7 @@ export const CandidateProfilePage = () => {
   });
 
   const updateExperienceMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Experience> }) => 
+    mutationFn: ({ id, data }: { id: number; data: Partial<Experience> }) =>
       profileApi.updateExperience(id, data),
     onSuccess: () => {
       toast.success('Expérience modifiée avec succès.');
@@ -491,7 +492,7 @@ export const CandidateProfilePage = () => {
   });
 
   const updateEducationMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Education> }) => 
+    mutationFn: ({ id, data }: { id: number; data: Partial<Education> }) =>
       profileApi.updateEducation(id, data),
     onSuccess: () => {
       toast.success('Formation modifiée avec succès.');
@@ -529,7 +530,7 @@ export const CandidateProfilePage = () => {
   });
 
   const updateLanguageMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Language> }) => 
+    mutationFn: ({ id, data }: { id: number; data: Partial<Language> }) =>
       profileApi.updateLanguage(id, data),
     onSuccess: () => {
       toast.success('Langue modifiée avec succès.');
@@ -554,7 +555,7 @@ export const CandidateProfilePage = () => {
   });
 
   const uploadDocMutation = useMutation({
-    mutationFn: ({ file, type }: { file: File; type: DocumentType }) => 
+    mutationFn: ({ file, type }: { file: File; type: DocumentType }) =>
       documentsApi.upload(file, type),
     onSuccess: () => {
       toast.success('Document téléversé avec succès.');
@@ -782,7 +783,7 @@ export const CandidateProfilePage = () => {
 
   if (isProfileLoading) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
@@ -816,21 +817,21 @@ export const CandidateProfilePage = () => {
 
   if (isProfileError || !profile) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-3xl mx-auto px-4 py-12"
+        className="max-w-3xl mx-auto px-3 sm:px-4 py-12"
       >
-        <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-8 text-center backdrop-blur-xl">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
-            <AlertCircle className="w-8 h-8 text-rose-400" />
+        <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-6 sm:p-8 text-center backdrop-blur-xl">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
+            <AlertCircle className="w-7 h-7 sm:w-8 sm:h-8 text-rose-400" />
           </div>
-          <p className="text-lg font-semibold text-white">Impossible de charger votre profil.</p>
+          <p className="text-base sm:text-lg font-semibold text-white">Impossible de charger votre profil.</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => queryClient.invalidateQueries({ queryKey: ['profile'] })}
-            className="mt-4 rounded-xl bg-slate-800 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
+            className="mt-4 rounded-xl bg-slate-800 px-5 sm:px-6 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
           >
             Réessayer
           </motion.button>
@@ -844,31 +845,31 @@ export const CandidateProfilePage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative"
+      className="relative space-y-4 sm:space-y-6"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 10,
             y: mousePosition.y * 10,
@@ -881,19 +882,19 @@ export const CandidateProfilePage = () => {
           BARRE DE NAVIGATION
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoBack}
-            className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
             <span className="hidden sm:inline">Retour</span>
           </motion.button>
 
@@ -901,17 +902,17 @@ export const CandidateProfilePage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoHome}
-            className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
           >
-            <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+            <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
             <span className="hidden sm:inline">Accueil</span>
           </motion.button>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+        <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Mon profil</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Mon profil</span>
             <Crown className="w-3 h-3 text-amber-400" />
           </div>
         </div>
@@ -924,18 +925,18 @@ export const CandidateProfilePage = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+        className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-5 sm:gap-6">
           {/* Avatar */}
-          <motion.div 
-            className="relative"
+          <motion.div
+            className="relative shrink-0 self-start lg:self-center"
             onMouseEnter={() => setIsHoveringAvatar(true)}
             onMouseLeave={() => setIsHoveringAvatar(false)}
           >
             <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
-              className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-3xl font-bold text-amber-400 shadow-xl shadow-amber-500/10 relative overflow-hidden"
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-2xl sm:text-3xl font-bold text-amber-400 shadow-xl shadow-amber-500/10 relative overflow-hidden"
             >
               {profile.first_name?.[0]?.toUpperCase() || profile.last_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'C'}
               <AnimatePresence>
@@ -946,7 +947,7 @@ export const CandidateProfilePage = () => {
                     exit={{ opacity: 0, y: 10 }}
                     className="absolute inset-0 bg-slate-950/80 flex items-center justify-center"
                   >
-                    <Camera className="w-6 h-6 text-amber-400" />
+                    <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -965,13 +966,13 @@ export const CandidateProfilePage = () => {
           </motion.div>
 
           {/* Informations */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 w-full">
             {isEditingProfile ? (
-              <motion.div 
+              <motion.div
                 variants={staggerContainer}
                 initial="initial"
                 animate="animate"
-                className="space-y-4"
+                className="space-y-3 sm:space-y-4"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <motion.input
@@ -980,7 +981,7 @@ export const CandidateProfilePage = () => {
                     value={editForm.first_name}
                     onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
                     placeholder="Prénom"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                   />
                   <motion.input
                     variants={fadeInUp}
@@ -988,16 +989,16 @@ export const CandidateProfilePage = () => {
                     value={editForm.last_name}
                     onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
                     placeholder="Nom"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                   />
                 </div>
 
-                <motion.div 
+                <motion.div
                   variants={fadeInUp}
-                  className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-4 py-3"
+                  className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-3 sm:px-4 py-3"
                 >
                   <Mail className="h-4 w-4 shrink-0 text-slate-500" />
-                  <span className="text-sm text-slate-400">{user?.email}</span>
+                  <span className="text-xs sm:text-sm text-slate-400 truncate">{user?.email}</span>
                 </motion.div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1008,7 +1009,7 @@ export const CandidateProfilePage = () => {
                       value={editForm.phone}
                       onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                       placeholder="Téléphone"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                   </motion.div>
                   <motion.div variants={fadeInUp} className="flex items-center gap-2">
@@ -1018,7 +1019,7 @@ export const CandidateProfilePage = () => {
                       value={editForm.city}
                       onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
                       placeholder="Ville"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                   </motion.div>
                 </div>
@@ -1030,7 +1031,7 @@ export const CandidateProfilePage = () => {
                     value={editForm.country}
                     onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
                     placeholder="Pays"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                   />
                 </motion.div>
 
@@ -1040,18 +1041,18 @@ export const CandidateProfilePage = () => {
                   onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
                   placeholder="Bio / Présentation"
                   rows={4}
-                  className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                  className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                 />
               </motion.div>
             ) : (
-              <motion.div 
+              <motion.div
                 variants={staggerContainer}
                 initial="initial"
                 animate="animate"
-                className="space-y-3"
+                className="space-y-2 sm:space-y-3"
               >
-                <div className="flex flex-wrap items-center gap-3">
-                  <motion.h1 variants={fadeInUp} className="text-2xl md:text-3xl font-extrabold text-white">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                  <motion.h1 variants={fadeInUp} className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white break-words">
                     {profile.first_name || profile.last_name
                       ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
                       : 'Mon profil'}
@@ -1060,38 +1061,38 @@ export const CandidateProfilePage = () => {
                     variants={fadeInUp}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
+                    className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
                   >
                     CANDIDAT
                   </motion.span>
                 </div>
 
-                <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 text-sm text-slate-400">
-                  <span className="flex items-center gap-1.5 group cursor-pointer" onClick={handleCopyEmail}>
-                    <Mail className="h-4 w-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                    {profile.email || user?.email}
+                <motion.div variants={fadeInUp} className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-slate-400">
+                  <span className="flex items-center gap-1.5 group cursor-pointer min-w-0" onClick={handleCopyEmail}>
+                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 group-hover:text-amber-400 transition-colors shrink-0" />
+                    <span className="truncate max-w-[180px] sm:max-w-none">{profile.email || user?.email}</span>
                     {isCopied ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     ) : (
-                      <Copy className="w-3 h-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <Copy className="w-3 h-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     )}
                   </span>
                   {profile.phone && (
                     <span className="flex items-center gap-1.5">
-                      <Phone className="h-4 w-4 text-slate-500" />
+                      <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 shrink-0" />
                       {profile.phone}
                     </span>
                   )}
                   {(profile.city || profile.country) && (
                     <span className="flex items-center gap-1.5">
-                      <MapPin className="h-4 w-4 text-slate-500" />
+                      <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 shrink-0" />
                       {[profile.city, profile.country].filter(Boolean).join(', ')}
                     </span>
                   )}
                 </motion.div>
 
                 {profile.bio && (
-                  <motion.p variants={fadeInUp} className="text-sm leading-6 text-slate-300">
+                  <motion.p variants={fadeInUp} className="text-xs sm:text-sm leading-6 text-slate-300">
                     {profile.bio}
                   </motion.p>
                 )}
@@ -1100,7 +1101,7 @@ export const CandidateProfilePage = () => {
           </div>
 
           {/* Actions profil */}
-          <div className="flex shrink-0 gap-2">
+          <div className="flex flex-col xs:flex-row shrink-0 gap-2 w-full lg:w-auto">
             {isEditingProfile ? (
               <>
                 <motion.button
@@ -1118,7 +1119,7 @@ export const CandidateProfilePage = () => {
                       bio: profile.bio || '',
                     });
                   }}
-                  className="flex items-center gap-2 rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
+                  className="flex-1 lg:flex-none flex items-center justify-center gap-2 rounded-xl bg-slate-800 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
                 >
                   <X className="h-4 w-4" />
                   Annuler
@@ -1129,7 +1130,7 @@ export const CandidateProfilePage = () => {
                   type="button"
                   onClick={handleSaveProfile}
                   disabled={updateProfileMutation.isPending}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
+                  className="flex-1 lg:flex-none flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
                 >
                   {updateProfileMutation.isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -1145,7 +1146,7 @@ export const CandidateProfilePage = () => {
                 whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={() => setIsEditingProfile(true)}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-5 py-2.5 text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
               >
                 <Edit2 className="h-4 w-4" />
                 Modifier
@@ -1159,11 +1160,11 @@ export const CandidateProfilePage = () => {
           STATISTIQUES RAPIDES
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         variants={staggerContainer}
         initial="initial"
         animate="animate"
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
       >
         <StatCard title="Expériences" value={stats.experiences} icon={Briefcase} color="amber" />
         <StatCard title="Formations" value={stats.education} icon={GraduationCap} color="blue" />
@@ -1175,21 +1176,21 @@ export const CandidateProfilePage = () => {
           CONTENU PRINCIPAL
       ====================================================== */}
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-3">
         {/* Colonne principale */}
-        <div className="space-y-8 lg:col-span-2">
+        <div className="space-y-4 sm:space-y-6 lg:space-y-8 lg:col-span-2">
           {/* EXPERIENCES */}
           <motion.section
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2 text-lg font-bold text-amber-400">
-                <Briefcase className="h-5 w-5" />
-                <h2>Expériences professionnelles</h2>
-                <span className="text-xs text-slate-500 font-normal">({experiences.length})</span>
+            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-amber-400 min-w-0">
+                <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                <h2 className="truncate">Expériences</h2>
+                <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({experiences.length})</span>
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -1204,9 +1205,9 @@ export const CandidateProfilePage = () => {
                     setShowExperienceForm(true);
                   }
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20"
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20 shrink-0"
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 Ajouter
               </motion.button>
             </div>
@@ -1217,56 +1218,56 @@ export const CandidateProfilePage = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-5 overflow-hidden"
+                  className="mt-4 sm:mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-4 sm:p-5 overflow-hidden"
                 >
-                  <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-bold text-white">
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <h3 className="font-bold text-white text-sm sm:text-base truncate">
                       {editingExperienceId ? 'Modifier l’expérience' : 'Ajouter une expérience'}
                     </h3>
-                    <button type="button" onClick={cancelExperienceForm} className="text-slate-400 hover:text-white transition-colors">
+                    <button type="button" onClick={cancelExperienceForm} className="text-slate-400 hover:text-white transition-colors shrink-0">
                       <X className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
                     <input
                       type="text"
                       value={experienceForm.title}
                       onChange={(e) => setExperienceForm({ ...experienceForm, title: e.target.value })}
                       placeholder="Intitulé du poste"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <input
                       type="text"
                       value={experienceForm.company}
                       onChange={(e) => setExperienceForm({ ...experienceForm, company: e.target.value })}
                       placeholder="Entreprise"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <input
                       type="text"
                       value={experienceForm.location}
                       onChange={(e) => setExperienceForm({ ...experienceForm, location: e.target.value })}
                       placeholder="Lieu"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <input
                       type="date"
                       value={experienceForm.start_date}
                       onChange={(e) => setExperienceForm({ ...experienceForm, start_date: e.target.value })}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     {!experienceForm.is_current && (
                       <input
                         type="date"
                         value={experienceForm.end_date}
                         onChange={(e) => setExperienceForm({ ...experienceForm, end_date: e.target.value })}
-                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                       />
                     )}
                   </div>
 
-                  <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+                  <label className="mt-4 flex cursor-pointer items-center gap-2 text-xs sm:text-sm text-slate-300">
                     <input
                       type="checkbox"
                       checked={experienceForm.is_current}
@@ -1285,14 +1286,14 @@ export const CandidateProfilePage = () => {
                     onChange={(e) => setExperienceForm({ ...experienceForm, description: e.target.value })}
                     placeholder="Description de l’expérience"
                     rows={4}
-                    className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 mt-4"
+                    className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 mt-4"
                   />
 
-                  <div className="mt-4 flex justify-end gap-2">
+                  <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
                     <button
                       type="button"
                       onClick={cancelExperienceForm}
-                      className="rounded-xl bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
+                      className="rounded-xl bg-slate-800 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
                     >
                       Annuler
                     </button>
@@ -1302,7 +1303,7 @@ export const CandidateProfilePage = () => {
                       type="button"
                       onClick={handleExperienceSubmit}
                       disabled={isSavingExperience}
-                      className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
                     >
                       {isSavingExperience && <Loader2 className="h-4 w-4 animate-spin" />}
                       {editingExperienceId ? 'Modifier' : 'Ajouter'}
@@ -1312,15 +1313,15 @@ export const CandidateProfilePage = () => {
               )}
             </AnimatePresence>
 
-            <div className="mt-5 space-y-4">
+            <div className="mt-4 sm:mt-5 space-y-3 sm:space-y-4">
               {experiences.length === 0 ? (
-                <motion.div 
+                <motion.div
                   variants={fadeInScale}
-                  className="py-8 text-center text-slate-500"
+                  className="py-6 sm:py-8 text-center text-slate-500"
                 >
-                  <Briefcase className="mx-auto mb-3 h-10 w-10 opacity-30" />
-                  <p className="text-sm font-medium text-slate-400">Aucune expérience renseignée</p>
-                  <p className="mt-1 text-xs text-slate-600">Ajoutez vos expériences professionnelles</p>
+                  <Briefcase className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
+                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucune expérience renseignée</p>
+                  <p className="mt-1 text-[10px] sm:text-xs text-slate-600">Ajoutez vos expériences professionnelles</p>
                 </motion.div>
               ) : (
                 experiences.map((exp, index) => (
@@ -1330,47 +1331,52 @@ export const CandidateProfilePage = () => {
                     initial="initial"
                     animate="animate"
                     transition={{ delay: index * 0.05 }}
-                    className="group rounded-xl border border-slate-800 bg-slate-950/40 p-4 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
+                    className="group rounded-xl border border-slate-800 bg-slate-950/40 p-3 sm:p-4 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start justify-between gap-3 sm:gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-bold text-white group-hover:text-amber-400 transition-colors">
+                          <h3 className="font-bold text-white group-hover:text-amber-400 transition-colors text-sm sm:text-base break-words">
                             {exp.title}
                           </h3>
-                          <span className="text-xs text-amber-400/70">•</span>
-                          <p className="text-sm text-amber-400">{exp.company}</p>
+                          <span className="text-xs text-amber-400/70 hidden sm:inline">•</span>
+                          <p className="text-xs sm:text-sm text-amber-400 break-words">{exp.company}</p>
                           {exp.is_current && (
                             <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
                               Actuel
                             </span>
                           )}
                         </div>
-                        <p className="mt-2 text-xs text-slate-500 flex items-center gap-3">
-                          <Calendar className="w-3 h-3" />
-                          {exp.start_date}
-                          {' — '}
-                          {exp.is_current ? 'Présent' : exp.end_date || 'Non précisé'}
+                        <p className="mt-2 text-[10px] sm:text-xs text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {exp.start_date}
+                            {' — '}
+                            {exp.is_current ? 'Présent' : exp.end_date || 'Non précisé'}
+                          </span>
                           {exp.location && (
-                            <>• <MapPin className="w-3 h-3 inline" /> {exp.location}</>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3" />
+                              {exp.location}
+                            </span>
                           )}
                         </p>
                         {exp.description && (
-                          <p className="mt-3 text-sm leading-6 text-slate-400 group-hover:text-slate-300 transition-colors">
+                          <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-6 text-slate-400 group-hover:text-slate-300 transition-colors">
                             {exp.description}
                           </p>
                         )}
                       </div>
-                      <div className="flex gap-1 shrink-0">
+                      <div className="flex gap-0.5 sm:gap-1 shrink-0">
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           type="button"
                           onClick={() => handleEditExperience(exp)}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
                           title="Modifier"
                         >
-                          <Edit2 className="h-4 w-4" />
+                          <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.1 }}
@@ -1378,10 +1384,10 @@ export const CandidateProfilePage = () => {
                           type="button"
                           onClick={() => deleteExperienceMutation.mutate(exp.id)}
                           disabled={deleteExperienceMutation.isPending}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
                           title="Supprimer"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </motion.button>
                       </div>
                     </div>
@@ -1396,13 +1402,13 @@ export const CandidateProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2 text-lg font-bold text-amber-400">
-                <GraduationCap className="h-5 w-5" />
-                <h2>Formations & diplômes</h2>
-                <span className="text-xs text-slate-500 font-normal">({education.length})</span>
+            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-amber-400 min-w-0">
+                <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                <h2 className="truncate">Formations</h2>
+                <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({education.length})</span>
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -1417,9 +1423,9 @@ export const CandidateProfilePage = () => {
                     setShowEducationForm(true);
                   }
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20"
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20 shrink-0"
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 Ajouter
               </motion.button>
             </div>
@@ -1430,56 +1436,56 @@ export const CandidateProfilePage = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-5 overflow-hidden"
+                  className="mt-4 sm:mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-4 sm:p-5 overflow-hidden"
                 >
-                  <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-bold text-white">
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <h3 className="font-bold text-white text-sm sm:text-base truncate">
                       {editingEducationId ? 'Modifier la formation' : 'Ajouter une formation'}
                     </h3>
-                    <button type="button" onClick={cancelEducationForm} className="text-slate-400 hover:text-white transition-colors">
+                    <button type="button" onClick={cancelEducationForm} className="text-slate-400 hover:text-white transition-colors shrink-0">
                       <X className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
                     <input
                       type="text"
                       value={educationForm.degree}
                       onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
                       placeholder="Diplôme"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <input
                       type="text"
                       value={educationForm.institution}
                       onChange={(e) => setEducationForm({ ...educationForm, institution: e.target.value })}
                       placeholder="Établissement"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <input
                       type="text"
                       value={educationForm.field_of_study}
                       onChange={(e) => setEducationForm({ ...educationForm, field_of_study: e.target.value })}
                       placeholder="Domaine d'étude"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <input
                       type="date"
                       value={educationForm.start_date}
                       onChange={(e) => setEducationForm({ ...educationForm, start_date: e.target.value })}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     {!educationForm.is_current && (
                       <input
                         type="date"
                         value={educationForm.end_date}
                         onChange={(e) => setEducationForm({ ...educationForm, end_date: e.target.value })}
-                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                       />
                     )}
                   </div>
 
-                  <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+                  <label className="mt-4 flex cursor-pointer items-center gap-2 text-xs sm:text-sm text-slate-300">
                     <input
                       type="checkbox"
                       checked={educationForm.is_current}
@@ -1493,11 +1499,11 @@ export const CandidateProfilePage = () => {
                     Formation en cours
                   </label>
 
-                  <div className="mt-4 flex justify-end gap-2">
+                  <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
                     <button
                       type="button"
                       onClick={cancelEducationForm}
-                      className="rounded-xl bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
+                      className="rounded-xl bg-slate-800 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
                     >
                       Annuler
                     </button>
@@ -1507,7 +1513,7 @@ export const CandidateProfilePage = () => {
                       type="button"
                       onClick={handleEducationSubmit}
                       disabled={isSavingEducation}
-                      className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
                     >
                       {isSavingEducation && <Loader2 className="h-4 w-4 animate-spin" />}
                       {editingEducationId ? 'Modifier' : 'Ajouter'}
@@ -1517,15 +1523,15 @@ export const CandidateProfilePage = () => {
               )}
             </AnimatePresence>
 
-            <div className="mt-5 space-y-4">
+            <div className="mt-4 sm:mt-5 space-y-3 sm:space-y-4">
               {education.length === 0 ? (
-                <motion.div 
+                <motion.div
                   variants={fadeInScale}
-                  className="py-8 text-center text-slate-500"
+                  className="py-6 sm:py-8 text-center text-slate-500"
                 >
-                  <GraduationCap className="mx-auto mb-3 h-10 w-10 opacity-30" />
-                  <p className="text-sm font-medium text-slate-400">Aucune formation renseignée</p>
-                  <p className="mt-1 text-xs text-slate-600">Ajoutez vos diplômes et formations</p>
+                  <GraduationCap className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
+                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucune formation renseignée</p>
+                  <p className="mt-1 text-[10px] sm:text-xs text-slate-600">Ajoutez vos diplômes et formations</p>
                 </motion.div>
               ) : (
                 education.map((edu, index) => (
@@ -1535,12 +1541,12 @@ export const CandidateProfilePage = () => {
                     initial="initial"
                     animate="animate"
                     transition={{ delay: index * 0.05 }}
-                    className="group rounded-xl border border-slate-800 bg-slate-950/40 p-4 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
+                    className="group rounded-xl border border-slate-800 bg-slate-950/40 p-3 sm:p-4 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start justify-between gap-3 sm:gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-bold text-white group-hover:text-amber-400 transition-colors">
+                          <h3 className="font-bold text-white group-hover:text-amber-400 transition-colors text-sm sm:text-base break-words">
                             {edu.degree}
                             {edu.field_of_study && <> en {edu.field_of_study}</>}
                           </h3>
@@ -1550,24 +1556,24 @@ export const CandidateProfilePage = () => {
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-amber-400">{edu.institution}</p>
-                        <p className="mt-2 text-xs text-slate-500 flex items-center gap-3">
-                          <Calendar className="w-3 h-3" />
+                        <p className="text-xs sm:text-sm text-amber-400 break-words">{edu.institution}</p>
+                        <p className="mt-2 text-[10px] sm:text-xs text-slate-500 flex items-center gap-2">
+                          <Calendar className="w-3 h-3 shrink-0" />
                           {edu.start_date}
                           {' — '}
                           {edu.is_current ? 'En cours' : edu.end_date || 'Non précisé'}
                         </p>
                       </div>
-                      <div className="flex gap-1 shrink-0">
+                      <div className="flex gap-0.5 sm:gap-1 shrink-0">
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           type="button"
                           onClick={() => handleEditEducation(edu)}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
                           title="Modifier"
                         >
-                          <Edit2 className="h-4 w-4" />
+                          <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </motion.button>
                         <motion.button
                           whileHover={{ scale: 1.1 }}
@@ -1575,10 +1581,10 @@ export const CandidateProfilePage = () => {
                           type="button"
                           onClick={() => deleteEducationMutation.mutate(edu.id)}
                           disabled={deleteEducationMutation.isPending}
-                          className="rounded-lg p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
                           title="Supprimer"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </motion.button>
                       </div>
                     </div>
@@ -1593,13 +1599,13 @@ export const CandidateProfilePage = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2 text-lg font-bold text-amber-400">
-                <Languages className="h-5 w-5" />
-                <h2>Langues</h2>
-                <span className="text-xs text-slate-500 font-normal">({languages.length})</span>
+            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 sm:pb-4">
+              <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-amber-400 min-w-0">
+                <Languages className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+                <h2 className="truncate">Langues</h2>
+                <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({languages.length})</span>
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -1614,9 +1620,9 @@ export const CandidateProfilePage = () => {
                     setShowLanguageForm(true);
                   }
                 }}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20"
+                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20 shrink-0"
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 Ajouter
               </motion.button>
             </div>
@@ -1627,29 +1633,29 @@ export const CandidateProfilePage = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-5 overflow-hidden"
+                  className="mt-4 sm:mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-4 sm:p-5 overflow-hidden"
                 >
-                  <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-bold text-white">
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <h3 className="font-bold text-white text-sm sm:text-base truncate">
                       {editingLanguageId ? 'Modifier la langue' : 'Ajouter une langue'}
                     </h3>
-                    <button type="button" onClick={cancelLanguageForm} className="text-slate-400 hover:text-white transition-colors">
+                    <button type="button" onClick={cancelLanguageForm} className="text-slate-400 hover:text-white transition-colors shrink-0">
                       <X className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
                     <input
                       type="text"
                       value={languageForm.name}
                       onChange={(e) => setLanguageForm({ ...languageForm, name: e.target.value })}
                       placeholder="Langue (ex. Français)"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     />
                     <select
                       value={languageForm.level}
                       onChange={(e) => setLanguageForm({ ...languageForm, level: e.target.value as LanguageLevel })}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                     >
                       <option value="basic">Notions</option>
                       <option value="intermediate">Intermédiaire</option>
@@ -1658,11 +1664,11 @@ export const CandidateProfilePage = () => {
                     </select>
                   </div>
 
-                  <div className="mt-4 flex justify-end gap-2">
+                  <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
                     <button
                       type="button"
                       onClick={cancelLanguageForm}
-                      className="rounded-xl bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
+                      className="rounded-xl bg-slate-800 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
                     >
                       Annuler
                     </button>
@@ -1672,7 +1678,7 @@ export const CandidateProfilePage = () => {
                       type="button"
                       onClick={handleLanguageSubmit}
                       disabled={isSavingLanguage}
-                      className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
                     >
                       {isSavingLanguage && <Loader2 className="h-4 w-4 animate-spin" />}
                       {editingLanguageId ? 'Modifier' : 'Ajouter'}
@@ -1682,14 +1688,14 @@ export const CandidateProfilePage = () => {
               )}
             </AnimatePresence>
 
-            <div className="mt-5 space-y-2">
+            <div className="mt-4 sm:mt-5 space-y-2">
               {languages.length === 0 ? (
-                <motion.div 
+                <motion.div
                   variants={fadeInScale}
-                  className="py-8 text-center text-slate-500"
+                  className="py-6 sm:py-8 text-center text-slate-500"
                 >
-                  <Languages className="mx-auto mb-3 h-10 w-10 opacity-30" />
-                  <p className="text-sm font-medium text-slate-400">Aucune langue renseignée</p>
+                  <Languages className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
+                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucune langue renseignée</p>
                 </motion.div>
               ) : (
                 languages.map((language, index) => (
@@ -1699,26 +1705,26 @@ export const CandidateProfilePage = () => {
                     initial="initial"
                     animate="animate"
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/40 p-3 hover:border-amber-500/30 transition-all duration-300 group"
+                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-950/40 p-2.5 sm:p-3 hover:border-amber-500/30 transition-all duration-300 group"
                   >
-                    <div>
-                      <span className="font-semibold text-white group-hover:text-amber-400 transition-colors">
+                    <div className="min-w-0 flex-1">
+                      <span className="font-semibold text-white group-hover:text-amber-400 transition-colors text-xs sm:text-sm block truncate">
                         {language.name}
                       </span>
                       <div className="mt-1">
                         <LevelBadge level={language.level} />
                       </div>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-0.5 sm:gap-1 shrink-0">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         type="button"
                         onClick={() => handleEditLanguage(language)}
-                        className="rounded-lg p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                        className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
                         title="Modifier"
                       >
-                        <Edit2 className="h-4 w-4" />
+                        <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </motion.button>
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -1726,10 +1732,10 @@ export const CandidateProfilePage = () => {
                         type="button"
                         onClick={() => deleteLanguageMutation.mutate(language.id)}
                         disabled={deleteLanguageMutation.isPending}
-                        className="rounded-lg p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                        className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
                         title="Supprimer"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </motion.button>
                     </div>
                   </motion.div>
@@ -1743,25 +1749,25 @@ export const CandidateProfilePage = () => {
             COLONNE DOCUMENTS
         ====================================================== */}
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <motion.section
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="sticky top-24 rounded-2xl border border-slate-800 bg-slate-900/80 p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="lg:sticky lg:top-24 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-4 text-lg font-bold text-amber-400">
-              <FileText className="h-5 w-5" />
-              <h2>Mes documents</h2>
-              <span className="text-xs text-slate-500 font-normal">({documents.length})</span>
+            <div className="flex items-center gap-2 border-b border-slate-800 pb-3 sm:pb-4 text-base sm:text-lg font-bold text-amber-400">
+              <FileText className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+              <h2 className="truncate">Mes documents</h2>
+              <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({documents.length})</span>
             </div>
 
             {/* Upload */}
-            <div className="mt-5 space-y-3">
+            <div className="mt-4 sm:mt-5 space-y-3">
               <select
                 value={selectedDocType}
                 onChange={(e) => setSelectedDocType(e.target.value as DocumentType)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
               >
                 <option value="cv">Curriculum Vitae (CV)</option>
                 <option value="diploma">Diplôme</option>
@@ -1773,11 +1779,11 @@ export const CandidateProfilePage = () => {
               <motion.label
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
-                className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-800 bg-slate-950/30 p-5 transition-all duration-300 hover:border-amber-500/50 hover:bg-slate-950/50"
+                className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-800 bg-slate-950/30 p-4 sm:p-5 transition-all duration-300 hover:border-amber-500/50 hover:bg-slate-950/50"
               >
-                <Upload className="mb-2 h-7 w-7 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                <span className="text-sm font-medium text-slate-300">Ajouter un document</span>
-                <span className="mt-1 text-[10px] text-slate-500">PDF, DOC, DOCX — Max 5 Mo</span>
+                <Upload className="mb-2 h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
+                <span className="text-xs sm:text-sm font-medium text-slate-300">Ajouter un document</span>
+                <span className="mt-1 text-[10px] text-slate-500 text-center">PDF, DOC, DOCX — Max 5 Mo</span>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
@@ -1792,19 +1798,19 @@ export const CandidateProfilePage = () => {
             </div>
 
             {/* Liste documents */}
-            <div className="mt-6 space-y-2">
+            <div className="mt-5 sm:mt-6 space-y-2">
               {isDocsLoading ? (
                 <div className="flex justify-center py-6">
                   <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
                 </div>
               ) : documents.length === 0 ? (
-                <motion.div 
+                <motion.div
                   variants={fadeInScale}
-                  className="py-8 text-center text-slate-500"
+                  className="py-6 sm:py-8 text-center text-slate-500"
                 >
-                  <FileText className="mx-auto mb-3 h-10 w-10 opacity-30" />
-                  <p className="text-sm font-medium text-slate-400">Aucun document</p>
-                  <p className="mt-1 text-xs text-slate-600">Ajoutez vos documents</p>
+                  <FileText className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
+                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucun document</p>
+                  <p className="mt-1 text-[10px] sm:text-xs text-slate-600">Ajoutez vos documents</p>
                 </motion.div>
               ) : (
                 documents.map((doc, index) => (
@@ -1814,17 +1820,17 @@ export const CandidateProfilePage = () => {
                     initial="initial"
                     animate="animate"
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-slate-950/60 p-3 hover:border-amber-500/30 transition-all duration-300 group"
+                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-950/60 p-2.5 sm:p-3 hover:border-amber-500/30 transition-all duration-300 group"
                   >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <div className="p-1.5 rounded-lg bg-amber-500/10">
-                        <FileText className="h-4 w-4 shrink-0 text-amber-400" />
+                    <div className="flex min-w-0 items-center gap-2 sm:gap-3 flex-1">
+                      <div className="p-1.5 rounded-lg bg-amber-500/10 shrink-0">
+                        <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400" />
                       </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-xs font-semibold text-white group-hover:text-amber-400 transition-colors">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[10px] sm:text-xs font-semibold text-white group-hover:text-amber-400 transition-colors">
                           {doc.original_filename}
                         </p>
-                        <p className="mt-0.5 text-[10px] uppercase text-slate-500">
+                        <p className="mt-0.5 text-[10px] uppercase text-slate-500 truncate">
                           {doc.document_type}
                         </p>
                       </div>
@@ -1839,7 +1845,7 @@ export const CandidateProfilePage = () => {
                         className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
                         title="Ouvrir"
                       >
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </motion.a>
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -1850,7 +1856,7 @@ export const CandidateProfilePage = () => {
                         className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
                         title="Supprimer"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                       </motion.button>
                     </div>
                   </motion.div>
@@ -1861,12 +1867,12 @@ export const CandidateProfilePage = () => {
 
           {/* Actions rapides */}
           <motion.section
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h3 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
               <Zap className="w-4 h-4 text-amber-400" />
               Actions rapides
             </h3>
@@ -1874,7 +1880,7 @@ export const CandidateProfilePage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <Settings className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -1885,7 +1891,7 @@ export const CandidateProfilePage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <Bell className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -1896,7 +1902,7 @@ export const CandidateProfilePage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <HelpCircle className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -1913,17 +1919,17 @@ export const CandidateProfilePage = () => {
           FOOTER
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
           <span className="text-slate-500">
             <span className="text-amber-400 font-medium">{profile.first_name || 'Candidat'}</span> • Profil
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
             <span className="text-emerald-400/70">Sécurisé</span>

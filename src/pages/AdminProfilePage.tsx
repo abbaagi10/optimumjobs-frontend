@@ -108,33 +108,33 @@ const ProfileDisplayValue: React.FC<{
   value?: string | null;
   icon?: React.ReactNode;
 }> = ({ value, icon }) => (
-  <motion.div 
+  <motion.div
     variants={fadeInUp}
-    className="flex items-center gap-3 px-4 h-[46px] rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden w-full group hover:border-amber-500/30 transition-all duration-300"
+    className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 h-[46px] rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden w-full group hover:border-amber-500/30 transition-all duration-300"
   >
     {icon && (
-      <span className="text-slate-500 group-hover:text-amber-400 transition-colors">
+      <span className="text-slate-500 group-hover:text-amber-400 transition-colors shrink-0">
         {icon}
       </span>
     )}
-    <span className="text-sm text-white truncate min-w-0 flex-1">
+    <span className="text-xs sm:text-sm text-white truncate min-w-0 flex-1">
       {value || 'Non renseigné'}
     </span>
   </motion.div>
 );
 
 const InfoCard = ({ icon: Icon, label, value, color = 'amber' }: any) => (
-  <motion.div 
+  <motion.div
     variants={fadeInUp}
-    className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-amber-500/30 transition-all duration-300 group"
+    className="p-3 sm:p-4 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-amber-500/30 transition-all duration-300 group"
   >
-    <div className="flex items-center justify-between">
-      <span className="text-xs text-slate-500">{label}</span>
-      <div className={`p-1.5 rounded-lg bg-${color}-500/10 group-hover:scale-110 transition-transform duration-300`}>
+    <div className="flex items-center justify-between gap-2">
+      <span className="text-[10px] sm:text-xs text-slate-500">{label}</span>
+      <div className={`p-1.5 rounded-lg bg-${color}-500/10 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
         <Icon className={`w-3.5 h-3.5 text-${color}-400`} />
       </div>
     </div>
-    <p className="text-sm font-semibold text-white mt-2">{value}</p>
+    <p className="text-xs sm:text-sm font-semibold text-white mt-2 break-words">{value}</p>
   </motion.div>
 );
 
@@ -292,7 +292,7 @@ export const AdminProfilePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="min-h-[60vh] flex items-center justify-center"
@@ -328,12 +328,12 @@ export const AdminProfilePage: React.FC = () => {
 
   if (isError) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-4 py-10"
+        className="max-w-4xl mx-auto px-3 sm:px-4 py-10"
       >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-12 text-center backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -344,19 +344,19 @@ export const AdminProfilePage: React.FC = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
           >
-            <User className="w-10 h-10 text-rose-400" />
+            <User className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-white">Impossible de charger le profil</h2>
-          <p className="text-sm text-slate-400 mt-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white">Impossible de charger le profil</h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2">
             Une erreur est survenue lors de la récupération de votre profil administrateur.
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => refetch()}
-            className="mt-6 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
           >
             Réessayer
           </motion.button>
@@ -370,24 +370,24 @@ export const AdminProfilePage: React.FC = () => {
   // ==========================================================
 
   return (
-    <motion.form 
+    <motion.form
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      onSubmit={handleSave} 
-      className="space-y-6 relative"
+      onSubmit={handleSave}
+      className="space-y-4 sm:space-y-6 relative"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[200px] sm:h-[300px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
@@ -400,26 +400,26 @@ export const AdminProfilePage: React.FC = () => {
           BOUTON RETOUR
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="flex items-center justify-between"
+        className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3"
       >
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={() => navigate('/admin/dashboard')}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all duration-300 group hover:border-amber-500/30"
+          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs sm:text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all duration-300 group hover:border-amber-500/30 w-full xs:w-auto justify-center"
         >
-          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:-translate-x-1 transition-transform duration-300" />
-          <LayoutDashboard className="w-4 h-4 text-amber-400" />
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:-translate-x-1 transition-transform duration-300" />
+          <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
           <span>Retour au Tableau de Bord</span>
         </motion.button>
 
-        <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+        <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start xs:self-auto">
           <Crown className="w-3 h-3 text-amber-500" />
-          <span className="text-xs text-slate-500 font-medium">Admin Niger</span>
+          <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Admin Niger</span>
         </div>
       </motion.div>
 
@@ -430,21 +430,21 @@ export const AdminProfilePage: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+        className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 min-w-0 flex-1">
-            {/* Avatar avec effet de survol */}
-            <motion.div 
-              className="relative"
+        <div className="flex flex-col gap-5 sm:gap-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 min-w-0 flex-1">
+            {/* Avatar */}
+            <motion.div
+              className="relative shrink-0"
               onMouseEnter={() => setIsHoveringAvatar(true)}
               onMouseLeave={() => setIsHoveringAvatar(false)}
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 shadow-xl flex items-center justify-center shrink-0 relative overflow-hidden"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 shadow-xl flex items-center justify-center relative overflow-hidden"
               >
-                <span className="text-2xl font-extrabold text-amber-400">
+                <span className="text-xl sm:text-2xl font-extrabold text-amber-400">
                   {initials}
                 </span>
                 <AnimatePresence>
@@ -455,13 +455,13 @@ export const AdminProfilePage: React.FC = () => {
                       exit={{ opacity: 0, y: 10 }}
                       className="absolute inset-0 bg-slate-950/80 flex items-center justify-center"
                     >
-                      <Camera className="w-6 h-6 text-amber-400" />
+                      <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
                     </motion.div>
                   )}
                 </AnimatePresence>
               </motion.div>
               <motion.div
-                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900"
+                className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-500 border-2 border-slate-900"
                 animate={{
                   scale: [1, 1.2, 1],
                 }}
@@ -474,30 +474,29 @@ export const AdminProfilePage: React.FC = () => {
             </motion.div>
 
             {/* Titres et infos */}
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white truncate">
+            <div className="flex-1 min-w-0 w-full">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-white truncate">
                   {fullName}
                 </h1>
-                <motion.span 
+                <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 text-amber-400 text-xs font-bold shrink-0"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 text-amber-400 text-[10px] sm:text-xs font-bold shrink-0"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   Administrateur
-                  <Sparkles className="w-3 h-3 text-amber-300" />
                 </motion.span>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-slate-400">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-400">
                 {user?.email && (
-                  <motion.span 
+                  <motion.span
                     className="inline-flex items-center gap-1.5 max-w-full cursor-pointer group"
                     onClick={handleCopyEmail}
                     whileHover={{ scale: 1.02 }}
                   >
-                    <Mail className="w-4 h-4 shrink-0 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-slate-500 group-hover:text-amber-400 transition-colors" />
                     <span className="truncate group-hover:text-white transition-colors">{user.email}</span>
                     {isCopied ? (
                       <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -509,7 +508,7 @@ export const AdminProfilePage: React.FC = () => {
 
                 {(profile?.city || profile?.country) && (
                   <span className="inline-flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 shrink-0 text-slate-500" />
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-slate-500" />
                     <span>
                       {[profile?.city, profile?.country || 'Niger']
                         .filter(Boolean)
@@ -518,8 +517,8 @@ export const AdminProfilePage: React.FC = () => {
                   </span>
                 )}
 
-                <span className="flex items-center gap-1.5 text-xs text-slate-600">
-                  <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-600">
+                  <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
                   <span className="text-emerald-400/70">En ligne</span>
                 </span>
               </div>
@@ -527,7 +526,7 @@ export const AdminProfilePage: React.FC = () => {
           </div>
 
           {/* Boutons d'action */}
-          <div className="flex gap-2 shrink-0">
+          <div className="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
             <AnimatePresence mode="wait">
               {!isEditing ? (
                 <motion.button
@@ -539,7 +538,7 @@ export const AdminProfilePage: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   type="button"
                   onClick={() => setIsEditing(true)}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center gap-2"
+                  className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 w-full xs:w-auto"
                 >
                   <Edit2 className="w-4 h-4" />
                   Modifier
@@ -556,7 +555,7 @@ export const AdminProfilePage: React.FC = () => {
                     type="button"
                     onClick={handleCancel}
                     disabled={updateProfileMutation.isPending}
-                    className="px-5 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+                    className="px-4 sm:px-5 py-2.5 rounded-xl bg-slate-800 text-white text-xs sm:text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 w-full xs:w-auto"
                   >
                     <X className="w-4 h-4" />
                     Annuler
@@ -571,7 +570,7 @@ export const AdminProfilePage: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                     type="submit"
                     disabled={updateProfileMutation.isPending}
-                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+                    className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 w-full xs:w-auto"
                   >
                     {updateProfileMutation.isPending ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -591,38 +590,38 @@ export const AdminProfilePage: React.FC = () => {
           CONTENU PRINCIPAL
       ====================================================== */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Colonne de gauche - Informations personnelles */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center gap-3 pb-5 border-b border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center shrink-0">
-                <User className="w-5 h-5 text-amber-400" />
+            <div className="flex items-center gap-3 pb-4 sm:pb-5 border-b border-slate-800">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center shrink-0">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-white">
+              <div className="min-w-0">
+                <h2 className="text-base sm:text-lg font-bold text-white">
                   Informations personnelles
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-[10px] sm:text-xs text-slate-500">
                   Gérez les informations de votre compte administrateur.
                 </p>
               </div>
             </div>
 
-            <motion.div 
+            <motion.div
               variants={staggerContainer}
               initial="initial"
               animate="animate"
-              className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mt-5 sm:mt-6"
             >
               {/* Prénom */}
               <motion.div variants={fadeInUp}>
-                <label className="block text-xs font-semibold text-slate-400 mb-2">
+                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                   Prénom
                 </label>
                 {isEditing ? (
@@ -632,7 +631,7 @@ export const AdminProfilePage: React.FC = () => {
                     value={form.first_name}
                     onChange={handleChange}
                     placeholder="Votre prénom"
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px]"
+                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
                   />
                 ) : (
                   <ProfileDisplayValue value={profile?.first_name} />
@@ -641,7 +640,7 @@ export const AdminProfilePage: React.FC = () => {
 
               {/* Nom */}
               <motion.div variants={fadeInUp}>
-                <label className="block text-xs font-semibold text-slate-400 mb-2">
+                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                   Nom
                 </label>
                 {isEditing ? (
@@ -651,7 +650,7 @@ export const AdminProfilePage: React.FC = () => {
                     value={form.last_name}
                     onChange={handleChange}
                     placeholder="Votre nom"
-                    className="w-full px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px]"
+                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
                   />
                 ) : (
                   <ProfileDisplayValue value={profile?.last_name} />
@@ -660,33 +659,33 @@ export const AdminProfilePage: React.FC = () => {
 
               {/* Email */}
               <motion.div variants={fadeInUp}>
-                <label className="block text-xs font-semibold text-slate-400 mb-2">
+                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                   Adresse email
                 </label>
                 <ProfileDisplayValue
                   icon={<Mail className="w-4 h-4 text-slate-500 shrink-0" />}
                   value={user?.email}
                 />
-                <p className="text-[11px] text-slate-600 mt-1.5">
+                <p className="text-[10px] sm:text-[11px] text-slate-600 mt-1.5">
                   L'adresse email est gérée par le compte utilisateur.
                 </p>
               </motion.div>
 
               {/* Téléphone */}
               <motion.div variants={fadeInUp}>
-                <label className="block text-xs font-semibold text-slate-400 mb-2">
+                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                   Téléphone
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <Phone className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                     <input
                       type="text"
                       name="phone"
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="Ex : +227 XX XX XX XX"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px]"
+                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
                     />
                   </div>
                 ) : (
@@ -699,19 +698,19 @@ export const AdminProfilePage: React.FC = () => {
 
               {/* Ville */}
               <motion.div variants={fadeInUp}>
-                <label className="block text-xs font-semibold text-slate-400 mb-2">
+                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                   Ville
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <MapPin className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                     <input
                       type="text"
                       name="city"
                       value={form.city}
                       onChange={handleChange}
                       placeholder="Votre ville"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px]"
+                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
                     />
                   </div>
                 ) : (
@@ -724,19 +723,19 @@ export const AdminProfilePage: React.FC = () => {
 
               {/* Pays */}
               <motion.div variants={fadeInUp}>
-                <label className="block text-xs font-semibold text-slate-400 mb-2">
+                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                   Pays
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <Globe className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <Globe className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                     <input
                       type="text"
                       name="country"
                       value={form.country}
                       onChange={handleChange}
                       placeholder="Votre pays"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px]"
+                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
                     />
                   </div>
                 ) : (
@@ -749,11 +748,11 @@ export const AdminProfilePage: React.FC = () => {
             </motion.div>
 
             {/* Biographie */}
-            <motion.div 
+            <motion.div
               variants={fadeInUp}
               className="mt-5"
             >
-              <label className="block text-xs font-semibold text-slate-400 mb-2">
+              <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
                 Biographie / Présentation
               </label>
               {isEditing ? (
@@ -763,12 +762,12 @@ export const AdminProfilePage: React.FC = () => {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Présentez-vous brièvement..."
-                  className="w-full px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300"
+                  className="w-full px-3 sm:px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 text-xs sm:text-sm"
                 />
               ) : (
-                <motion.div 
+                <motion.div
                   whileHover={{ borderColor: 'rgba(251, 191, 36, 0.3)' }}
-                  className="min-h-[110px] px-4 py-3 rounded-xl bg-slate-950/60 border border-slate-800 text-sm text-slate-300 leading-relaxed break-words transition-all duration-300"
+                  className="min-h-[100px] sm:min-h-[110px] px-3 sm:px-4 py-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed break-words transition-all duration-300"
                 >
                   {profile?.bio || 'Aucune présentation renseignée.'}
                 </motion.div>
@@ -778,49 +777,49 @@ export const AdminProfilePage: React.FC = () => {
         </div>
 
         {/* Colonne de droite - Compte & Sécurité */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Informations du compte */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center gap-3 pb-5 border-b border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-5 h-5 text-amber-400" />
+            <div className="flex items-center gap-3 pb-4 sm:pb-5 border-b border-slate-800">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
               </div>
-              <div>
-                <h2 className="text-lg font-bold text-white">Compte</h2>
-                <p className="text-xs text-slate-500">Informations de sécurité</p>
+              <div className="min-w-0">
+                <h2 className="text-base sm:text-lg font-bold text-white">Compte</h2>
+                <p className="text-[10px] sm:text-xs text-slate-500">Informations de sécurité</p>
               </div>
             </div>
 
-            <motion.div 
+            <motion.div
               variants={staggerContainer}
               initial="initial"
               animate="animate"
-              className="space-y-3 mt-6"
+              className="space-y-3 mt-5 sm:mt-6"
             >
-              <InfoCard 
+              <InfoCard
                 icon={ShieldCheck}
                 label="Rôle"
                 value="Administrateur"
                 color="amber"
               />
-              <InfoCard 
+              <InfoCard
                 icon={CheckCircle2}
                 label="Statut"
                 value={user?.is_active ? 'Actif' : 'Inactif'}
                 color="emerald"
               />
-              <InfoCard 
+              <InfoCard
                 icon={Mail}
                 label="Email du compte"
                 value={user?.email || 'Non disponible'}
                 color="blue"
               />
-              <InfoCard 
+              <InfoCard
                 icon={Fingerprint}
                 label="ID Utilisateur"
                 value={`#${user?.id || 'N/A'}`}
@@ -834,9 +833,9 @@ export const AdminProfilePage: React.FC = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
               <Zap className="w-4 h-4 text-amber-400" />
               Actions rapides
             </h2>
@@ -844,7 +843,8 @@ export const AdminProfilePage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                type="button"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <Lock className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -855,7 +855,8 @@ export const AdminProfilePage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                type="button"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <Bell className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -866,7 +867,8 @@ export const AdminProfilePage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                type="button"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <HelpCircle className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -882,11 +884,13 @@ export const AdminProfilePage: React.FC = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.35 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <Activity className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Session active</span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                Session active
+              </span>
               <span className="w-px h-4 bg-slate-800" />
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
@@ -901,17 +905,17 @@ export const AdminProfilePage: React.FC = () => {
           FOOTER
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
           <span className="text-slate-500">
             <span className="text-amber-400 font-medium">Admin</span> • Profil
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
             <span className="text-emerald-400/70">Sécurisé - Niger</span>

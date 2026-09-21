@@ -9,14 +9,14 @@ import { documentsApi } from '../api/documents';
 import { JobPosting, PaginatedResponse } from '../types';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
-import { 
-  Search, MapPin, Briefcase, Building2, Clock, Send, 
+import {
+  Search, MapPin, Briefcase, Building2, Clock, Send,
   X, Loader2, DollarSign, ArrowLeft, Home,
   Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
   Globe, Calendar, Users, Award, Star, Eye,
   Filter, Grid3x3, List, TrendingUp, Heart,
   Share2, Bookmark, CheckCircle2, AlertCircle,
-  RefreshCw
+  RefreshCw, FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -90,10 +90,10 @@ const StatusBadge = ({ status }: { status: string }) => {
   };
 
   return (
-    <motion.span 
+    <motion.span
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${config.className}`}
+      className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${config.className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
@@ -199,8 +199,8 @@ const JobListingsPage = () => {
   };
 
   const handleSaveJob = (jobId: number) => {
-    setSavedJobs(prev => 
-      prev.includes(jobId) 
+    setSavedJobs(prev =>
+      prev.includes(jobId)
         ? prev.filter(id => id !== jobId)
         : [...prev, jobId]
     );
@@ -241,31 +241,31 @@ const JobListingsPage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative"
+      className="relative space-y-4 sm:space-y-6"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 10,
             y: mousePosition.y * 10,
@@ -274,25 +274,25 @@ const JobListingsPage = () => {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
 
         {/* ======================================================
             NAVIGATION
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoBack}
-              className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
             >
-              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span className="hidden sm:inline">Retour</span>
             </motion.button>
 
@@ -300,16 +300,16 @@ const JobListingsPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoHome}
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
             >
-              <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
               <span className="hidden sm:inline">Accueil</span>
             </motion.button>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Offres d'emploi</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Offres d'emploi</span>
             <Sparkles className="w-3 h-3 text-amber-400" />
           </div>
         </motion.div>
@@ -321,40 +321,40 @@ const JobListingsPage = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 p-6 rounded-3xl backdrop-blur-xl hover:border-slate-700 transition-all duration-300 shadow-xl"
+          className="bg-slate-900/80 border border-slate-800 p-4 sm:p-6 rounded-2xl sm:rounded-3xl backdrop-blur-xl hover:border-slate-700 transition-all duration-300 shadow-xl"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-            <div>
-              <h1 className="text-2xl font-extrabold text-white flex items-center gap-2">
-                Trouvez votre prochaine opportunité
-                <span className="text-xs font-normal text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-2xl font-extrabold text-white flex flex-wrap items-center gap-2">
+                <span>Trouvez votre prochaine opportunité</span>
+                <span className="text-[10px] sm:text-xs font-normal text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full shrink-0">
                   {jobs.length} offres
                 </span>
               </h1>
-              <p className="text-sm text-slate-400">Découvrez les meilleures offres d'emploi au Niger</p>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">Découvrez les meilleures offres d'emploi au Niger</p>
             </div>
           </div>
-          
+
           <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="relative group">
-              <Search className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
+              <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
               <input
                 type="text"
                 placeholder="Titre du poste, mots-clés..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-slate-950/80 text-white pl-12 pr-4 py-3.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
+                className="w-full bg-slate-950/80 text-white pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-3.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
               />
             </div>
 
             <div className="relative group">
-              <MapPin className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
               <input
                 type="text"
                 placeholder="Ville au Niger, ou Télétravail..."
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full bg-slate-950/80 text-white pl-12 pr-4 py-3.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
+                className="w-full bg-slate-950/80 text-white pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-3.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
               />
             </div>
 
@@ -362,7 +362,7 @@ const JobListingsPage = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:shadow-lg hover:shadow-amber-500/25 text-slate-950 font-bold py-3.5 px-6 rounded-xl transition-all duration-300 text-sm flex items-center justify-center gap-2"
+              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:shadow-lg hover:shadow-amber-500/25 text-slate-950 font-bold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl transition-all duration-300 text-xs sm:text-sm flex items-center justify-center gap-2"
             >
               <Search className="w-4 h-4" />
               <span>Rechercher</span>
@@ -371,7 +371,7 @@ const JobListingsPage = () => {
 
           {/* Filtres et tris */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-4 pt-4 border-t border-slate-800">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as 'recent' | 'salary' | 'deadline')}
@@ -381,7 +381,7 @@ const JobListingsPage = () => {
                 <option value="salary">💰 Salaire élevé</option>
                 <option value="deadline">⏳ Date limite</option>
               </select>
-              
+
               {(search || location) && (
                 <motion.button
                   initial={{ scale: 0 }}
@@ -395,22 +395,22 @@ const JobListingsPage = () => {
               )}
             </div>
 
-            <div className="flex gap-1 bg-slate-950/80 border border-slate-800 rounded-xl p-1">
+            <div className="flex gap-1 bg-slate-950/80 border border-slate-800 rounded-xl p-1 self-end sm:self-auto">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'list' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
+                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'list' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
               >
-                <List className="w-4 h-4" />
+                <List className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
+                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
               >
-                <Grid3x3 className="w-4 h-4" />
+                <Grid3x3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </motion.button>
             </div>
           </div>
@@ -422,17 +422,17 @@ const JobListingsPage = () => {
 
         <AnimatePresence mode="wait">
           {isJobsLoading ? (
-            <motion.div 
+            <motion.div
               key="loading"
               variants={fadeInScale}
               initial="initial"
               animate="animate"
               exit="exit"
-              className="flex justify-center py-20"
+              className="flex justify-center py-12 sm:py-20"
             >
               <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-                <p className="text-sm text-slate-400">Chargement des offres au Niger...</p>
+                <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-amber-500" />
+                <p className="text-xs sm:text-sm text-slate-400">Chargement des offres au Niger...</p>
                 <div className="flex gap-1">
                   {[0, 1, 2].map((i) => (
                     <motion.div
@@ -453,24 +453,24 @@ const JobListingsPage = () => {
               </div>
             </motion.div>
           ) : sortedJobs.length === 0 ? (
-            <motion.div 
+            <motion.div
               key="empty"
               variants={fadeInScale}
               initial="initial"
               animate="animate"
               exit="exit"
-              className="text-center py-20 bg-slate-900/40 border border-slate-800 rounded-2xl"
+              className="text-center py-12 sm:py-20 bg-slate-900/40 border border-slate-800 rounded-2xl px-4"
             >
-              <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-                <Briefcase className="w-10 h-10 text-slate-600" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
+                <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-slate-600" />
               </div>
-              <p className="text-lg font-semibold text-white">Aucune offre ne correspond à vos critères</p>
-              <p className="text-sm text-slate-400 mt-1">Essayez de modifier vos filtres de recherche</p>
+              <p className="text-base sm:text-lg font-semibold text-white">Aucune offre ne correspond à vos critères</p>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">Essayez de modifier vos filtres de recherche</p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleResetFilters}
-                className="mt-4 text-amber-400 hover:text-amber-300 text-sm font-semibold transition-colors inline-flex items-center gap-1"
+                className="mt-4 text-amber-400 hover:text-amber-300 text-xs sm:text-sm font-semibold transition-colors inline-flex items-center gap-1"
               >
                 <RefreshCw className="w-4 h-4" />
                 Réinitialiser les filtres
@@ -482,7 +482,7 @@ const JobListingsPage = () => {
               variants={staggerContainer}
               initial="initial"
               animate="animate"
-              className="space-y-4"
+              className="space-y-3 sm:space-y-4"
             >
               {sortedJobs.map((job, index) => (
                 <motion.div
@@ -492,11 +492,11 @@ const JobListingsPage = () => {
                   animate="animate"
                   transition={{ delay: index * 0.03 }}
                   whileHover="hover"
-                  className="group bg-slate-900/80 border border-slate-800 hover:border-amber-500/30 p-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/5 flex flex-col lg:flex-row lg:items-center justify-between gap-6"
+                  className="group bg-slate-900/80 border border-slate-800 hover:border-amber-500/30 p-4 sm:p-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/5 flex flex-col gap-4"
                 >
-                  <Link to={`/jobs/${job.id}`} className="flex-1 space-y-3">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h2 className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors duration-300">
+                  <Link to={`/jobs/${job.id}`} className="flex-1 space-y-2 sm:space-y-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      <h2 className="text-base sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors duration-300 break-words">
                         {job.title}
                       </h2>
                       <StatusBadge status={job.status} />
@@ -507,23 +507,27 @@ const JobListingsPage = () => {
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+                    <div className="flex flex-wrap gap-x-3 gap-y-2 text-[10px] sm:text-xs text-slate-400">
                       <span className="flex items-center gap-1.5">
-                        <Building2 className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                        {job.organization_name || 'Entreprise'}
+                        <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-amber-400 transition-colors shrink-0" />
+                        <span className="truncate max-w-[150px] sm:max-w-none">{job.organization_name || 'Entreprise'}</span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 text-slate-500" />
-                        {job.city || job.location || 'Non spécifié'}
+                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
+                        <span className="truncate max-w-[120px] sm:max-w-none">
+                          {job.city || job.location || 'Non spécifié'}
+                        </span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4 text-slate-500" />
+                        <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
                         {new Date(job.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
                       {job.salary_min && job.salary_max && (
                         <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                          <TrendingUp className="w-4 h-4" />
-                          {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} FCFA
+                          <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                          <span className="truncate">
+                            {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} FCFA
+                          </span>
                         </span>
                       )}
                       {job.is_remote && (
@@ -535,22 +539,24 @@ const JobListingsPage = () => {
                     </div>
 
                     {job.description && (
-                      <p className="text-sm text-slate-400 line-clamp-2 group-hover:text-slate-300 transition-colors">
+                      <p className="text-xs sm:text-sm text-slate-400 line-clamp-2 group-hover:text-slate-300 transition-colors">
                         {job.description}
                       </p>
                     )}
                   </Link>
 
-                  <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                  {/* Actions : pleine largeur sur mobile */}
+                  <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 shrink-0">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      className="w-full xs:w-auto"
                     >
                       <Link
                         to={`/jobs/${job.id}`}
-                        className="px-4 py-2.5 bg-slate-800 text-white rounded-xl text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center gap-1.5 group/link"
+                        className="w-full xs:w-auto px-4 py-2.5 bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-1.5 group/link"
                       >
-                        <Eye className="w-4 h-4 group-hover/link:scale-110 transition-transform" />
+                        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:scale-110 transition-transform" />
                         Voir
                       </Link>
                     </motion.div>
@@ -559,7 +565,7 @@ const JobListingsPage = () => {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => handleSaveJob(job.id)}
-                      className={`p-2 rounded-xl transition-all duration-300 ${
+                      className={`p-2 rounded-xl transition-all duration-300 shrink-0 ${
                         savedJobs.includes(job.id)
                           ? 'text-rose-400 bg-rose-500/10'
                           : 'text-slate-400 hover:text-rose-400 hover:bg-slate-800'
@@ -574,9 +580,9 @@ const JobListingsPage = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleApply(job)}
-                        className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/25"
+                        className="flex-1 xs:flex-none px-4 sm:px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl transition-all duration-300 text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/25"
                       >
-                        <Send className="w-4 h-4" />
+                        <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         Postuler
                       </motion.button>
                     )}
@@ -590,7 +596,7 @@ const JobListingsPage = () => {
               variants={staggerContainer}
               initial="initial"
               animate="animate"
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
             >
               {sortedJobs.map((job, index) => (
                 <motion.div
@@ -600,38 +606,38 @@ const JobListingsPage = () => {
                   animate="animate"
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ scale: 1.02, borderColor: 'rgba(251, 191, 36, 0.3)' }}
-                  className="bg-slate-900/80 border border-slate-800 rounded-xl p-4 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/5"
+                  className="bg-slate-900/80 border border-slate-800 rounded-xl p-3 sm:p-4 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/5 flex flex-col"
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <h4 className="font-semibold text-white text-sm group-hover:text-amber-400 transition-colors">
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <h4 className="font-semibold text-white text-xs sm:text-sm line-clamp-2 flex-1 min-w-0">
                       {job.title}
                     </h4>
                     <StatusBadge status={job.status} />
                   </div>
-                  <p className="text-xs text-slate-400 flex items-center gap-1.5">
-                    <Building2 className="w-3 h-3" />
-                    {job.organization_name || 'Entreprise'}
+                  <p className="text-[10px] sm:text-xs text-slate-400 flex items-center gap-1.5">
+                    <Building2 className="w-3 h-3 shrink-0" />
+                    <span className="truncate">{job.organization_name || 'Entreprise'}</span>
                   </p>
-                  <p className="text-xs text-slate-500 mt-2 flex items-center gap-1.5">
-                    <MapPin className="w-3 h-3" />
-                    {job.city || job.location || 'Non spécifié'}
+                  <p className="text-[10px] sm:text-xs text-slate-500 mt-2 flex items-center gap-1.5">
+                    <MapPin className="w-3 h-3 shrink-0" />
+                    <span className="truncate">{job.city || job.location || 'Non spécifié'}</span>
                   </p>
                   {job.salary_min && job.salary_max && (
-                    <p className="text-xs text-amber-400 mt-1 font-medium">
+                    <p className="text-[10px] sm:text-xs text-amber-400 mt-1 font-medium truncate">
                       💰 {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} FCFA
                     </p>
                   )}
-                  <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800">
+                  <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800 mt-auto">
                     <Link
                       to={`/jobs/${job.id}`}
-                      className="flex-1 text-center px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-medium hover:bg-slate-700 transition-colors"
+                      className="flex-1 text-center px-3 py-1.5 bg-slate-800 text-white rounded-lg text-[10px] sm:text-xs font-medium hover:bg-slate-700 transition-colors"
                     >
                       Voir
                     </Link>
                     {job.status === 'active' && (
                       <button
                         onClick={() => handleApply(job)}
-                        className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-lg text-xs font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+                        className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-lg text-[10px] sm:text-xs font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
                       >
                         Postuler
                       </button>
@@ -653,31 +659,40 @@ const JobListingsPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm"
+              onClick={() => {
+                setIsApplyModalOpen(false);
+                setSelectedJob(null);
+              }}
             >
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-slate-900/95 border border-slate-800 w-full max-w-lg rounded-2xl p-6 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto backdrop-blur-xl"
+                onClick={(e) => e.stopPropagation()}
+                className="bg-slate-900/95 border border-slate-800 w-full max-w-lg rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto backdrop-blur-xl"
               >
-                <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-                  <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <Send className="w-5 h-5 text-amber-400" />
+                <div className="flex items-start justify-between gap-3 border-b border-slate-800 pb-3 sm:pb-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                      <Send className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
                       Postuler à l'offre
                     </h3>
-                    <p className="text-sm font-semibold text-amber-400 mt-1">{selectedJob.title}</p>
-                    <p className="text-xs text-slate-400">{selectedJob.organization_name}</p>
+                    <p className="text-xs sm:text-sm font-semibold text-amber-400 mt-1 break-words">
+                      {selectedJob.title}
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-slate-400 truncate">
+                      {selectedJob.organization_name}
+                    </p>
                   </div>
-                  <motion.button 
+                  <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => {
                       setIsApplyModalOpen(false);
                       setSelectedJob(null);
-                    }} 
-                    className="text-slate-400 hover:text-white transition-colors"
+                    }}
+                    className="text-slate-400 hover:text-white transition-colors shrink-0"
                   >
                     <X className="w-5 h-5" />
                   </motion.button>
@@ -694,23 +709,23 @@ const JobListingsPage = () => {
                   className="space-y-4"
                 >
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 mb-1">
-                      <FileText className="w-3.5 h-3.5 text-amber-400" />
+                    <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 mb-1.5">
+                      <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
                       CV / Document
                     </label>
                     {isDocsLoading ? (
                       <div className="flex items-center gap-2 text-slate-400">
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm">Chargement de vos documents...</span>
+                        <span className="text-xs sm:text-sm">Chargement de vos documents...</span>
                       </div>
                     ) : documents && documents.length > 0 ? (
                       <select
                         value={selectedDocId || ''}
                         onChange={(e) => setSelectedDocId(Number(e.target.value))}
-                        className="w-full bg-slate-950/80 text-white px-4 py-2.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                        className="w-full bg-slate-950/80 text-white px-3 sm:px-4 py-2.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
                       >
                         <option value="">Sélectionner un document...</option>
-                        {documents.map((doc) => (
+                        {documents.map((doc: any) => (
                           <option key={doc.id} value={doc.id}>
                             {doc.original_filename} ({doc.document_type})
                           </option>
@@ -718,10 +733,10 @@ const JobListingsPage = () => {
                       </select>
                     ) : (
                       <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-                        <p className="text-xs text-amber-400/80">
+                        <p className="text-[10px] sm:text-xs text-amber-400/80">
                           Aucun CV trouvé. Téléversez-en un depuis votre profil.
                         </p>
-                        <Link to="/profile" className="inline-block mt-1 text-xs text-amber-400 hover:text-amber-300 font-semibold transition-colors">
+                        <Link to="/profile" className="inline-block mt-1 text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-semibold transition-colors">
                           Aller au profil →
                         </Link>
                       </div>
@@ -729,8 +744,8 @@ const JobListingsPage = () => {
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 mb-1">
-                      <FileText className="w-3.5 h-3.5 text-amber-400" />
+                    <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 mb-1.5">
+                      <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
                       Lettre de motivation
                     </label>
                     <textarea
@@ -738,14 +753,14 @@ const JobListingsPage = () => {
                       value={coverNote}
                       onChange={(e) => setCoverNote(e.target.value)}
                       placeholder="Présentez brièvement votre profil et vos motivations..."
-                      className="w-full bg-slate-950/80 text-white px-4 py-2.5 rounded-xl border border-slate-800 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 resize-none placeholder:text-slate-600"
+                      className="w-full bg-slate-950/80 text-white px-3 sm:px-4 py-2.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 resize-none placeholder:text-slate-600"
                     />
-                    <p className="text-xs text-slate-500 mt-1.5">
+                    <p className="text-[10px] sm:text-xs text-slate-500 mt-1.5">
                       Optionnel - Laissez vide si vous n'avez pas de lettre de motivation.
                     </p>
                   </div>
 
-                  <div className="flex justify-end gap-3 pt-2 border-t border-slate-800">
+                  <div className="flex flex-col xs:flex-row justify-end gap-2 sm:gap-3 pt-2 border-t border-slate-800">
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -754,7 +769,7 @@ const JobListingsPage = () => {
                         setIsApplyModalOpen(false);
                         setSelectedJob(null);
                       }}
-                      className="px-4 py-2.5 text-sm text-slate-400 hover:text-white transition-colors"
+                      className="px-4 py-2.5 text-xs sm:text-sm text-slate-400 hover:text-white transition-colors rounded-xl"
                     >
                       Annuler
                     </motion.button>
@@ -763,7 +778,7 @@ const JobListingsPage = () => {
                       whileTap={{ scale: 0.98 }}
                       type="submit"
                       disabled={applyMutation.isPending}
-                      className="bg-gradient-to-r from-amber-500 to-amber-600 hover:shadow-lg hover:shadow-amber-500/25 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition-all duration-300 shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center gap-2"
+                      className="bg-gradient-to-r from-amber-500 to-amber-600 hover:shadow-lg hover:shadow-amber-500/25 text-slate-950 font-bold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {applyMutation.isPending ? (
                         <>
@@ -788,17 +803,17 @@ const JobListingsPage = () => {
             FOOTER
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
             <span className="text-slate-500">
               <span className="text-amber-400 font-medium">{jobs.length}</span> offres disponibles
             </span>
-            <span className="w-px h-4 bg-slate-800" />
+            <span className="hidden xs:block w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
               <span className="text-emerald-400/70">Sécurisé - Niger</span>

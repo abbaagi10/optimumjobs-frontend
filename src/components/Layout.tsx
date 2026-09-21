@@ -1,13 +1,15 @@
+// src/components/Layout.tsx
+
 import { ReactNode, useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useLogout } from '../hooks/useLogout';
 import { useHeartbeat } from '../hooks/useHeartbeat';
-import { 
-  Home, 
-  Briefcase, 
-  User, 
-  LogOut, 
+import {
+  Home,
+  Briefcase,
+  User,
+  LogOut,
   Building2,
   ShieldCheck,
   Menu,
@@ -82,7 +84,7 @@ const menuItemVariants = {
 
 const ThemeToggle = () => {
   const [isDark, setIsDark] = useState(true);
-  
+
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle('dark');
@@ -131,7 +133,7 @@ const NotificationBell = () => {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute right-0 mt-2 w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl shadow-slate-950/50 overflow-hidden z-50"
+            className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl shadow-slate-950/50 overflow-hidden z-50"
           >
             <div className="p-3 border-b border-slate-800">
               <span className="text-xs font-semibold text-slate-300">Notifications</span>
@@ -203,7 +205,7 @@ const UserMenu = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 px-3 py-1.5 bg-slate-900/80 border border-slate-800 hover:border-amber-500/30 rounded-xl transition-all duration-300 group"
+        className="flex items-center gap-2 sm:gap-2.5 px-2 sm:px-3 py-1.5 bg-slate-900/80 border border-slate-800 hover:border-amber-500/30 rounded-xl transition-all duration-300 group"
       >
         <div className="relative">
           <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xs font-bold group-hover:scale-110 transition-transform">
@@ -211,7 +213,7 @@ const UserMenu = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
           </div>
           <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-slate-900" />
         </div>
-        <span className="text-sm font-medium text-slate-200 max-w-[100px] truncate">
+        <span className="hidden sm:inline text-sm font-medium text-slate-200 max-w-[100px] truncate">
           {user?.first_name || user?.email || 'Utilisateur'}
         </span>
         <motion.div
@@ -229,7 +231,7 @@ const UserMenu = ({ user, onLogout }: { user: any; onLogout: () => void }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-2 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl shadow-slate-950/50 overflow-hidden z-50"
+            className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1rem)] bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl shadow-slate-950/50 overflow-hidden z-50"
           >
             <div className="p-3 border-b border-slate-800">
               <div className="flex items-center gap-3">
@@ -329,7 +331,7 @@ export const Layout = ({ children }: LayoutProps) => {
   const { handleLogout } = useLogout();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  
+
   useHeartbeat();
 
   const { scrollYProgress } = useScroll();
@@ -402,7 +404,7 @@ export const Layout = ({ children }: LayoutProps) => {
   ];
 
   const isActiveLink = (to: string) => location.pathname === to || location.pathname.startsWith(to + '/');
-  
+
   // Vérifier si la page actuelle est la page d'accueil
   const isHomePage = location.pathname === '/';
 
@@ -419,37 +421,38 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* ========================================================== */}
       {/* NAVIGATION */}
       {/* ========================================================== */}
-      
+
       <nav className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/80 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
+
             {/* Logo */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              className="min-w-0"
             >
-              <Link 
-                to="/" 
-                className="flex items-center gap-2.5 text-xl font-bold text-amber-400 hover:text-amber-300 transition-colors group"
+              <Link
+                to="/"
+                className="flex items-center gap-1.5 sm:gap-2.5 text-base sm:text-xl font-bold text-amber-400 hover:text-amber-300 transition-colors group"
               >
                 <motion.div
                   whileHover={{ rotate: 180 }}
                   transition={{ duration: 0.6, type: "spring" }}
-                  className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors"
+                  className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors shrink-0"
                 >
-                  <Briefcase className="w-5 h-5 text-amber-400" />
+                  <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
                 </motion.div>
-                <span className="font-extrabold tracking-tight text-white group-hover:text-amber-400 transition-colors">
-                  OptimumJobs<span className="text-amber-400">+</span>
+                <span className="font-extrabold tracking-tight text-white group-hover:text-amber-400 transition-colors truncate">
+                  OptimaPlus<span className="text-amber-400">-Jobs</span>
                 </span>
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5, type: "spring" }}
-                  className="px-2 py-0.5 text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
+                  className="hidden xs:inline-block px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
                 >
-                  BETA
+                  NIGER
                 </motion.span>
               </Link>
             </motion.div>
@@ -468,9 +471,11 @@ export const Layout = ({ children }: LayoutProps) => {
             </div>
 
             {/* Auth Actions Desktop */}
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <NotificationBell />
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              <div className="hidden sm:flex items-center gap-2">
+                <ThemeToggle />
+                <NotificationBell />
+              </div>
 
               {user ? (
                 <UserMenu user={user} onLogout={handleLogout} />
@@ -479,13 +484,14 @@ export const Layout = ({ children }: LayoutProps) => {
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    className="hidden xs:block"
                   >
                     <Link
                       to="/login"
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl transition-all duration-300"
+                      className="flex items-center gap-2 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 border border-amber-500/20 rounded-xl transition-all duration-300"
                     >
-                      <LogIn className="w-4 h-4" />
-                      Connexion
+                      <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span className="hidden sm:inline">Connexion</span>
                     </Link>
                   </motion.div>
                   <motion.div
@@ -494,11 +500,11 @@ export const Layout = ({ children }: LayoutProps) => {
                   >
                     <Link
                       to="/register"
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 active:scale-95 relative overflow-hidden group"
+                      className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl hover:from-amber-400 hover:to-amber-500 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 active:scale-95 relative overflow-hidden group"
                     >
-                      <span className="relative z-10 flex items-center gap-2">
-                        <UserPlus className="w-4 h-4" />
-                        S'inscrire
+                      <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+                        <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">S'inscrire</span>
                       </span>
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-300"
@@ -516,7 +522,7 @@ export const Layout = ({ children }: LayoutProps) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors relative"
+                className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors relative shrink-0"
                 aria-label="Menu"
               >
                 <AnimatePresence mode="wait">
@@ -569,7 +575,7 @@ export const Layout = ({ children }: LayoutProps) => {
                       variants={menuItemVariants}
                       className="flex items-center gap-3 px-3 py-2.5 bg-slate-800/60 border border-slate-700/50 rounded-xl mb-3"
                     >
-                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm font-bold">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 text-sm font-bold shrink-0">
                         {user?.first_name?.[0] || user?.email?.[0] || 'U'}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -582,7 +588,7 @@ export const Layout = ({ children }: LayoutProps) => {
                       </div>
                       <motion.div
                         whileHover={{ scale: 1.1 }}
-                        className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center"
+                        className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0"
                       >
                         <Star className="w-3.5 h-3.5 text-emerald-400" />
                       </motion.div>
@@ -602,7 +608,7 @@ export const Layout = ({ children }: LayoutProps) => {
                               : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                           }`}
                         >
-                          <link.icon className={`w-4 h-4 ${isActiveLink(link.to) ? 'text-amber-400' : 'text-slate-400'}`} />
+                          <link.icon className={`w-4 h-4 shrink-0 ${isActiveLink(link.to) ? 'text-amber-400' : 'text-slate-400'}`} />
                           {link.label}
                           {isActiveLink(link.to) && (
                             <motion.div
@@ -626,6 +632,18 @@ export const Layout = ({ children }: LayoutProps) => {
                         Déconnexion
                       </button>
                     </motion.div>
+
+                    {/* Préférences dans le menu mobile */}
+                    <motion.div
+                      variants={menuItemVariants}
+                      className="flex items-center justify-between pt-3 mt-2 border-t border-slate-800"
+                    >
+                      <span className="text-xs text-slate-500">Préférences</span>
+                      <div className="flex items-center gap-2">
+                        <ThemeToggle />
+                        <NotificationBell />
+                      </div>
+                    </motion.div>
                   </>
                 ) : (
                   <>
@@ -634,7 +652,7 @@ export const Layout = ({ children }: LayoutProps) => {
                         to="/"
                         onClick={() => setIsMobileMenuOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors ${
-                          location.pathname === '/' 
+                          location.pathname === '/'
                             ? 'text-white bg-amber-500/10 border border-amber-500/20'
                             : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                         }`}
@@ -673,6 +691,17 @@ export const Layout = ({ children }: LayoutProps) => {
                         S'inscrire
                       </Link>
                     </motion.div>
+
+                    <motion.div
+                      variants={menuItemVariants}
+                      className="flex items-center justify-between pt-3 mt-2 border-t border-slate-800"
+                    >
+                      <span className="text-xs text-slate-500">Préférences</span>
+                      <div className="flex items-center gap-2">
+                        <ThemeToggle />
+                        <NotificationBell />
+                      </div>
+                    </motion.div>
                   </>
                 )}
               </motion.div>
@@ -684,12 +713,12 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* ========================================================== */}
       {/* MAIN CONTENT */}
       {/* ========================================================== */}
-      
+
       <motion.main
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1"
+        className="max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1"
       >
         {children}
       </motion.main>
@@ -697,37 +726,38 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* ========================================================== */}
       {/* FOOTER - UNIQUEMENT SUR LA PAGE D'ACCUEIL */}
       {/* ========================================================== */}
-      
+
       {isHomePage && (
-        <footer className="border-t border-slate-800/80 bg-slate-900/40 py-8 mt-12 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              
+        <footer className="border-t border-slate-800/80 bg-slate-900/40 py-6 sm:py-8 mt-8 sm:mt-12 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+
               {/* Brand & Rights */}
-              <motion.div 
-                className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left"
+              <motion.div
+                className="flex flex-col xs:flex-row flex-wrap items-center gap-2 sm:gap-3 text-center xs:text-left"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
               >
                 <div className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-amber-400 animate-pulse" />
-                  <span className="font-extrabold text-white">OptimumJobs+</span>
+                  <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 animate-pulse" />
+                  <span className="font-extrabold text-white text-sm sm:text-base">OptimaPlus-Jobs</span>
+                  <span className="text-[10px] sm:text-xs text-slate-500">Niger</span>
                 </div>
-                <span className="hidden sm:inline text-slate-700">•</span>
-                <p className="text-xs text-slate-400">
-                  &copy; {new Date().getFullYear()} OptimumJobs+. Tous droits réservés.
+                <span className="hidden xs:inline text-slate-700">•</span>
+                <p className="text-[10px] sm:text-xs text-slate-400">
+                  &copy; {new Date().getFullYear()} OptimaPlus-Jobs. Tous droits réservés.
                 </p>
-                <span className="hidden sm:inline text-slate-700">•</span>
+                <span className="hidden xs:inline text-slate-700">•</span>
                 <div className="flex items-center gap-1.5">
                   <Activity className="w-3 h-3 text-emerald-400 animate-pulse" />
-                  <span className="text-xs text-emerald-400/70">En ligne</span>
+                  <span className="text-[10px] sm:text-xs text-emerald-400/70">En ligne - Niger</span>
                 </div>
               </motion.div>
 
               {/* Social Networks Icons */}
-              <motion.div 
-                className="flex items-center gap-2"
+              <motion.div
+                className="flex items-center gap-1.5 sm:gap-2"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -739,16 +769,16 @@ export const Layout = ({ children }: LayoutProps) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.name}
-                    whileHover={{ 
-                      scale: 1.1, 
+                    whileHover={{
+                      scale: 1.1,
                       y: -2,
                       rotate: [0, -5, 5, 0],
                       transition: { duration: 0.3 }
                     }}
                     whileTap={{ scale: 0.9 }}
-                    className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 hover:bg-slate-800 transition-all duration-300"
+                    className="p-2 sm:p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 hover:bg-slate-800 transition-all duration-300"
                   >
-                    <social.icon className="w-4 h-4" />
+                    <social.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </motion.a>
                 ))}
               </motion.div>
@@ -756,8 +786,8 @@ export const Layout = ({ children }: LayoutProps) => {
             </div>
 
             {/* Footer Links */}
-            <motion.div 
-              className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500"
+            <motion.div
+              className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-500"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -768,7 +798,7 @@ export const Layout = ({ children }: LayoutProps) => {
               <span className="text-slate-800">•</span>
               <a href="#" className="hover:text-white transition-colors">Cookies</a>
               <span className="text-slate-800">•</span>
-              <span className="text-slate-600">v1.0.0</span>
+              <span className="text-slate-600">v2.0.0</span>
             </motion.div>
           </div>
         </footer>

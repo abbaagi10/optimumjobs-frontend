@@ -6,12 +6,12 @@ import { jobsApi } from '../api/jobs';
 import { applicationsApi } from '../api/applications';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { 
-  Loader2, 
-  Building2, 
-  MapPin, 
-  Calendar, 
-  Briefcase, 
+import {
+  Loader2,
+  Building2,
+  MapPin,
+  Calendar,
+  Briefcase,
   ArrowLeft,
   Home,
   Clock,
@@ -137,10 +137,10 @@ const StatusBadge = ({ status }: { status: string }) => {
   };
 
   return (
-    <motion.span 
+    <motion.span
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${config.className}`}
+      className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border ${config.className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
@@ -150,15 +150,15 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 const InfoItem = ({ icon: Icon, label, value, color = 'text-slate-400' }: any) => (
-  <motion.div 
+  <motion.div
     variants={fadeInUp}
-    className="flex items-center gap-3 py-2.5 border-b border-slate-800/50 last:border-0 group hover:bg-slate-800/20 px-3 -mx-3 rounded-lg transition-colors duration-200"
+    className="flex items-center gap-2 sm:gap-3 py-2 sm:py-2.5 border-b border-slate-800/50 last:border-0 group hover:bg-slate-800/20 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-lg transition-colors duration-200"
   >
-    <div className={`p-1.5 rounded-lg bg-${color.replace('text-', '')}/10`}>
-      <Icon className={`w-4 h-4 ${color}`} />
+    <div className={`p-1.5 rounded-lg bg-${color.replace('text-', '')}/10 shrink-0`}>
+      <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${color}`} />
     </div>
-    <span className="text-sm text-slate-300 flex-1">{label}</span>
-    <span className="text-sm text-white font-medium text-right group-hover:text-amber-400 transition-colors">
+    <span className="text-xs sm:text-sm text-slate-300 flex-1 truncate">{label}</span>
+    <span className="text-xs sm:text-sm text-white font-medium text-right group-hover:text-amber-400 transition-colors truncate max-w-[55%]">
       {value}
     </span>
   </motion.div>
@@ -218,7 +218,7 @@ export const JobDetailPage = () => {
   // ==========================================================
 
   const applyMutation = useMutation({
-    mutationFn: (data: { cover_note?: string }) => 
+    mutationFn: (data: { cover_note?: string }) =>
       applicationsApi.apply(Number(id), data),
     onSuccess: () => {
       toast.success('Candidature envoyée avec succès ! 🎉');
@@ -229,7 +229,7 @@ export const JobDetailPage = () => {
       queryClient.invalidateQueries({ queryKey: ['myApplications', 'all'] });
     },
     onError: (error: any) => {
-      const message = error.response?.data?.detail || 
+      const message = error.response?.data?.detail ||
                      error.response?.data?.message ||
                      'Erreur lors de la candidature';
       toast.error(message);
@@ -276,7 +276,7 @@ export const JobDetailPage = () => {
 
   if (isLoadingJob || isLoadingApps) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
@@ -310,12 +310,12 @@ export const JobDetailPage = () => {
 
   if (error || !job) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-4 py-12"
+        className="max-w-4xl mx-auto px-3 sm:px-4 py-12"
       >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-12 text-center backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -326,17 +326,17 @@ export const JobDetailPage = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
           >
-            <Briefcase className="w-10 h-10 text-rose-400" />
+            <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-white">Offre non trouvée</h2>
-          <p className="text-sm text-slate-400 mt-2">L'offre que vous recherchez n'existe pas ou a été supprimée.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-white">Offre non trouvée</h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2">L'offre que vous recherchez n'existe pas ou a été supprimée.</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoHome}
-            className="mt-6 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
           >
             Retour à l'accueil
           </motion.button>
@@ -350,31 +350,31 @@ export const JobDetailPage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative"
+      className="relative space-y-4 sm:space-y-6"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 10,
             y: mousePosition.y * 10,
@@ -383,25 +383,25 @@ export const JobDetailPage = () => {
         />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-6">
 
         {/* ======================================================
             NAVIGATION
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoBack}
-              className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
             >
-              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span className="hidden sm:inline">Retour</span>
             </motion.button>
 
@@ -409,16 +409,16 @@ export const JobDetailPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoHome}
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
             >
-              <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
               <span className="hidden sm:inline">Accueil</span>
             </motion.button>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
             <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Détail de l'offre</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Détail de l'offre</span>
             <Sparkles className="w-3 h-3 text-amber-400" />
           </div>
         </motion.div>
@@ -427,50 +427,52 @@ export const JobDetailPage = () => {
             CONTENU PRINCIPAL
         ====================================================== */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Colonne de gauche - Détails de l'offre */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
 
             {/* En-tête de l'offre */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
             >
-              <div className="flex flex-col sm:flex-row items-start gap-4">
-                <motion.div 
+              <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                <motion.div
                   whileHover={{ scale: 1.05, rotate: 5 }}
-                  className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/10 flex-shrink-0"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/10 shrink-0"
                 >
-                  <Building2 className="w-8 h-8" />
+                  <Building2 className="w-6 h-6 sm:w-8 sm:h-8" />
                 </motion.div>
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <h1 className="text-2xl font-extrabold text-white">{job.title}</h1>
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-white break-words">
+                      {job.title}
+                    </h1>
                     {job.is_urgent && (
                       <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="text-xs font-bold text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded-full border border-rose-500/20 flex items-center gap-1"
+                        className="text-[10px] sm:text-xs font-bold text-rose-400 bg-rose-500/10 px-2 sm:px-2.5 py-0.5 rounded-full border border-rose-500/20 flex items-center gap-1"
                       >
                         <Zap className="w-3 h-3" /> Urgent
                       </motion.span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-400 flex items-center gap-2">
-                    <Building2 className="w-3.5 h-3.5 text-amber-400" />
-                    {job.organization_name || 'Entreprise'}
+                  <p className="text-xs sm:text-sm text-slate-400 flex items-center gap-2">
+                    <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span className="truncate">{job.organization_name || 'Entreprise'}</span>
                   </p>
-                  
+
                   {hasApplied && existingApplication && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="mt-3 flex flex-wrap items-center gap-3 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl"
+                      className="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                       <StatusBadge status={existingApplication.status} />
-                      <span className="text-xs text-slate-400">
+                      <span className="text-[10px] sm:text-xs text-slate-400">
                         Candidature envoyée le {new Date(existingApplication.submitted_at || existingApplication.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </span>
                     </motion.div>
@@ -484,35 +486,35 @@ export const JobDetailPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSaveJob}
-                  className={`p-2 rounded-xl transition-all duration-300 flex items-center gap-2 text-sm ${
-                    isSaved 
-                      ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' 
+                  className={`p-2 rounded-xl transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm ${
+                    isSaved
+                      ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                       : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                   }`}
                 >
-                  <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-400' : ''}`} />
-                  {isSaved ? 'Sauvegardé' : 'Sauvegarder'}
+                  <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isSaved ? 'fill-rose-400' : ''}`} />
+                  <span>{isSaved ? 'Sauvegardé' : 'Sauvegarder'}</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCopyLink}
-                  className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-2 text-sm"
+                  className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm"
                 >
                   {isCopied ? (
-                    <Check className="w-4 h-4 text-emerald-400" />
+                    <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
                   ) : (
-                    <Copy className="w-4 h-4" />
+                    <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   )}
-                  {isCopied ? 'Copié !' : 'Copier le lien'}
+                  <span>{isCopied ? 'Copié !' : 'Copier le lien'}</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-2 text-sm ml-auto"
+                  className="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-sm ml-auto"
                 >
-                  <Share2 className="w-4 h-4" />
-                  Partager
+                  <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="hidden xs:inline">Partager</span>
                 </motion.button>
               </div>
             </motion.div>
@@ -522,13 +524,13 @@ export const JobDetailPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
             >
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
                 <FileText className="w-4 h-4 text-amber-400" />
                 Description du poste
               </h2>
-              <div className="text-slate-300 whitespace-pre-wrap leading-relaxed text-sm">
+              <div className="text-slate-300 whitespace-pre-wrap leading-relaxed text-xs sm:text-sm">
                 {job.description || 'Aucune description disponible.'}
               </div>
             </motion.div>
@@ -539,21 +541,21 @@ export const JobDetailPage = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+                className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
               >
-                <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+                <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
                   <Award className="w-4 h-4 text-amber-400" />
                   Compétences requises
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {job.requirements.map((req: string, index: number) => (
-                    <motion.span 
+                    <motion.span
                       key={index}
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       transition={{ delay: index * 0.05 }}
                       whileHover={{ scale: 1.05, y: -2 }}
-                      className="px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
+                      className="px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
                     >
                       {req}
                     </motion.span>
@@ -564,79 +566,79 @@ export const JobDetailPage = () => {
           </div>
 
           {/* Colonne de droite - Informations et Candidature */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
 
             {/* Informations */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300 sticky top-24"
+              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300 lg:sticky lg:top-24"
             >
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
                 <Briefcase className="w-4 h-4 text-amber-400" />
                 Informations
               </h2>
 
               <div className="space-y-1">
                 {job.city && (
-                  <InfoItem 
-                    icon={MapPin} 
-                    label="Localisation" 
+                  <InfoItem
+                    icon={MapPin}
+                    label="Localisation"
                     value={`${job.city}${job.country ? `, ${job.country}` : ', Niger'}`}
                     color="text-amber-400"
                   />
                 )}
 
                 {job.is_remote && (
-                  <InfoItem 
-                    icon={Globe} 
-                    label="Télétravail" 
+                  <InfoItem
+                    icon={Globe}
+                    label="Télétravail"
                     value="✅ Oui"
                     color="text-emerald-400"
                   />
                 )}
 
                 {job.salary_min && job.salary_max && (
-                  <InfoItem 
-                    icon={DollarSign} 
-                    label="Salaire" 
+                  <InfoItem
+                    icon={DollarSign}
+                    label="Salaire"
                     value={`${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} FCFA`}
                     color="text-emerald-400"
                   />
                 )}
 
                 {job.contract_type && (
-                  <InfoItem 
-                    icon={Briefcase} 
-                    label="Type de contrat" 
+                  <InfoItem
+                    icon={Briefcase}
+                    label="Type de contrat"
                     value={job.contract_type}
                     color="text-blue-400"
                   />
                 )}
 
                 {job.experience_level && (
-                  <InfoItem 
-                    icon={Users} 
-                    label="Niveau d'expérience" 
+                  <InfoItem
+                    icon={Users}
+                    label="Niveau d'expérience"
                     value={job.experience_level}
                     color="text-purple-400"
                   />
                 )}
 
                 {job.application_deadline && (
-                  <InfoItem 
-                    icon={Calendar} 
-                    label="Date limite" 
+                  <InfoItem
+                    icon={Calendar}
+                    label="Date limite"
                     value={new Date(job.application_deadline).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     color="text-amber-400"
                   />
                 )}
 
                 {job.created_at && (
-                  <InfoItem 
-                    icon={Calendar} 
-                    label="Publiée le" 
+                  <InfoItem
+                    icon={Calendar}
+                    label="Publiée le"
                     value={new Date(job.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     color="text-slate-400"
                   />
@@ -645,20 +647,20 @@ export const JobDetailPage = () => {
 
               {/* Statistiques */}
               <div className="mt-4 pt-4 border-t border-slate-800">
-                <div className="grid grid-cols-2 gap-3">
-                  <motion.div 
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
-                    className="bg-slate-950/60 p-3 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
+                    className="bg-slate-950/60 p-2.5 sm:p-3 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
                   >
-                    <p className="text-xs text-slate-500">Candidatures</p>
-                    <p className="text-lg font-bold text-white">0</p>
+                    <p className="text-[10px] sm:text-xs text-slate-500">Candidatures</p>
+                    <p className="text-base sm:text-lg font-bold text-white">0</p>
                   </motion.div>
-                  <motion.div 
+                  <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
-                    className="bg-slate-950/60 p-3 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
+                    className="bg-slate-950/60 p-2.5 sm:p-3 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
                   >
-                    <p className="text-xs text-slate-500">Vues</p>
-                    <p className="text-lg font-bold text-white">0</p>
+                    <p className="text-[10px] sm:text-xs text-slate-500">Vues</p>
+                    <p className="text-base sm:text-lg font-bold text-white">0</p>
                   </motion.div>
                 </div>
               </div>
@@ -672,16 +674,16 @@ export const JobDetailPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+                  className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
                 >
-                  <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+                  <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
                     <Send className="w-4 h-4 text-amber-400" />
                     Postuler
                   </h2>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-slate-400 mb-2 flex items-center gap-1.5">
+                      <label className="block text-[10px] sm:text-xs font-medium text-slate-400 mb-2 flex items-center gap-1.5">
                         <FileText className="w-3.5 h-3.5" />
                         Lettre de motivation <span className="text-slate-600">(optionnelle)</span>
                       </label>
@@ -689,7 +691,7 @@ export const JobDetailPage = () => {
                         value={coverNote}
                         onChange={(e) => setCoverNote(e.target.value)}
                         placeholder="Décrivez brièvement votre motivation et vos compétences..."
-                        className="w-full bg-slate-950 text-white px-4 py-3 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 min-h-[120px] resize-none placeholder:text-slate-600 text-sm"
+                        className="w-full bg-slate-950 text-white px-3 sm:px-4 py-3 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 min-h-[100px] sm:min-h-[120px] resize-none placeholder:text-slate-600 text-xs sm:text-sm"
                       />
                     </div>
 
@@ -698,7 +700,7 @@ export const JobDetailPage = () => {
                       whileTap={{ scale: 0.98 }}
                       onClick={handleApply}
                       disabled={isApplying}
-                      className="w-full px-6 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-xs sm:text-sm"
                     >
                       {isApplying ? (
                         <>
@@ -713,14 +715,14 @@ export const JobDetailPage = () => {
                       )}
                     </motion.button>
 
-                    <motion.p 
+                    <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 }}
-                      className="text-[10px] text-slate-500 text-center flex items-center justify-center gap-2"
+                      className="text-[10px] text-slate-500 text-center flex flex-wrap items-center justify-center gap-2"
                     >
-                      <Shield className="w-3 h-3 text-emerald-400" />
-                      Vos informations sont sécurisées
+                      <Shield className="w-3 h-3 text-emerald-400 shrink-0" />
+                      <span>Vos informations sont sécurisées</span>
                       <span className="text-slate-700">•</span>
                       <span className="text-slate-600">Candidature gratuite</span>
                     </motion.p>
@@ -732,10 +734,10 @@ export const JobDetailPage = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-slate-900/80 border border-emerald-500/20 rounded-2xl p-6 backdrop-blur-xl"
+                  className="bg-slate-900/80 border border-emerald-500/20 rounded-2xl p-4 sm:p-6 backdrop-blur-xl"
                 >
                   <div className="flex items-start gap-3">
-                    <motion.div 
+                    <motion.div
                       animate={{
                         scale: [1, 1.2, 1],
                       }}
@@ -744,16 +746,16 @@ export const JobDetailPage = () => {
                         repeat: Infinity,
                         ease: "easeInOut",
                       }}
-                      className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0 border border-emerald-500/20"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20"
                     >
-                      <Check className="w-6 h-6 text-emerald-400" />
+                      <Check className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
                     </motion.div>
-                    <div>
-                      <h3 className="text-sm font-semibold text-emerald-400 flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4" />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xs sm:text-sm font-semibold text-emerald-400 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
                         Candidature envoyée
                       </h3>
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="text-[10px] sm:text-xs text-slate-400 mt-1">
                         Vous avez déjà postulé à cette offre le {existingApplication ? new Date(existingApplication.submitted_at || existingApplication.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
                       </p>
                       <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -761,7 +763,7 @@ export const JobDetailPage = () => {
                       </div>
                       <Link
                         to="/applications"
-                        className="mt-3 inline-flex items-center gap-1 text-xs text-amber-400 hover:text-amber-300 font-semibold transition-colors group"
+                        className="mt-3 inline-flex items-center gap-1 text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-semibold transition-colors group"
                       >
                         Voir mes candidatures
                         <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
@@ -778,17 +780,17 @@ export const JobDetailPage = () => {
             FOOTER
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
         >
-          <div className="flex items-center gap-4">
-            <span className="text-slate-500">
-              <span className="text-amber-400 font-medium">{job.title}</span> • Détail de l'offre
+          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
+            <span className="text-slate-500 truncate max-w-[200px] sm:max-w-none">
+              <span className="text-amber-400 font-medium truncate">{job.title}</span> • Détail
             </span>
-            <span className="w-px h-4 bg-slate-800" />
+            <span className="hidden xs:block w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
               <span className="text-emerald-400/70">Sécurisé - Niger</span>

@@ -4,8 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { applicationsApi } from '../api/applications';
 import { Application, PaginatedResponse } from '../types';
-import { 
-  Clock, CheckCircle2, XCircle, FileText, Building2, Loader2, 
+import {
+  Clock, CheckCircle2, XCircle, FileText, Building2, Loader2,
   ArrowLeft, Eye, Trash2, AlertCircle, RefreshCw,
   Sparkles, TrendingUp, Award, Star, Zap, Calendar,
   ChevronRight, Filter, Grid3x3, List, Search,
@@ -109,10 +109,10 @@ const StatusBadge = ({ status }: { status: Application['status'] }) => {
   };
 
   return (
-    <motion.span 
+    <motion.span
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${config.className}`}
+      className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border ${config.className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
@@ -121,13 +121,13 @@ const StatusBadge = ({ status }: { status: Application['status'] }) => {
   );
 };
 
-const ApplicationCard = ({ 
-  app, 
-  onWithdraw, 
+const ApplicationCard = ({
+  app,
+  onWithdraw,
   isPending,
-  index 
-}: { 
-  app: Application; 
+  index
+}: {
+  app: Application;
   onWithdraw: (id: number, title: string) => void;
   isPending: boolean;
   index: number;
@@ -143,18 +143,18 @@ const ApplicationCard = ({
       animate="animate"
       transition={{ delay: index * 0.05 }}
       whileHover="hover"
-      className={`group bg-slate-900/80 border p-6 rounded-2xl transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 ${
-        isWithdrawn 
-          ? 'border-slate-700/50 opacity-60 hover:opacity-80 hover:border-slate-600' 
+      className={`group bg-slate-900/80 border p-4 sm:p-6 rounded-2xl transition-all duration-300 flex flex-col gap-4 ${
+        isWithdrawn
+          ? 'border-slate-700/50 opacity-60 hover:opacity-80 hover:border-slate-600'
           : 'border-slate-800 hover:border-amber-500/30 hover:shadow-xl hover:shadow-amber-500/5'
       }`}
     >
       <div className="space-y-2 flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-3">
-          <motion.h3 
-            className={`font-bold text-lg ${
-              isWithdrawn 
-                ? 'text-slate-400' 
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <motion.h3
+            className={`font-bold text-sm sm:text-lg break-words ${
+              isWithdrawn
+                ? 'text-slate-400'
                 : 'text-white group-hover:text-amber-400 transition-colors'
             }`}
           >
@@ -165,7 +165,7 @@ const ApplicationCard = ({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="text-xs font-bold text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20 flex items-center gap-1"
+              className="text-[10px] sm:text-xs font-bold text-purple-400 bg-purple-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-purple-500/20 flex items-center gap-1"
             >
               <Star className="w-3 h-3" /> Présélection
             </motion.span>
@@ -174,20 +174,22 @@ const ApplicationCard = ({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20 flex items-center gap-1"
+              className="text-[10px] sm:text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-indigo-500/20 flex items-center gap-1"
             >
               <Calendar className="w-3 h-3" /> Entretien
             </motion.span>
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-400">
           <span className="flex items-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-slate-500 group-hover:text-amber-400 transition-colors" />
-            {app.organization_name || app.job_details?.organization_name || 'Entreprise'}
+            <Building2 className="w-3.5 h-3.5 text-slate-500 group-hover:text-amber-400 transition-colors shrink-0" />
+            <span className="truncate max-w-[180px] sm:max-w-none">
+              {app.organization_name || app.job_details?.organization_name || 'Entreprise'}
+            </span>
           </span>
           <span className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-500" />
+            <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
             Postulée le {new Date(app.submitted_at || app.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
           </span>
           {isWithdrawn && (
@@ -205,10 +207,10 @@ const ApplicationCard = ({
         </div>
 
         {app.cover_note && (
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`text-xs bg-slate-950/40 p-3 rounded-lg border border-slate-800/80 mt-2 max-w-2xl line-clamp-2 ${
+            className={`text-[10px] sm:text-xs bg-slate-950/40 p-2.5 sm:p-3 rounded-lg border border-slate-800/80 mt-2 w-full line-clamp-2 ${
               isWithdrawn ? 'text-slate-500' : 'text-slate-400 group-hover:text-slate-300 transition-colors'
             }`}
           >
@@ -217,14 +219,16 @@ const ApplicationCard = ({
         )}
       </div>
 
-      <div className="flex items-center gap-2 shrink-0 flex-wrap">
+      {/* Actions : pleine largeur sur mobile */}
+      <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 shrink-0">
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          className="w-full xs:w-auto"
         >
           <Link
             to={`/jobs/${app.opportunity}`}
-            className="px-4 py-2.5 bg-slate-800 text-white rounded-xl text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center gap-1.5 group/link"
+            className="w-full xs:w-auto px-4 py-2.5 bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-1.5 group/link"
           >
             <Eye className="w-3.5 h-3.5 group-hover/link:scale-110 transition-transform" />
             Voir l'offre
@@ -237,7 +241,7 @@ const ApplicationCard = ({
             whileTap={{ scale: 0.95 }}
             onClick={() => onWithdraw(app.id, app.opportunity_title || app.job_details?.title || 'cette offre')}
             disabled={isPending}
-            className="px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 rounded-xl text-sm font-semibold transition-all duration-300 border border-rose-500/20 hover:border-rose-500/40 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full xs:w-auto px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-rose-500/20 hover:border-rose-500/40 flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isPending ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -249,10 +253,10 @@ const ApplicationCard = ({
         )}
 
         {isWithdrawn && (
-          <motion.span 
+          <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="px-4 py-2 bg-slate-800/50 text-slate-500 rounded-xl text-xs font-medium border border-slate-700 flex items-center gap-1.5"
+            className="w-full xs:w-auto px-4 py-2 bg-slate-800/50 text-slate-500 rounded-xl text-[10px] sm:text-xs font-medium border border-slate-700 flex items-center justify-center gap-1.5"
           >
             <XCircle className="w-3.5 h-3.5" />
             Retirée
@@ -303,9 +307,9 @@ export const CandidateApplicationsPage = () => {
       const pageSize = 50;
 
       while (hasMore) {
-        const response = await applicationsApi.getMyApplications({ 
-          page, 
-          page_size: pageSize 
+        const response = await applicationsApi.getMyApplications({
+          page,
+          page_size: pageSize
         });
         allResults.push(...response.data.results);
         hasMore = !!response.data.next;
@@ -337,7 +341,7 @@ export const CandidateApplicationsPage = () => {
       refetch();
     },
     onError: (err: any) => {
-      const errorMessage = err.response?.data?.detail || 
+      const errorMessage = err.response?.data?.detail ||
                            err.response?.data?.message ||
                            'Erreur lors du retrait de la candidature';
       toast.error(errorMessage);
@@ -369,12 +373,12 @@ export const CandidateApplicationsPage = () => {
   // ==========================================================
 
   const applications = applicationsData?.results || [];
-  
+
   const activeApplications = applications.filter(app => app.status !== 'withdrawn');
   const withdrawnApplications = applications.filter(app => app.status === 'withdrawn');
 
-  const filteredApplications = statusFilter === 'all' 
-    ? applications 
+  const filteredApplications = statusFilter === 'all'
+    ? applications
     : applications.filter(app => app.status === statusFilter);
 
   const statusCounts = {
@@ -394,7 +398,7 @@ export const CandidateApplicationsPage = () => {
 
   if (isLoading) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
@@ -427,23 +431,23 @@ export const CandidateApplicationsPage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="relative"
+      className="relative space-y-4 sm:space-y-6"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[200px] sm:h-[300px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
@@ -456,19 +460,19 @@ export const CandidateApplicationsPage = () => {
           BARRE DE NAVIGATION
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoBack}
-            className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
             <span className="hidden sm:inline">Retour</span>
           </motion.button>
 
@@ -476,9 +480,9 @@ export const CandidateApplicationsPage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleGoHome}
-            className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
           >
-            <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+            <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
             <span className="hidden sm:inline">Accueil</span>
           </motion.button>
 
@@ -486,16 +490,16 @@ export const CandidateApplicationsPage = () => {
             whileHover={{ rotate: 180 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleRefresh}
-            className={`p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300 ${isRefreshing ? 'animate-spin' : ''}`}
+            className={`p-2 sm:p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300 ${isRefreshing ? 'animate-spin' : ''}`}
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </motion.button>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Mes candidatures</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Mes candidatures</span>
             <Sparkles className="w-3 h-3 text-amber-400" />
           </div>
         </div>
@@ -511,52 +515,52 @@ export const CandidateApplicationsPage = () => {
         transition={{ delay: 0.1 }}
         className="space-y-2"
       >
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl lg:text-4xl font-black text-white tracking-tight">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
             Mes Candidatures
           </h1>
           <motion.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.3 }}
-            className="px-3 py-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
+            className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
           >
             {applications.length}
           </motion.span>
         </div>
-        <p className="text-sm text-slate-400">
+        <p className="text-xs sm:text-sm text-slate-400">
           Suivez l'état d'avancement de toutes vos postulations au Niger
         </p>
-        <div className="flex flex-wrap gap-4 text-xs">
-          <motion.span 
+        <div className="flex flex-wrap gap-2 sm:gap-4 text-[10px] sm:text-xs">
+          <motion.span
             whileHover={{ scale: 1.05 }}
             className="text-slate-500 flex items-center gap-1.5"
           >
-            <FileText className="w-3.5 h-3.5" />
+            <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             Total : {applications.length} candidature{applications.length > 1 ? 's' : ''}
           </motion.span>
-          <motion.span 
+          <motion.span
             whileHover={{ scale: 1.05 }}
             className="text-emerald-400 flex items-center gap-1.5"
           >
-            <Activity className="w-3.5 h-3.5" />
+            <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             Actives : {activeApplications.length}
           </motion.span>
           {withdrawnApplications.length > 0 && (
-            <motion.span 
+            <motion.span
               whileHover={{ scale: 1.05 }}
               className="text-slate-500 flex items-center gap-1.5"
             >
-              <XCircle className="w-3.5 h-3.5" />
+              <XCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               Retirées : {withdrawnApplications.length}
             </motion.span>
           )}
           {statusCounts.accepted > 0 && (
-            <motion.span 
+            <motion.span
               whileHover={{ scale: 1.05 }}
               className="text-emerald-400 flex items-center gap-1.5"
             >
-              <Award className="w-3.5 h-3.5" />
+              <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               Acceptées : {statusCounts.accepted} 🎉
             </motion.span>
           )}
@@ -571,55 +575,61 @@ export const CandidateApplicationsPage = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between"
+        className="flex flex-col gap-3"
       >
-        <div className="flex flex-wrap gap-2">
-          {['all', 'submitted', 'under_review', 'shortlisted', 'interview', 'accepted', 'rejected', 'withdrawn'].map((status) => (
-            <motion.button
-              key={status}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setStatusFilter(status)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${ 
-                statusFilter === status
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
-                  : 'bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              {status === 'all' ? 'Tous' : 
-               status === 'under_review' ? 'En examen' :
-               status === 'shortlisted' ? 'Présélection' :
-               status === 'interview' ? 'Entretien' :
-               status === 'accepted' ? 'Acceptés' :
-               status === 'rejected' ? 'Refusés' :
-               status === 'withdrawn' ? 'Retirés' :
-               status.charAt(0).toUpperCase() + status.slice(1)}
-              {status !== 'all' && (
-                <span className="ml-1 text-[10px] opacity-60">
-                  ({statusCounts[status as keyof typeof statusCounts] || 0})
-                </span>
-              )}
-            </motion.button>
-          ))}
+        {/* Filtres scrollables horizontalement sur mobile */}
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0 pb-1">
+          <div className="flex gap-2 min-w-max">
+            {['all', 'submitted', 'under_review', 'shortlisted', 'interview', 'accepted', 'rejected', 'withdrawn'].map((status) => (
+              <motion.button
+                key={status}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setStatusFilter(status)}
+                className={`px-2.5 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                  statusFilter === status
+                    ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
+                    : 'bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                {status === 'all' ? 'Tous' :
+                 status === 'under_review' ? 'En examen' :
+                 status === 'shortlisted' ? 'Présélection' :
+                 status === 'interview' ? 'Entretien' :
+                 status === 'accepted' ? 'Acceptés' :
+                 status === 'rejected' ? 'Refusés' :
+                 status === 'withdrawn' ? 'Retirés' :
+                 status.charAt(0).toUpperCase() + status.slice(1)}
+                {status !== 'all' && (
+                  <span className="ml-1 text-[10px] opacity-60">
+                    ({statusCounts[status as keyof typeof statusCounts] || 0})
+                  </span>
+                )}
+              </motion.button>
+            ))}
+          </div>
         </div>
 
-        <div className="flex gap-1 bg-slate-900/80 border border-slate-800 rounded-xl p-1">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setViewMode('list')}
-            className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'list' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
-          >
-            <List className="w-4 h-4" />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
-          >
-            <Grid3x3 className="w-4 h-4" />
-          </motion.button>
+        {/* Toggle vue : aligné à droite */}
+        <div className="flex justify-end">
+          <div className="flex gap-1 bg-slate-900/80 border border-slate-800 rounded-xl p-1">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'list' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
+            >
+              <List className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
+            >
+              <Grid3x3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </motion.button>
+          </div>
         </div>
       </motion.div>
 
@@ -635,23 +645,23 @@ export const CandidateApplicationsPage = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="text-center py-20 bg-slate-900/40 border border-slate-800 rounded-2xl"
+            className="text-center py-12 sm:py-20 bg-slate-900/40 border border-slate-800 rounded-2xl px-4"
           >
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-              <FileText className="w-10 h-10 text-slate-600" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
+              <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-slate-600" />
             </div>
-            <p className="text-lg font-semibold text-white">
+            <p className="text-base sm:text-lg font-semibold text-white">
               {statusFilter !== 'all' ? 'Aucune candidature avec ce statut' : 'Aucune candidature'}
             </p>
-            <p className="text-sm text-slate-400 mt-1">
-              {statusFilter !== 'all' 
-                ? 'Essayez de modifier votre filtre' 
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              {statusFilter !== 'all'
+                ? 'Essayez de modifier votre filtre'
                 : 'Vous n\'avez encore postulé à aucune offre d\'emploi au Niger.'}
             </p>
             {statusFilter === 'all' && (
-              <Link 
-                to="/jobs" 
-                className="inline-block mt-6 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+              <Link
+                to="/jobs"
+                className="inline-block mt-6 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
               >
                 Voir les offres
               </Link>
@@ -663,7 +673,7 @@ export const CandidateApplicationsPage = () => {
             variants={staggerContainer}
             initial="initial"
             animate="animate"
-            className="space-y-4"
+            className="space-y-3 sm:space-y-4"
           >
             {filteredApplications.map((app, index) => (
               <ApplicationCard
@@ -681,7 +691,7 @@ export const CandidateApplicationsPage = () => {
             variants={staggerContainer}
             initial="initial"
             animate="animate"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
           >
             {filteredApplications.map((app, index) => (
               <motion.div
@@ -691,27 +701,29 @@ export const CandidateApplicationsPage = () => {
                 animate="animate"
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.02, borderColor: 'rgba(251, 191, 36, 0.3)' }}
-                className={`bg-slate-900/80 border p-4 rounded-xl transition-all duration-300 ${
-                  app.status === 'withdrawn' 
-                    ? 'border-slate-700/50 opacity-60' 
+                className={`bg-slate-900/80 border p-3 sm:p-4 rounded-xl transition-all duration-300 flex flex-col ${
+                  app.status === 'withdrawn'
+                    ? 'border-slate-700/50 opacity-60'
                     : 'border-slate-800 hover:shadow-xl hover:shadow-amber-500/5'
                 }`}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <h4 className="font-semibold text-white text-sm">{app.opportunity_title || 'Offre'}</h4>
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h4 className="font-semibold text-white text-xs sm:text-sm line-clamp-2 flex-1 min-w-0">
+                    {app.opportunity_title || 'Offre'}
+                  </h4>
                   <StatusBadge status={app.status} />
                 </div>
-                <p className="text-xs text-slate-400 flex items-center gap-1.5">
-                  <Building2 className="w-3 h-3" />
-                  {app.organization_name || 'Entreprise'}
+                <p className="text-[10px] sm:text-xs text-slate-400 flex items-center gap-1.5">
+                  <Building2 className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{app.organization_name || 'Entreprise'}</span>
                 </p>
-                <p className="text-xs text-slate-500 mt-2">
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-2">
                   {new Date(app.submitted_at || app.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </p>
-                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800">
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800 mt-auto">
                   <Link
                     to={`/jobs/${app.opportunity}`}
-                    className="flex-1 text-center px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-medium hover:bg-slate-700 transition-colors"
+                    className="flex-1 text-center px-3 py-1.5 bg-slate-800 text-white rounded-lg text-[10px] sm:text-xs font-medium hover:bg-slate-700 transition-colors"
                   >
                     Voir
                   </Link>
@@ -719,7 +731,7 @@ export const CandidateApplicationsPage = () => {
                     <button
                       onClick={() => handleWithdraw(app.id, app.opportunity_title || 'cette offre')}
                       disabled={withdrawMutation.isPending}
-                      className="px-3 py-1.5 bg-rose-500/10 text-rose-400 rounded-lg text-xs font-medium hover:bg-rose-500/20 transition-colors disabled:opacity-50"
+                      className="px-3 py-1.5 bg-rose-500/10 text-rose-400 rounded-lg text-[10px] sm:text-xs font-medium hover:bg-rose-500/20 transition-colors disabled:opacity-50"
                     >
                       Retirer
                     </button>
@@ -735,17 +747,17 @@ export const CandidateApplicationsPage = () => {
           FOOTER
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
           <span className="text-slate-500">
             <span className="text-amber-400 font-medium">{applications.length}</span> candidatures totales
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
             <span className="text-emerald-400/70">Sécurisé - Niger</span>

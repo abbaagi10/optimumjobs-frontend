@@ -4,11 +4,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '../api/admin';
-import { 
-  ArrowLeft, Home, Loader2, Building2, MapPin, Calendar, 
+import {
+  ArrowLeft, Home, Loader2, Building2, MapPin, Calendar,
   Briefcase, Check, X, Clock, AlertCircle, Users,
   FileText, Mail, Phone, Globe, RefreshCw,
-  Shield, Award, Sparkles, Zap, TrendingUp, 
+  Shield, Award, Sparkles, Zap, TrendingUp,
   Eye, Heart, Share2, Bookmark, ChevronRight,
   Crown, Star, UserCheck, UserX, Activity,
   Link2, ExternalLink, Send, Copy, CheckCircle2,
@@ -109,10 +109,10 @@ const StatusBadge = ({ status }: { status: string }) => {
   };
 
   return (
-    <motion.span 
+    <motion.span
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border ${config.className}`}
+      className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border ${config.className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
@@ -122,27 +122,28 @@ const StatusBadge = ({ status }: { status: string }) => {
 };
 
 const InfoItem = ({ label, value, icon: Icon, color = 'text-slate-400' }: any) => (
-  <motion.div 
+  <motion.div
     variants={fadeInUp}
-    className="flex justify-between items-center py-3 border-b border-slate-800/50 last:border-0 group hover:bg-slate-800/20 px-3 -mx-3 rounded-lg transition-colors duration-200"
+    className="flex justify-between items-center py-3 border-b border-slate-800/50 last:border-0 group hover:bg-slate-800/20 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-lg transition-colors duration-200 gap-3"
   >
-    <span className="text-sm text-slate-400 flex items-center gap-2">
-      <Icon className={`w-4 h-4 ${color}`} />
+    <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-2 shrink-0">
+      <Icon className={`w-4 h-4 ${color} shrink-0`} />
       {label}
     </span>
-    <span className="text-sm text-white font-medium text-right group-hover:text-amber-400 transition-colors">
+    <span className="text-xs sm:text-sm text-white font-medium text-right group-hover:text-amber-400 transition-colors break-words">
       {value}
     </span>
   </motion.div>
 );
 
-const ActionButton = ({ 
-  onClick, 
-  disabled, 
-  isLoading, 
-  icon: Icon, 
-  label, 
-  variant = 'primary' 
+const ActionButton = ({
+  onClick,
+  disabled,
+  isLoading,
+  icon: Icon,
+  label,
+  variant = 'primary',
+  className = ''
 }: any) => {
   const variants = {
     primary: 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40',
@@ -157,7 +158,7 @@ const ActionButton = ({
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
       disabled={disabled || isLoading}
-      className={`px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]}`}
+      className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
     >
       {isLoading ? (
         <Loader2 className="w-4 h-4 animate-spin" />
@@ -289,7 +290,7 @@ export const AdminOpportunityDetailPage = () => {
 
   if (isLoading) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
@@ -323,12 +324,12 @@ export const AdminOpportunityDetailPage = () => {
 
   if (!job) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-4 py-12"
+        className="max-w-4xl mx-auto px-3 sm:px-4 py-12"
       >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-12 text-center backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -339,17 +340,17 @@ export const AdminOpportunityDetailPage = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
           >
-            <AlertCircle className="w-10 h-10 text-rose-400" />
+            <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
           </motion.div>
-          <h2 className="text-2xl font-bold text-white">Offre non trouvée</h2>
-          <p className="text-sm text-slate-400 mt-2">L'offre que vous recherchez n'existe pas ou a été supprimée.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-white">Offre non trouvée</h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2">L'offre que vous recherchez n'existe pas ou a été supprimée.</p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/admin/dashboard')}
-            className="mt-6 px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
           >
             Retour au dashboard
           </motion.button>
@@ -363,23 +364,23 @@ export const AdminOpportunityDetailPage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-6 relative"
+      className="space-y-4 sm:space-y-6 relative"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[200px] sm:h-[300px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
@@ -392,19 +393,19 @@ export const AdminOpportunityDetailPage = () => {
           NAVIGATION
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/admin/dashboard')}
-            className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
             <span>Retour</span>
           </motion.button>
 
@@ -412,31 +413,31 @@ export const AdminOpportunityDetailPage = () => {
             whileHover={{ rotate: 180 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => refetch()}
-            className="group flex items-center gap-2 rounded-xl bg-slate-900/50 border border-slate-800 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-700 hover:text-white"
+            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-slate-900/50 border border-slate-800 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-700 hover:text-white"
           >
-            <RefreshCw className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180" />
-            <span className="hidden sm:inline">Rafraîchir</span>
+            <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:rotate-180" />
+            <span className="hidden xs:inline">Rafraîchir</span>
           </motion.button>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleCopyLink}
-            className="flex items-center gap-2 rounded-xl bg-slate-900/50 border border-slate-800 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-amber-500/30 hover:text-amber-400"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-slate-900/50 border border-slate-800 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-amber-500/30 hover:text-amber-400"
           >
             {isCopied ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
             ) : (
-              <Link2 className="w-4 h-4" />
+              <Link2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             )}
-            <span className="hidden sm:inline">{isCopied ? 'Copié !' : 'Copier le lien'}</span>
+            <span className="hidden xs:inline">{isCopied ? 'Copié !' : 'Copier le lien'}</span>
           </motion.button>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+          <div className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800">
             <Crown className="w-3 h-3 text-amber-500" />
-            <span className="text-xs text-slate-500 font-medium">Admin Niger</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Admin Niger</span>
           </div>
         </div>
       </motion.div>
@@ -448,15 +449,15 @@ export const AdminOpportunityDetailPage = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl transition-all duration-300 hover:border-slate-700"
+        className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-slate-700"
       >
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <motion.span 
+              <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="text-xs text-amber-400 uppercase font-bold bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20"
+                className="text-[10px] sm:text-xs text-amber-400 uppercase font-bold bg-amber-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-amber-500/20"
               >
                 {job.opportunity_type || 'Offre'}
               </motion.span>
@@ -465,58 +466,60 @@ export const AdminOpportunityDetailPage = () => {
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="text-xs font-bold text-rose-400 bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20 flex items-center gap-1"
+                  className="text-[10px] sm:text-xs font-bold text-rose-400 bg-rose-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-rose-500/20 flex items-center gap-1"
                 >
                   <Zap className="w-3 h-3" /> Urgent
                 </motion.span>
               )}
             </div>
-            <h1 className="text-2xl lg:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-lg sm:text-2xl lg:text-3xl font-black text-white tracking-tight break-words">
               {job.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 mt-2">
-              <span className="text-sm text-slate-400 flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-amber-400" />
-                {job.organization_name || 'Entreprise'}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2">
+              <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
+                <span className="truncate">{job.organization_name || 'Entreprise'}</span>
               </span>
               {job.city && (
-                <span className="text-sm text-slate-500 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5" />
-                  {job.city}{job.country ? `, ${job.country}` : ', Niger'}
+                <span className="text-xs sm:text-sm text-slate-500 flex items-center gap-1.5">
+                  <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                  <span className="truncate">
+                    {job.city}{job.country ? `, ${job.country}` : ', Niger'}
+                  </span>
                 </span>
               )}
               {job.is_remote && (
-                <span className="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                <span className="text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                   <Globe className="w-3 h-3" />
                   Télétravail
                 </span>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-3 text-[10px] sm:text-xs text-slate-500">
               {job.created_at && (
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5" />
+                  <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   Créée le {new Date(job.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </span>
               )}
               {job.published_at && (
                 <span className="flex items-center gap-1.5 text-emerald-400">
-                  <Check className="w-3.5 h-3.5" />
+                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   Publiée le {new Date(job.published_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                 </span>
               )}
               <span className="flex items-center gap-1.5 text-slate-600">
-                <Activity className="w-3.5 h-3.5" />
+                <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 ID: #{job.id}
               </span>
             </div>
             {job.rejection_reason && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="mt-3 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl"
+                className="mt-3 p-3 sm:p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl"
               >
-                <p className="text-xs text-rose-400 flex items-start gap-2">
+                <p className="text-[10px] sm:text-xs text-rose-400 flex items-start gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>Motif du rejet: {job.rejection_reason}</span>
                 </p>
@@ -525,7 +528,7 @@ export const AdminOpportunityDetailPage = () => {
           </div>
 
           {/* Actions Admin */}
-          <div className="flex flex-wrap gap-2 shrink-0">
+          <div className="flex flex-col xs:flex-row flex-wrap gap-2">
             {job.status === 'pending_review' && (
               <>
                 <ActionButton
@@ -535,6 +538,7 @@ export const AdminOpportunityDetailPage = () => {
                   icon={Check}
                   label="Approuver"
                   variant="success"
+                  className="w-full xs:w-auto"
                 />
                 <ActionButton
                   onClick={() => setShowRejectForm(!showRejectForm)}
@@ -543,6 +547,7 @@ export const AdminOpportunityDetailPage = () => {
                   icon={X}
                   label="Refuser"
                   variant="danger"
+                  className="w-full xs:w-auto"
                 />
               </>
             )}
@@ -555,6 +560,7 @@ export const AdminOpportunityDetailPage = () => {
                 icon={Sparkles}
                 label="Publier l'offre"
                 variant="primary"
+                className="w-full xs:w-auto"
               />
             )}
 
@@ -566,6 +572,7 @@ export const AdminOpportunityDetailPage = () => {
                 icon={X}
                 label="Clôturer"
                 variant="secondary"
+                className="w-full xs:w-auto"
               />
             )}
 
@@ -577,6 +584,7 @@ export const AdminOpportunityDetailPage = () => {
                 icon={ArrowLeft}
                 label="Retour"
                 variant="secondary"
+                className="w-full xs:w-auto"
               />
             )}
           </div>
@@ -589,9 +597,9 @@ export const AdminOpportunityDetailPage = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-4 p-4 bg-slate-950/60 border border-rose-500/20 rounded-xl overflow-hidden"
+              className="mt-4 p-3 sm:p-4 bg-slate-950/60 border border-rose-500/20 rounded-xl overflow-hidden"
             >
-              <p className="text-sm text-slate-400 mb-3 flex items-center gap-2">
+              <p className="text-xs sm:text-sm text-slate-400 mb-3 flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-rose-400" />
                 Motif du rejet :
               </p>
@@ -599,13 +607,13 @@ export const AdminOpportunityDetailPage = () => {
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 placeholder="Expliquez pourquoi cette offre est rejetée..."
-                className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl text-sm focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition-all duration-300 placeholder:text-slate-600"
+                className="w-full bg-slate-950 border border-slate-800 text-white p-3 sm:p-3.5 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition-all duration-300 placeholder:text-slate-600"
                 rows={3}
               />
-              <div className="flex justify-end gap-2 mt-3">
+              <div className="flex flex-col xs:flex-row justify-end gap-2 mt-3">
                 <button
                   onClick={() => setShowRejectForm(false)}
-                  className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors rounded-lg"
+                  className="px-4 py-2 text-xs sm:text-sm text-slate-400 hover:text-white transition-colors rounded-lg"
                 >
                   Annuler
                 </button>
@@ -614,7 +622,7 @@ export const AdminOpportunityDetailPage = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => rejectMutation.mutate()}
                   disabled={rejectMutation.isPending || !rejectionReason.trim()}
-                  className="px-6 py-2 bg-rose-600 text-white text-sm font-bold rounded-xl hover:bg-rose-500 transition-all duration-300 disabled:opacity-50 flex items-center gap-2 hover:shadow-lg hover:shadow-rose-500/25"
+                  className="px-4 sm:px-6 py-2 bg-rose-600 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-rose-500 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-rose-500/25"
                 >
                   {rejectMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -633,21 +641,21 @@ export const AdminOpportunityDetailPage = () => {
           CONTENU PRINCIPAL
       ====================================================== */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Colonne de gauche - Description */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           {/* Description */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
               <FileText className="w-4 h-4 text-amber-400" />
               Description du poste
             </h2>
-            <div className="text-slate-300 whitespace-pre-wrap leading-relaxed text-sm">
+            <div className="text-slate-300 whitespace-pre-wrap leading-relaxed text-xs sm:text-sm">
               {job.description || 'Aucune description disponible.'}
             </div>
           </motion.div>
@@ -658,21 +666,21 @@ export const AdminOpportunityDetailPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
             >
-              <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
                 <Users className="w-4 h-4 text-amber-400" />
                 Compétences requises
               </h2>
               <div className="flex flex-wrap gap-2">
                 {job.requirements.map((req, index) => (
-                  <motion.span 
+                  <motion.span
                     key={index}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.05 }}
                     whileHover={{ scale: 1.05, y: -2 }}
-                    className="px-4 py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
                   >
                     {req}
                   </motion.span>
@@ -683,69 +691,69 @@ export const AdminOpportunityDetailPage = () => {
         </div>
 
         {/* Colonne de droite - Informations */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Informations générales */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
               <Briefcase className="w-4 h-4 text-amber-400" />
               Informations
             </h2>
             <div className="space-y-1">
-              <InfoItem 
-                label="Type" 
-                value={job.opportunity_type || 'Non spécifié'} 
+              <InfoItem
+                label="Type"
+                value={job.opportunity_type || 'Non spécifié'}
                 icon={Briefcase}
                 color="text-amber-400"
               />
               {job.contract_type && (
-                <InfoItem 
-                  label="Contrat" 
-                  value={job.contract_type} 
+                <InfoItem
+                  label="Contrat"
+                  value={job.contract_type}
                   icon={FileText}
                   color="text-blue-400"
                 />
               )}
               {job.experience_level && (
-                <InfoItem 
-                  label="Expérience" 
-                  value={job.experience_level} 
+                <InfoItem
+                  label="Expérience"
+                  value={job.experience_level}
                   icon={Award}
                   color="text-emerald-400"
                 />
               )}
               {job.education_level && (
-                <InfoItem 
-                  label="Niveau d'étude" 
-                  value={job.education_level} 
+                <InfoItem
+                  label="Niveau d'étude"
+                  value={job.education_level}
                   icon={GraduationCap}
                   color="text-purple-400"
                 />
               )}
               {job.salary_min && job.salary_max && (
-                <InfoItem 
-                  label="Salaire" 
-                  value={`${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} FCFA`} 
+                <InfoItem
+                  label="Salaire"
+                  value={`${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} FCFA`}
                   icon={TrendingUp}
                   color="text-amber-400"
                 />
               )}
               {job.is_remote && (
-                <InfoItem 
-                  label="Télétravail" 
-                  value="✅ Oui" 
+                <InfoItem
+                  label="Télétravail"
+                  value="✅ Oui"
                   icon={Globe}
                   color="text-emerald-400"
                 />
               )}
               {job.application_deadline && (
-                <InfoItem 
-                  label="Date limite" 
-                  value={new Date(job.application_deadline).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })} 
+                <InfoItem
+                  label="Date limite"
+                  value={new Date(job.application_deadline).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                   icon={Calendar}
                   color="text-amber-400"
                 />
@@ -758,26 +766,26 @@ export const AdminOpportunityDetailPage = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
               <Activity className="w-4 h-4 text-amber-400" />
               Statistiques
             </h2>
             <div className="grid grid-cols-2 gap-3">
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-slate-950/60 p-4 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
+                className="bg-slate-950/60 p-3 sm:p-4 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
               >
-                <p className="text-xs text-slate-500">Candidatures</p>
-                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-[10px] sm:text-xs text-slate-500">Candidatures</p>
+                <p className="text-xl sm:text-2xl font-bold text-white">0</p>
               </motion.div>
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-slate-950/60 p-4 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
+                className="bg-slate-950/60 p-3 sm:p-4 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
               >
-                <p className="text-xs text-slate-500">Vues</p>
-                <p className="text-2xl font-bold text-white">0</p>
+                <p className="text-[10px] sm:text-xs text-slate-500">Vues</p>
+                <p className="text-xl sm:text-2xl font-bold text-white">0</p>
               </motion.div>
             </div>
           </motion.div>
@@ -787,9 +795,9 @@ export const AdminOpportunityDetailPage = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.35 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
           >
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
               <Zap className="w-4 h-4 text-amber-400" />
               Actions rapides
             </h2>
@@ -797,7 +805,7 @@ export const AdminOpportunityDetailPage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <Eye className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -808,7 +816,7 @@ export const AdminOpportunityDetailPage = () => {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
               >
                 <span className="flex items-center gap-2">
                   <Send className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
@@ -825,17 +833,17 @@ export const AdminOpportunityDetailPage = () => {
           FOOTER DE PAGE
       ====================================================== */}
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
           <span className="text-slate-500">
             <span className="text-amber-400 font-medium">{job.id}</span> • Offre #{job.id}
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-slate-800" />
           <span className="flex items-center gap-1.5">
             <Shield className="w-3 h-3 text-emerald-400" />
             <span className="text-emerald-400/70">Sécurisé - Niger</span>

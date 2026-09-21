@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { jobsApi } from '../api/jobs';
 import { organizationApi } from '../api/organization';
-import { 
+import {
   Briefcase, Save, X, Loader2, ArrowLeft, Home,
   Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
   Building2, MapPin, Globe, Calendar, Users, Award,
@@ -49,14 +49,14 @@ const slideInLeft = {
 // COMPOSANTS
 // ==========================================================
 
-const FormInput = ({ 
-  icon: Icon, 
-  label, 
-  type = 'text', 
-  value, 
-  onChange, 
-  placeholder, 
-  required, 
+const FormInput = ({
+  icon: Icon,
+  label,
+  type = 'text',
+  value,
+  onChange,
+  placeholder,
+  required,
   error,
   options,
   className = ''
@@ -64,30 +64,30 @@ const FormInput = ({
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <motion.div 
+    <motion.div
       variants={fadeInUp}
       className={`space-y-2 ${className}`}
     >
-      <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-          {Icon && <Icon className="w-3.5 h-3.5 text-amber-400" />}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2">
+          {Icon && <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />}
           {label}
           {required && <span className="text-rose-400">*</span>}
         </label>
         {error && (
-          <span className="text-xs text-rose-400 flex items-center gap-1">
+          <span className="text-[10px] sm:text-xs text-rose-400 flex items-center gap-1">
             <AlertCircle className="w-3 h-3" />
             {error}
           </span>
         )}
       </div>
-      
+
       {type === 'select' ? (
         <select
           value={value}
           onChange={onChange}
           required={required}
-          className={`w-full bg-slate-950/80 text-white px-4 py-3.5 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
+          className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
             error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
           }`}
         >
@@ -103,7 +103,7 @@ const FormInput = ({
           required={required}
           rows={4}
           placeholder={placeholder}
-          className={`w-full bg-slate-950/80 text-white px-4 py-3.5 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none ${
+          className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none ${
             error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
           }`}
         />
@@ -113,9 +113,9 @@ const FormInput = ({
             type="checkbox"
             checked={value}
             onChange={onChange}
-            className="w-5 h-5 rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-amber-500 focus:ring-offset-0 transition-all duration-300"
+            className="w-5 h-5 rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-amber-500 focus:ring-offset-0 transition-all duration-300 shrink-0"
           />
-          <span className="text-sm text-slate-300">Oui, cette offre est en télétravail</span>
+          <span className="text-xs sm:text-sm text-slate-300">Oui, cette offre est en télétravail</span>
         </div>
       ) : (
         <div className="relative group">
@@ -127,7 +127,7 @@ const FormInput = ({
             onBlur={() => setIsFocused(false)}
             required={required}
             placeholder={placeholder}
-            className={`w-full bg-slate-950/80 text-white px-4 py-3.5 rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
+            className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
               error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
             }`}
           />
@@ -146,13 +146,13 @@ const FormInput = ({
 const FormSection = ({ title, icon: Icon, children }: any) => (
   <motion.div
     variants={fadeInUp}
-    className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-5 hover:border-slate-700 transition-all duration-300"
+    className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-5 hover:border-slate-700 transition-all duration-300"
   >
-    <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
-      <div className="p-2 rounded-xl bg-amber-500/10">
-        <Icon className="w-5 h-5 text-amber-400" />
+    <div className="flex items-center gap-2 sm:gap-3 pb-3 border-b border-slate-800">
+      <div className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 shrink-0">
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
       </div>
-      <h3 className="text-base font-bold text-white">{title}</h3>
+      <h3 className="text-sm sm:text-base font-bold text-white truncate">{title}</h3>
     </div>
     {children}
   </motion.div>
@@ -221,7 +221,7 @@ export const JobCreatePage = () => {
     },
     onError: (error: any) => {
       console.error('❌ Erreur création offre:', error);
-      const message = error.response?.data?.detail || 
+      const message = error.response?.data?.detail ||
                      error.response?.data?.message ||
                      'Erreur lors de la création de l\'offre';
       toast.error(message);
@@ -237,7 +237,7 @@ export const JobCreatePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.organization) {
       toast.error('Veuillez sélectionner une organisation');
       return;
@@ -281,7 +281,7 @@ export const JobCreatePage = () => {
 
   if (isLoadingOrgs) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
@@ -317,12 +317,12 @@ export const JobCreatePage = () => {
 
   if (orgsList.length === 0) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-3xl mx-auto px-4 py-8"
+        className="max-w-3xl mx-auto px-3 sm:px-4 py-8"
       >
-        <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-12 text-center space-y-6 backdrop-blur-xl">
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center space-y-5 sm:space-y-6 backdrop-blur-xl">
           <motion.div
             animate={{
               scale: [1, 1.1, 1],
@@ -333,13 +333,13 @@ export const JobCreatePage = () => {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-20 h-20 mx-auto rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20"
           >
-            <Briefcase className="w-10 h-10 text-amber-400" />
+            <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-amber-400" />
           </motion.div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Aucune organisation</h2>
-            <p className="text-slate-400 mt-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Aucune organisation</h2>
+            <p className="text-xs sm:text-sm text-slate-400 mt-2">
               Vous devez créer une organisation avant de publier une offre
             </p>
           </div>
@@ -347,9 +347,9 @@ export const JobCreatePage = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate('/organization/create')}
-            className="px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center gap-2 mx-auto"
+            className="px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center gap-2 mx-auto text-sm sm:text-base"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
             Créer une organisation
           </motion.button>
         </div>
@@ -362,31 +362,31 @@ export const JobCreatePage = () => {
   // ==========================================================
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="relative"
     >
       {/* Background decoration with parallax */}
       <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
           animate={{
             x: mousePosition.x * 20,
             y: mousePosition.y * 20,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
           }}
           transition={{ type: "spring", damping: 30, stiffness: 50 }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl"
+        <motion.div
+          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 10,
             y: mousePosition.y * 10,
@@ -395,25 +395,25 @@ export const JobCreatePage = () => {
         />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-6">
 
         {/* ======================================================
             NAVIGATION
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
         >
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoBack}
-              className="group flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-4 py-2.5 text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
             >
-              <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               <span className="hidden sm:inline">Retour</span>
             </motion.button>
 
@@ -421,16 +421,16 @@ export const JobCreatePage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleGoHome}
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-4 py-2.5 text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
             >
-              <Home className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
               <span className="hidden sm:inline">Accueil</span>
             </motion.button>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-4 py-1.5 border border-slate-800">
+          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
             <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-xs text-slate-500 font-medium">Nouvelle offre</span>
+            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Nouvelle offre</span>
             <Sparkles className="w-3 h-3 text-amber-400" />
           </div>
         </motion.div>
@@ -442,29 +442,29 @@ export const JobCreatePage = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
+          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
         >
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-            <motion.div 
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+            <motion.div
               whileHover={{ rotate: 180 }}
               transition={{ duration: 0.6, type: "spring" }}
-              className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center shrink-0"
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center shrink-0"
             >
-              <Briefcase className="w-7 h-7 text-amber-400" />
+              <Briefcase className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
             </motion.div>
-            <div className="flex-1">
-              <h1 className="text-2xl md:text-3xl font-black text-white flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-white flex flex-wrap items-center gap-2 sm:gap-3">
                 Publier une offre
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="px-2 py-0.5 text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
+                  className="px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
                 >
                   NOUVEAU
                 </motion.span>
               </h1>
-              <p className="text-sm text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">
                 Créez une nouvelle opportunité d'emploi pour votre organisation au Niger
               </p>
             </div>
@@ -480,12 +480,12 @@ export const JobCreatePage = () => {
           initial="initial"
           animate="animate"
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className="space-y-4 sm:space-y-6"
         >
 
           {/* Section: Informations générales */}
           <FormSection title="Informations générales" icon={Info}>
-            <div className="grid grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 gap-4 sm:gap-5">
               <FormInput
                 label="Titre de l'offre"
                 value={formData.title}
@@ -509,7 +509,7 @@ export const JobCreatePage = () => {
                 }))}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormInput
                   type="select"
                   label="Type d'opportunité"
@@ -544,7 +544,7 @@ export const JobCreatePage = () => {
 
           {/* Section: Localisation */}
           <FormSection title="Localisation" icon={MapPin}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormInput
                 label="Ville"
                 value={formData.city}
@@ -572,7 +572,7 @@ export const JobCreatePage = () => {
 
           {/* Section: Rémunération et prérequis */}
           <FormSection title="Rémunération & prérequis" icon={Award}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormInput
                 type="number"
                 label="Salaire minimum (FCFA)"
@@ -592,7 +592,7 @@ export const JobCreatePage = () => {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormInput
                 type="select"
                 label="Niveau d'expérience"
@@ -659,16 +659,16 @@ export const JobCreatePage = () => {
               BOUTONS D'ACTION
           ====================================================== */}
 
-          <motion.div 
+          <motion.div
             variants={fadeInUp}
-            className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-800"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-slate-800"
           >
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="button"
               onClick={() => navigate('/organization/dashboard')}
-              className="px-6 py-3.5 bg-slate-800 text-white rounded-xl font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 bg-slate-800 text-white rounded-xl text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <X className="w-4 h-4" />
               Annuler
@@ -679,28 +679,28 @@ export const JobCreatePage = () => {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={createMutation.isPending}
-              className="flex-1 px-6 py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:flex-1 px-5 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {createMutation.isPending ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
               ) : (
-                <Save className="w-5 h-5" />
+                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
               Créer en brouillon
             </motion.button>
           </motion.div>
 
           {/* Indicateur de brouillon */}
-          <motion.div 
+          <motion.div
             variants={fadeInUp}
-            className="flex items-center gap-3 p-4 bg-slate-900/60 border border-slate-800 rounded-xl"
+            className="flex items-start sm:items-center gap-3 p-3 sm:p-4 bg-slate-900/60 border border-slate-800 rounded-xl"
           >
-            <div className="p-2 rounded-lg bg-amber-500/10">
+            <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 shrink-0">
               <Info className="w-4 h-4 text-amber-400" />
             </div>
-            <div>
-              <p className="text-xs text-slate-400">
-                <span className="font-semibold text-amber-400">Brouillon</span> — 
+            <div className="min-w-0">
+              <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed">
+                <span className="font-semibold text-amber-400">Brouillon</span> —
                 Votre offre sera enregistrée en brouillon. Vous pourrez la modifier et la soumettre à modération ultérieurement.
               </p>
             </div>
@@ -712,17 +712,17 @@ export const JobCreatePage = () => {
             FOOTER
         ====================================================== */}
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-xs text-slate-600"
+          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
         >
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
             <span className="text-slate-500">
               <span className="text-amber-400 font-medium">Nouvelle offre</span> • Création
             </span>
-            <span className="w-px h-4 bg-slate-800" />
+            <span className="hidden xs:block w-px h-4 bg-slate-800" />
             <span className="flex items-center gap-1.5">
               <Shield className="w-3 h-3 text-emerald-400" />
               <span className="text-emerald-400/70">Sécurisé - Niger</span>

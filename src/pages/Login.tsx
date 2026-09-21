@@ -5,8 +5,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { authApi } from '../api/auth';
-import { 
-  Eye, EyeOff, Loader2, Mail, Lock, Briefcase, 
+import {
+  Eye, EyeOff, Loader2, Mail, Lock, Briefcase,
   ArrowRight, ShieldCheck, CheckCircle2, Sparkles,
   Zap, Globe, Users, Building2, Rocket, Star,
   ChevronRight, Fingerprint, Key, Shield, Crown
@@ -110,27 +110,27 @@ const FloatingParticles = () => {
   );
 };
 
-const AnimatedInput = ({ 
-  icon: Icon, 
-  label, 
-  type, 
-  value, 
-  onChange, 
-  placeholder, 
+const AnimatedInput = ({
+  icon: Icon,
+  label,
+  type,
+  value,
+  onChange,
+  placeholder,
   disabled,
   autoComplete,
   required,
-  endAdornment 
+  endAdornment
 }: any) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <motion.div 
+    <motion.div
       className="space-y-1.5"
       variants={fadeInUp}
     >
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-slate-300 tracking-wide uppercase">
+        <label className="text-[10px] sm:text-xs font-semibold text-slate-300 tracking-wide uppercase">
           {label}
         </label>
       </div>
@@ -141,7 +141,7 @@ const AnimatedInput = ({
             opacity: isFocused ? 0.1 : 0,
           }}
         />
-        <Icon className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 transition-all duration-300 ${
+        <Icon className={`absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${
           isFocused ? 'text-amber-400 scale-110' : 'text-slate-500'
         }`} />
         <input
@@ -151,7 +151,7 @@ const AnimatedInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className="w-full bg-slate-900/90 text-white pl-11 pr-11 py-3.5 rounded-xl border transition-all duration-300 placeholder:text-slate-600 text-sm focus:outline-none"
+          className="w-full bg-slate-900/90 text-white pl-10 sm:pl-11 pr-10 sm:pr-11 py-3 sm:py-3.5 rounded-xl border transition-all duration-300 placeholder:text-slate-600 text-xs sm:text-sm focus:outline-none"
           style={{
             borderColor: isFocused ? 'rgba(251, 191, 36, 0.5)' : 'rgba(30, 41, 59, 0.8)',
             boxShadow: isFocused ? '0 0 0 3px rgba(251, 191, 36, 0.1)' : 'none',
@@ -161,7 +161,7 @@ const AnimatedInput = ({
           required={required}
         />
         {endAdornment && (
-          <div className="absolute right-3.5 top-1/2 -translate-y-1/2">
+          <div className="absolute right-3 sm:right-3.5 top-1/2 -translate-y-1/2">
             {endAdornment}
           </div>
         )}
@@ -174,14 +174,14 @@ const FeatureItem = ({ icon: Icon, text, delay }: any) => (
   <motion.li
     variants={fadeInUp}
     custom={delay}
-    className="flex items-center gap-3 text-xs text-slate-300 group"
+    className="flex items-start sm:items-center gap-2.5 sm:gap-3 text-[10px] sm:text-xs text-slate-300 group"
   >
     <motion.div
       whileHover={{ scale: 1.2, rotate: 180 }}
       transition={{ duration: 0.3 }}
-      className="w-5 h-5 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors"
+      className="w-4 h-4 sm:w-5 sm:h-5 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors mt-0.5 sm:mt-0"
     >
-      <Icon className="w-3 h-3 text-amber-400" />
+      <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" />
     </motion.div>
     <span className="group-hover:text-white transition-colors">{text}</span>
   </motion.li>
@@ -195,13 +195,13 @@ export const Login = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setUser, setAuthenticated } = useAuthStore();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  
+
   const formRef = useRef<HTMLFormElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -270,22 +270,22 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex justify-center items-center relative overflow-hidden selection:bg-amber-500 selection:text-slate-950 p-4">
-      
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex justify-center items-center relative overflow-hidden selection:bg-amber-500 selection:text-slate-950 p-3 sm:p-4">
+
       {/* Background decorations */}
       <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:24px_24px] opacity-5" />
-      
+
       <motion.div
-        className="absolute -top-40 -left-40 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
+        className="absolute -top-40 -left-40 w-72 sm:w-96 h-72 sm:h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"
         animate={{
           x: mousePosition.x * 20,
           y: mousePosition.y * 20,
         }}
         transition={{ type: "spring", damping: 30, stiffness: 50 }}
       />
-      
+
       <motion.div
-        className="absolute -bottom-40 -right-40 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"
+        className="absolute -bottom-40 -right-40 w-72 sm:w-96 h-72 sm:h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"
         animate={{
           x: -mousePosition.x * 15,
           y: -mousePosition.y * 15,
@@ -296,32 +296,32 @@ export const Login = () => {
       <FloatingParticles />
 
       {/* Main Container */}
-      <motion.div 
+      <motion.div
         ref={containerRef}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, type: "spring" }}
-        className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 min-h-[700px] rounded-3xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-2xl shadow-2xl shadow-slate-950/50 overflow-hidden relative"
+        className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 min-h-0 lg:min-h-[700px] rounded-2xl sm:rounded-3xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-2xl shadow-2xl shadow-slate-950/50 overflow-hidden relative"
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        
+
         {/* ========================================================== */}
         {/* LEFT PANEL - HERO SECTION */}
         {/* ========================================================== */}
-        
-        <motion.div 
-          className="lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800/60"
+
+        <motion.div
+          className="lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-5 sm:p-8 lg:p-12 flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800/60"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           {/* Background grid pattern */}
           <div className="absolute inset-0 bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:16px_16px] opacity-10" />
-          
+
           {/* Animated glow orb */}
           <motion.div
-            className="absolute -top-20 -right-20 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl"
+            className="absolute -top-20 -right-20 w-48 sm:w-64 h-48 sm:h-64 bg-amber-500/10 rounded-full blur-3xl"
             animate={pulseGlow.animate}
           />
 
@@ -331,24 +331,24 @@ export const Login = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Link to="/" className="inline-flex items-center gap-3 group">
-                <motion.div 
-                  className="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-all duration-300"
+              <Link to="/" className="inline-flex items-center gap-2 sm:gap-3 group flex-wrap">
+                <motion.div
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 p-0.5 shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-all duration-300"
                   whileHover={{ rotate: 180 }}
                   transition={{ duration: 0.6, type: "spring" }}
                 >
                   <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                    <Briefcase className="w-6 h-6 text-amber-400" />
+                    <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
                   </div>
                 </motion.div>
-                <span className="text-2xl font-black tracking-tight text-white group-hover:text-amber-400 transition-colors">
-                  Optimum<span className="text-amber-400">Jobs+</span>
+                <span className="text-lg sm:text-2xl font-black tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                  OptimaPlus<span className="text-amber-400">-Jobs</span>
                 </span>
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.8, type: "spring" }}
-                  className="px-2 py-0.5 text-[8px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
+                  className="px-1.5 sm:px-2 py-0.5 text-[7px] sm:text-[8px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
                 >
                   NIGER
                 </motion.span>
@@ -367,22 +367,24 @@ export const Login = () => {
           </div>
 
           {/* Content */}
-          <motion.div 
-            className="relative z-10 my-8"
+          <motion.div
+            className="relative z-10 my-6 sm:my-8"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
             <motion.div variants={fadeInUp}>
-              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full mb-4">
+              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 px-2.5 sm:px-3 py-1 rounded-full mb-3 sm:mb-4">
                 <Sparkles className="w-3 h-3 text-amber-400" />
-                <span className="text-[10px] font-semibold text-amber-400 tracking-wider">PLATEFORME PREMIUM NIGER</span>
+                <span className="text-[9px] sm:text-[10px] font-semibold text-amber-400 tracking-wider">
+                  PLATEFORME PREMIUM NIGER
+                </span>
               </div>
             </motion.div>
 
-            <motion.h2 
+            <motion.h2
               variants={fadeInUp}
-              className="text-3xl lg:text-4xl font-extrabold text-white leading-tight"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight"
             >
               Propulsez votre <br />
               <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent">
@@ -390,16 +392,16 @@ export const Login = () => {
               </span>
             </motion.h2>
 
-            <motion.p 
+            <motion.p
               variants={fadeInUp}
-              className="mt-4 text-slate-400 text-sm leading-relaxed"
+              className="mt-3 sm:mt-4 text-slate-400 text-xs sm:text-sm leading-relaxed"
             >
               Accédez aux meilleures opportunités de recrutement au Niger et développez votre réseau avec notre écosystème intelligent.
             </motion.p>
 
-            <motion.ul 
+            <motion.ul
               variants={staggerContainer}
-              className="mt-6 space-y-3"
+              className="mt-4 sm:mt-6 space-y-2.5 sm:space-y-3"
             >
               <FeatureItem icon={CheckCircle2} text="Accès exclusif aux offres qualifiées au Niger" delay={0.3} />
               <FeatureItem icon={CheckCircle2} text="Gestion de profil simplifiée" delay={0.4} />
@@ -408,8 +410,8 @@ export const Login = () => {
           </motion.div>
 
           {/* Footer */}
-          <motion.div 
-            className="relative z-10 pt-6 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500"
+          <motion.div
+            className="relative z-10 pt-4 sm:pt-6 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -425,11 +427,11 @@ export const Login = () => {
                   ease: "easeInOut",
                 }}
               >
-                <ShieldCheck className="w-4 h-4 text-amber-400/80" />
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400/80" />
               </motion.div>
               <span>Connexion sécurisée SSL</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <span className="flex items-center gap-1">
                 <Globe className="w-3 h-3" />
                 Niger
@@ -442,24 +444,24 @@ export const Login = () => {
         {/* ========================================================== */}
         {/* RIGHT PANEL - LOGIN FORM */}
         {/* ========================================================== */}
-        
-        <motion.div 
-          className="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-center bg-slate-950/40"
+
+        <motion.div
+          className="lg:col-span-7 p-5 sm:p-8 lg:p-12 flex flex-col justify-center bg-slate-950/40"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <motion.div 
+          <motion.div
             className="max-w-md w-full mx-auto"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
           >
-            
+
             {/* Header */}
-            <motion.div 
+            <motion.div
               variants={fadeInUp}
-              className="mb-8"
+              className="mb-6 sm:mb-8"
             >
               <motion.div
                 className="flex items-center gap-2 mb-2"
@@ -467,22 +469,22 @@ export const Login = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
               >
-                <Crown className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-semibold text-amber-400/70 tracking-wider">ESPACE MEMBRE</span>
+                <Crown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+                <span className="text-[10px] sm:text-xs font-semibold text-amber-400/70 tracking-wider">ESPACE MEMBRE</span>
               </motion.div>
-              <h3 className="text-2xl font-bold text-white tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 Bienvenue sur votre <br />
                 <span className="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">
                   espace sécurisé
                 </span>
               </h3>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">
                 Entrez vos identifiants pour accéder à votre tableau de bord.
               </p>
             </motion.div>
 
             {/* Form */}
-            <form ref={formRef} onSubmit={handleLogin} className="space-y-5">
+            <form ref={formRef} onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
               <AnimatedInput
                 icon={Mail}
                 label="Adresse email"
@@ -514,19 +516,19 @@ export const Login = () => {
                     className="text-slate-500 hover:text-slate-300 transition-colors p-1"
                     aria-label="Afficher ou masquer le mot de passe"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                   </motion.button>
                 }
               />
 
               {/* Forgot password link */}
-              <motion.div 
+              <motion.div
                 variants={fadeInUp}
                 className="flex justify-end"
               >
-                <Link 
-                  to="/forgot-password" 
-                  className="text-xs text-amber-400 hover:text-amber-300 font-medium transition-all hover:underline flex items-center gap-1 group"
+                <Link
+                  to="/forgot-password"
+                  className="text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-medium transition-all hover:underline flex items-center gap-1 group"
                 >
                   <Key className="w-3 h-3" />
                   Mot de passe oublié ?
@@ -542,7 +544,7 @@ export const Login = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full mt-2 py-4 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm rounded-xl transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden"
+                  className="w-full mt-2 py-3.5 sm:py-4 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group relative overflow-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     {isLoading ? (
@@ -569,14 +571,14 @@ export const Login = () => {
             </form>
 
             {/* Register link */}
-            <motion.div 
+            <motion.div
               variants={fadeInUp}
-              className="mt-8 text-center"
+              className="mt-6 sm:mt-8 text-center"
             >
-              <p className="text-sm text-slate-400">
+              <p className="text-xs sm:text-sm text-slate-400">
                 Vous n'avez pas de compte ?{' '}
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="text-amber-400 hover:text-amber-300 font-semibold transition-all hover:underline inline-flex items-center gap-1 group"
                 >
                   S'inscrire
@@ -586,11 +588,11 @@ export const Login = () => {
             </motion.div>
 
             {/* Terms */}
-            <motion.div 
+            <motion.div
               variants={fadeInUp}
-              className="mt-8 pt-6 border-t border-slate-800/80 text-center"
+              className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-800/80 text-center"
             >
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-[10px] sm:text-xs text-slate-500 leading-relaxed">
                 En continuant, vous acceptez nos{' '}
                 <a href="#" className="text-amber-400/70 hover:text-amber-400 transition-colors hover:underline">
                   Conditions d'utilisation
@@ -601,7 +603,7 @@ export const Login = () => {
                 </a>.
               </p>
               <motion.div
-                className="mt-3 flex items-center justify-center gap-4 text-[10px] text-slate-600"
+                className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[10px] text-slate-600"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 }}
@@ -625,7 +627,7 @@ export const Login = () => {
 
       {/* Floating decorative elements */}
       <motion.div
-        className="fixed bottom-8 right-8 flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 px-4 py-2 rounded-full shadow-lg"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 flex items-center gap-2 bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.5 }}
@@ -643,9 +645,9 @@ export const Login = () => {
         >
           <div className="w-2 h-2 rounded-full bg-emerald-400" />
         </motion.div>
-        <span className="text-xs text-slate-400 font-medium">Système en ligne</span>
-        <span className="text-xs text-slate-600">•</span>
-        <span className="text-xs text-slate-500">v1.0.0</span>
+        <span className="text-[10px] sm:text-xs text-slate-400 font-medium">Système en ligne</span>
+        <span className="text-[10px] sm:text-xs text-slate-600 hidden xs:inline">•</span>
+        <span className="text-[10px] sm:text-xs text-slate-500 hidden xs:inline">v1.0.0</span>
       </motion.div>
 
     </div>
