@@ -1,6 +1,6 @@
 // src/pages/JobListingsPage.tsx
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { jobsApi } from '../api/jobs';
@@ -11,47 +11,16 @@ import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 import {
   Search, MapPin, Briefcase, Building2, Clock, Send,
-  X, Loader2, DollarSign, ArrowLeft, Home,
-  Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
-  Globe, Calendar, Users, Award, Star, Eye,
-  Filter, Grid3x3, List, TrendingUp, Heart,
-  Share2, Bookmark, CheckCircle2, AlertCircle,
-  RefreshCw, FileText
+  X, Loader2, ArrowLeft, Home,
+  Sparkles, Zap, Shield, Activity, ChevronRight,
+  Globe, Calendar, TrendingUp, Heart,
+  Grid3x3, List, Eye, CheckCircle2,
+  RefreshCw, FileText, Inbox,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const tableRowVariants = {
-  initial: { opacity: 0, x: -10 },
-  animate: { opacity: 1, x: 0 },
-  hover: { backgroundColor: "rgba(255,255,255,0.03)" }
-};
-
-// ==========================================================
-// COMPOSANTS
+// STATUS BADGE
 // ==========================================================
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -59,46 +28,42 @@ const StatusBadge = ({ status }: { status: string }) => {
     'active': {
       icon: <CheckCircle2 className="w-3 h-3" />,
       label: 'Active',
-      className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-      dotColor: 'bg-emerald-400 animate-pulse'
+      className: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+      dotColor: 'bg-[#16A34A] animate-pulse'
     },
     'pending_review': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-      dotColor: 'bg-amber-400'
+      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
+      dotColor: 'bg-[#FCD34D]'
     },
     'closed': {
       icon: <X className="w-3 h-3" />,
       label: 'Fermée',
-      className: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+      className: 'bg-slate-100 text-slate-500 border-slate-200',
       dotColor: 'bg-slate-400'
     },
     'published': {
       icon: <Sparkles className="w-3 h-3" />,
       label: 'Publiée',
-      className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-      dotColor: 'bg-emerald-400'
+      className: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+      dotColor: 'bg-[#16A34A]'
     }
   };
 
   const config = statusMap[status] || {
     icon: null,
     label: status,
-    className: 'bg-slate-800 text-slate-400 border-slate-700',
+    className: 'bg-slate-100 text-slate-500 border-slate-200',
     dotColor: 'bg-slate-400'
   };
 
   return (
-    <motion.span
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${config.className}`}
-    >
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${config.className}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
       {config.label}
-    </motion.span>
+    </span>
   );
 };
 
@@ -118,23 +83,7 @@ const JobListingsPage = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [sortBy, setSortBy] = useState<'recent' | 'salary' | 'deadline'>('recent');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // QUERIES
@@ -161,7 +110,7 @@ const JobListingsPage = () => {
         cover_note: data.cover_note,
       }),
     onSuccess: () => {
-      toast.success('Candidature envoyée avec succès ! 🎉');
+      toast.success('Candidature envoyée');
       setIsApplyModalOpen(false);
       setSelectedJob(null);
       setCoverNote('');
@@ -199,12 +148,12 @@ const JobListingsPage = () => {
   };
 
   const handleSaveJob = (jobId: number) => {
-    setSavedJobs(prev =>
-      prev.includes(jobId)
-        ? prev.filter(id => id !== jobId)
-        : [...prev, jobId]
+    setSavedJobs((prev) =>
+      prev.includes(jobId) ? prev.filter((id) => id !== jobId) : [...prev, jobId]
     );
-    toast.success(savedJobs.includes(jobId) ? 'Offre retirée des favoris' : 'Offre ajoutée aux favoris ❤️');
+    toast.success(
+      savedJobs.includes(jobId) ? 'Retiré des favoris' : 'Ajouté aux favoris'
+    );
   };
 
   const handleResetFilters = () => {
@@ -224,14 +173,15 @@ const JobListingsPage = () => {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }
     if (sortBy === 'salary') {
-      const aSalary = a.salary_max || 0;
-      const bSalary = b.salary_max || 0;
-      return bSalary - aSalary;
+      return (b.salary_max || 0) - (a.salary_max || 0);
     }
     if (sortBy === 'deadline') {
       if (!a.application_deadline) return 1;
       if (!b.application_deadline) return -1;
-      return new Date(a.application_deadline).getTime() - new Date(b.application_deadline).getTime();
+      return (
+        new Date(a.application_deadline).getTime() -
+        new Date(b.application_deadline).getTime()
+      );
     }
     return 0;
   });
@@ -241,297 +191,227 @@ const JobListingsPage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative space-y-4 sm:space-y-6"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 10,
-            y: mousePosition.y * 10,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
+    <div className="space-y-6">
+
+      {/* ======================================================
+          NAVIGATION
+      ====================================================== */}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button
+            onClick={handleGoBack}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="hidden sm:inline">Retour</span>
+          </button>
+
+          <button
+            onClick={handleGoHome}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <Home className="h-4 w-4 text-[#16A34A]" />
+            <span className="hidden sm:inline">Accueil</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)] self-start sm:self-auto">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+          </span>
+          <span className="text-xs text-[#14532D]/70 font-semibold">Offres d'emploi</span>
+        </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
+      {/* ======================================================
+          BARRE DE RECHERCHE
+      ====================================================== */}
 
-        {/* ======================================================
-            NAVIGATION
-        ====================================================== */}
+      <div className="bg-white border border-[#16A34A]/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.08)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#14532D] flex flex-wrap items-center gap-2">
+              <span>Trouvez votre prochaine opportunité</span>
+              <span className="text-xs font-bold text-[#16A34A] bg-[#F0FDF4] px-2.5 py-1 rounded-full border border-[#16A34A]/20 shrink-0">
+                {jobs.length} offre{jobs.length > 1 ? 's' : ''}
+              </span>
+            </h1>
+            <p className="text-sm text-[#14532D]/60 mt-1">
+              Découvrez les meilleures offres d'emploi au Niger
+            </p>
+          </div>
+        </div>
 
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-        >
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoBack}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-              <span className="hidden sm:inline">Retour</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoHome}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
-            >
-              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span className="hidden sm:inline">Accueil</span>
-            </motion.button>
+        <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="relative group">
+            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#14532D]/40 group-focus-within:text-[#16A34A] transition-colors" />
+            <input
+              type="text"
+              placeholder="Titre du poste, mots-clés..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-[#FAFAF9] text-[#14532D] pl-11 pr-4 py-3 rounded-xl border border-[#16A34A]/15 text-sm focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 focus:bg-white transition-all placeholder-[#14532D]/30 font-medium"
+            />
           </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Offres d'emploi</span>
-            <Sparkles className="w-3 h-3 text-amber-400" />
-          </div>
-        </motion.div>
-
-        {/* ======================================================
-            BARRE DE RECHERCHE
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 p-4 sm:p-6 rounded-2xl sm:rounded-3xl backdrop-blur-xl hover:border-slate-700 transition-all duration-300 shadow-xl"
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4">
-            <div className="min-w-0">
-              <h1 className="text-lg sm:text-2xl font-extrabold text-white flex flex-wrap items-center gap-2">
-                <span>Trouvez votre prochaine opportunité</span>
-                <span className="text-[10px] sm:text-xs font-normal text-slate-500 bg-slate-800/50 px-2 py-0.5 rounded-full shrink-0">
-                  {jobs.length} offres
-                </span>
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">Découvrez les meilleures offres d'emploi au Niger</p>
-            </div>
+          <div className="relative group">
+            <MapPin className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#14532D]/40 group-focus-within:text-[#16A34A] transition-colors" />
+            <input
+              type="text"
+              placeholder="Ville au Niger, ou Télétravail..."
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="w-full bg-[#FAFAF9] text-[#14532D] pl-11 pr-4 py-3 rounded-xl border border-[#16A34A]/15 text-sm focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 focus:bg-white transition-all placeholder-[#14532D]/30 font-medium"
+            />
           </div>
 
-          <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="relative group">
-              <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
-              <input
-                type="text"
-                placeholder="Titre du poste, mots-clés..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-slate-950/80 text-white pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-3.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
-              />
-            </div>
+          <button
+            type="submit"
+            className="bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 text-sm shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5"
+          >
+            <Search className="w-4 h-4" />
+            <span>Rechercher</span>
+          </button>
+        </form>
 
-            <div className="relative group">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-500 transition-colors duration-300 group-focus-within:text-amber-400" />
-              <input
-                type="text"
-                placeholder="Ville au Niger, ou Télétravail..."
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full bg-slate-950/80 text-white pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-3.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-slate-600"
-              />
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              type="submit"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:shadow-lg hover:shadow-amber-500/25 text-slate-950 font-bold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl transition-all duration-300 text-xs sm:text-sm flex items-center justify-center gap-2"
+        {/* Filtres */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-5 pt-4 border-t border-[#16A34A]/10">
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-[#FAFAF9] text-[#14532D] px-3 py-2 rounded-xl border border-[#16A34A]/15 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-xs cursor-pointer font-semibold"
             >
-              <Search className="w-4 h-4" />
-              <span>Rechercher</span>
-            </motion.button>
-          </form>
+              <option value="recent">Plus récentes</option>
+              <option value="salary">Salaire élevé</option>
+              <option value="deadline">Date limite</option>
+            </select>
 
-          {/* Filtres et tris */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-4 pt-4 border-t border-slate-800">
-            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'recent' | 'salary' | 'deadline')}
-                className="bg-slate-950/80 text-slate-300 px-3 py-2 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 text-xs cursor-pointer hover:border-slate-700"
-              >
-                <option value="recent">📅 Plus récentes</option>
-                <option value="salary">💰 Salaire élevé</option>
-                <option value="deadline">⏳ Date limite</option>
-              </select>
-
-              {(search || location) && (
-                <motion.button
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  onClick={handleResetFilters}
-                  className="text-xs text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                  Réinitialiser
-                </motion.button>
-              )}
-            </div>
-
-            <div className="flex gap-1 bg-slate-950/80 border border-slate-800 rounded-xl p-1 self-end sm:self-auto">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setViewMode('list')}
-                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'list' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
-              >
-                <List className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setViewMode('grid')}
-                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
-              >
-                <Grid3x3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* ======================================================
-            LISTE DES OFFRES
-        ====================================================== */}
-
-        <AnimatePresence mode="wait">
-          {isJobsLoading ? (
-            <motion.div
-              key="loading"
-              variants={fadeInScale}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="flex justify-center py-12 sm:py-20"
-            >
-              <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-amber-500" />
-                <p className="text-xs sm:text-sm text-slate-400">Chargement des offres au Niger...</p>
-                <div className="flex gap-1">
-                  {[0, 1, 2].map((i) => (
-                    <motion.div
-                      key={i}
-                      className="w-2 h-2 rounded-full bg-amber-500/50"
-                      animate={{
-                        scale: [1, 1.5, 1],
-                        opacity: [0.3, 1, 0.3],
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        delay: i * 0.2,
-                        repeat: Infinity,
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ) : sortedJobs.length === 0 ? (
-            <motion.div
-              key="empty"
-              variants={fadeInScale}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="text-center py-12 sm:py-20 bg-slate-900/40 border border-slate-800 rounded-2xl px-4"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-                <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-slate-600" />
-              </div>
-              <p className="text-base sm:text-lg font-semibold text-white">Aucune offre ne correspond à vos critères</p>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">Essayez de modifier vos filtres de recherche</p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            {(search || location) && (
+              <button
                 onClick={handleResetFilters}
-                className="mt-4 text-amber-400 hover:text-amber-300 text-xs sm:text-sm font-semibold transition-colors inline-flex items-center gap-1"
+                className="text-xs text-[#16A34A] hover:text-[#15803D] font-bold flex items-center gap-1 transition-colors"
               >
-                <RefreshCw className="w-4 h-4" />
-                Réinitialiser les filtres
-              </motion.button>
-            </motion.div>
-          ) : viewMode === 'list' ? (
-            <motion.div
-              key="list"
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              className="space-y-3 sm:space-y-4"
+                <X className="w-3 h-3" />
+                Réinitialiser
+              </button>
+            )}
+          </div>
+
+          <div className="flex gap-1 bg-[#FAFAF9] border border-[#16A34A]/15 rounded-xl p-1 self-end sm:self-auto">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-2 rounded-lg transition-all ${
+                viewMode === 'list'
+                  ? 'bg-[#16A34A] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]'
+                  : 'text-[#14532D]/50 hover:text-[#16A34A]'
+              }`}
+              title="Vue liste"
             >
-              {sortedJobs.map((job, index) => (
-                <motion.div
-                  key={job.id}
-                  variants={tableRowVariants}
-                  initial="initial"
-                  animate="animate"
-                  transition={{ delay: index * 0.03 }}
-                  whileHover="hover"
-                  className="group bg-slate-900/80 border border-slate-800 hover:border-amber-500/30 p-4 sm:p-6 rounded-2xl transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/5 flex flex-col gap-4"
-                >
-                  <Link to={`/jobs/${job.id}`} className="flex-1 space-y-2 sm:space-y-3">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                      <h2 className="text-base sm:text-xl font-bold text-white group-hover:text-amber-400 transition-colors duration-300 break-words">
+              <List className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-2 rounded-lg transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-[#16A34A] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]'
+                  : 'text-[#14532D]/50 hover:text-[#16A34A]'
+              }`}
+              title="Vue grille"
+            >
+              <Grid3x3 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================
+          LISTE DES OFFRES
+      ====================================================== */}
+
+      {isJobsLoading ? (
+        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+          <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+          <p className="text-sm text-[#14532D]/60 font-medium">
+            Chargement des offres au Niger...
+          </p>
+        </div>
+      ) : sortedJobs.length === 0 ? (
+        <div className="text-center py-16 bg-white border border-[#16A34A]/10 rounded-2xl px-4">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+            <Inbox className="w-10 h-10 text-[#16A34A]/40" />
+          </div>
+          <p className="text-lg font-extrabold text-[#14532D]">
+            Aucune offre ne correspond à vos critères
+          </p>
+          <p className="text-sm text-[#14532D]/60 mt-1">
+            Essayez de modifier vos filtres de recherche.
+          </p>
+          <button
+            onClick={handleResetFilters}
+            className="mt-5 inline-flex items-center gap-2 text-[#16A34A] hover:text-[#15803D] text-sm font-bold transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Réinitialiser les filtres
+          </button>
+        </div>
+      ) : viewMode === 'list' ? (
+        <div className="space-y-4">
+          {sortedJobs.map((job) => (
+            <div
+              key={job.id}
+              className="group bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#16A34A]/20 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:-translate-y-1"
+            >
+              <div className="h-1 bg-[#16A34A]" />
+
+              <div className="p-5">
+                <div className="flex flex-col gap-4">
+                  <Link to={`/jobs/${job.id}`} className="flex-1 space-y-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h2 className="text-lg font-extrabold text-[#14532D] group-hover:text-[#16A34A] transition-colors break-words">
                         {job.title}
                       </h2>
                       <StatusBadge status={job.status} />
                       {job.is_urgent && (
-                        <span className="text-[10px] font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20 flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 flex items-center gap-1">
                           <Zap className="w-3 h-3" /> Urgent
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-x-3 gap-y-2 text-[10px] sm:text-xs text-slate-400">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-[#14532D]/60">
                       <span className="flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 group-hover:text-amber-400 transition-colors shrink-0" />
-                        <span className="truncate max-w-[150px] sm:max-w-none">{job.organization_name || 'Entreprise'}</span>
+                        <Building2 className="w-4 h-4 text-[#16A34A] shrink-0" />
+                        <span className="truncate max-w-[180px] font-medium">
+                          {job.organization_name || 'Entreprise'}
+                        </span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
-                        <span className="truncate max-w-[120px] sm:max-w-none">
+                        <MapPin className="w-4 h-4 text-[#16A34A] shrink-0" />
+                        <span className="truncate max-w-[150px]">
                           {job.city || job.location || 'Non spécifié'}
                         </span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
-                        {new Date(job.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        <Calendar className="w-4 h-4 text-[#14532D]/40 shrink-0" />
+                        {new Date(job.created_at).toLocaleDateString('fr-FR', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
                       </span>
                       {job.salary_min && job.salary_max && (
-                        <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                          <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                        <span className="flex items-center gap-1.5 text-[#16A34A] font-bold">
+                          <TrendingUp className="w-4 h-4 shrink-0" />
                           <span className="truncate">
                             {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} FCFA
                           </span>
                         </span>
                       )}
                       {job.is_remote && (
-                        <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        <span className="flex items-center gap-1 text-[#16A34A] bg-[#F0FDF4] px-2 py-0.5 rounded-full border border-[#16A34A]/20 font-semibold">
                           <Globe className="w-3 h-3" />
                           Télétravail
                         </span>
@@ -539,298 +419,277 @@ const JobListingsPage = () => {
                     </div>
 
                     {job.description && (
-                      <p className="text-xs sm:text-sm text-slate-400 line-clamp-2 group-hover:text-slate-300 transition-colors">
+                      <p className="text-sm text-[#14532D]/60 line-clamp-2">
                         {job.description}
                       </p>
                     )}
                   </Link>
 
-                  {/* Actions : pleine largeur sur mobile */}
-                  <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 shrink-0">
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-full xs:w-auto"
-                    >
-                      <Link
-                        to={`/jobs/${job.id}`}
-                        className="w-full xs:w-auto px-4 py-2.5 bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-1.5 group/link"
-                      >
-                        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/link:scale-110 transition-transform" />
-                        Voir
-                      </Link>
-                    </motion.div>
-
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => handleSaveJob(job.id)}
-                      className={`p-2 rounded-xl transition-all duration-300 shrink-0 ${
-                        savedJobs.includes(job.id)
-                          ? 'text-rose-400 bg-rose-500/10'
-                          : 'text-slate-400 hover:text-rose-400 hover:bg-slate-800'
-                      }`}
-                      title={savedJobs.includes(job.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                    >
-                      <Heart className={`w-4 h-4 ${savedJobs.includes(job.id) ? 'fill-rose-400' : ''}`} />
-                    </motion.button>
-
-                    {job.status === 'active' && (
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleApply(job)}
-                        className="flex-1 xs:flex-none px-4 sm:px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl transition-all duration-300 text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 shadow-lg shadow-amber-500/10 hover:shadow-amber-500/25"
-                      >
-                        <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        Postuler
-                      </motion.button>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="grid"
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-            >
-              {sortedJobs.map((job, index) => (
-                <motion.div
-                  key={job.id}
-                  variants={tableRowVariants}
-                  initial="initial"
-                  animate="animate"
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ scale: 1.02, borderColor: 'rgba(251, 191, 36, 0.3)' }}
-                  className="bg-slate-900/80 border border-slate-800 rounded-xl p-3 sm:p-4 transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/5 flex flex-col"
-                >
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <h4 className="font-semibold text-white text-xs sm:text-sm line-clamp-2 flex-1 min-w-0">
-                      {job.title}
-                    </h4>
-                    <StatusBadge status={job.status} />
-                  </div>
-                  <p className="text-[10px] sm:text-xs text-slate-400 flex items-center gap-1.5">
-                    <Building2 className="w-3 h-3 shrink-0" />
-                    <span className="truncate">{job.organization_name || 'Entreprise'}</span>
-                  </p>
-                  <p className="text-[10px] sm:text-xs text-slate-500 mt-2 flex items-center gap-1.5">
-                    <MapPin className="w-3 h-3 shrink-0" />
-                    <span className="truncate">{job.city || job.location || 'Non spécifié'}</span>
-                  </p>
-                  {job.salary_min && job.salary_max && (
-                    <p className="text-[10px] sm:text-xs text-amber-400 mt-1 font-medium truncate">
-                      💰 {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} FCFA
-                    </p>
-                  )}
-                  <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800 mt-auto">
+                  <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 pt-4 border-t border-[#16A34A]/10">
                     <Link
                       to={`/jobs/${job.id}`}
-                      className="flex-1 text-center px-3 py-1.5 bg-slate-800 text-white rounded-lg text-[10px] sm:text-xs font-medium hover:bg-slate-700 transition-colors"
+                      className="flex-1 xs:flex-none px-5 py-2.5 bg-white border border-[#16A34A]/20 text-[#14532D] rounded-xl text-sm font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2 group/link"
                     >
-                      Voir
+                      <Eye className="w-4 h-4 text-[#16A34A] group-hover/link:scale-110 transition-transform" />
+                      Voir l'offre
                     </Link>
+
+                    <button
+                      onClick={() => handleSaveJob(job.id)}
+                      className={`p-2.5 rounded-xl transition-all shrink-0 border ${
+                        savedJobs.includes(job.id)
+                          ? 'text-rose-500 bg-rose-50 border-rose-200'
+                          : 'text-[#14532D]/40 bg-white border-[#16A34A]/15 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200'
+                      }`}
+                      title={
+                        savedJobs.includes(job.id)
+                          ? 'Retirer des favoris'
+                          : 'Ajouter aux favoris'
+                      }
+                    >
+                      <Heart
+                        className={`w-4 h-4 ${
+                          savedJobs.includes(job.id) ? 'fill-rose-500 text-rose-500' : ''
+                        }`}
+                      />
+                    </button>
+
                     {job.status === 'active' && (
                       <button
                         onClick={() => handleApply(job)}
-                        className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-lg text-[10px] sm:text-xs font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
+                        className="flex-1 xs:flex-none px-5 py-2.5 bg-[#16A34A] text-white font-bold rounded-xl hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all text-sm flex items-center justify-center gap-2"
                       >
+                        <Send className="w-4 h-4" />
                         Postuler
                       </button>
                     )}
                   </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ======================================================
-            MODAL DE CANDIDATURE
-        ====================================================== */}
-
-        <AnimatePresence>
-          {isApplyModalOpen && selectedJob && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm"
-              onClick={() => {
-                setIsApplyModalOpen(false);
-                setSelectedJob(null);
-              }}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-slate-900/95 border border-slate-800 w-full max-w-lg rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto backdrop-blur-xl"
-              >
-                <div className="flex items-start justify-between gap-3 border-b border-slate-800 pb-3 sm:pb-4">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                      <Send className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 shrink-0" />
-                      Postuler à l'offre
-                    </h3>
-                    <p className="text-xs sm:text-sm font-semibold text-amber-400 mt-1 break-words">
-                      {selectedJob.title}
-                    </p>
-                    <p className="text-[10px] sm:text-xs text-slate-400 truncate">
-                      {selectedJob.organization_name}
-                    </p>
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => {
-                      setIsApplyModalOpen(false);
-                      setSelectedJob(null);
-                    }}
-                    className="text-slate-400 hover:text-white transition-colors shrink-0"
-                  >
-                    <X className="w-5 h-5" />
-                  </motion.button>
                 </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sortedJobs.map((job) => (
+            <div
+              key={job.id}
+              className="group bg-white border border-[#16A34A]/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-[#16A34A]/20 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:-translate-y-1 flex flex-col"
+            >
+              <div className="h-1 bg-[#16A34A]" />
 
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    applyMutation.mutate({
-                      opportunityId: selectedJob.id,
-                      cover_note: coverNote,
-                    });
-                  }}
-                  className="space-y-4"
-                >
-                  <div>
-                    <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 mb-1.5">
-                      <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
-                      CV / Document
-                    </label>
-                    {isDocsLoading ? (
-                      <div className="flex items-center gap-2 text-slate-400">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-xs sm:text-sm">Chargement de vos documents...</span>
-                      </div>
-                    ) : documents && documents.length > 0 ? (
-                      <select
-                        value={selectedDocId || ''}
-                        onChange={(e) => setSelectedDocId(Number(e.target.value))}
-                        className="w-full bg-slate-950/80 text-white px-3 sm:px-4 py-2.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                      >
-                        <option value="">Sélectionner un document...</option>
-                        {documents.map((doc: any) => (
-                          <option key={doc.id} value={doc.id}>
-                            {doc.original_filename} ({doc.document_type})
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-                        <p className="text-[10px] sm:text-xs text-amber-400/80">
-                          Aucun CV trouvé. Téléversez-en un depuis votre profil.
-                        </p>
-                        <Link to="/profile" className="inline-block mt-1 text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-semibold transition-colors">
-                          Aller au profil →
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 mb-1.5">
-                      <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
-                      Lettre de motivation
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={coverNote}
-                      onChange={(e) => setCoverNote(e.target.value)}
-                      placeholder="Présentez brièvement votre profil et vos motivations..."
-                      className="w-full bg-slate-950/80 text-white px-3 sm:px-4 py-2.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 resize-none placeholder:text-slate-600"
-                    />
-                    <p className="text-[10px] sm:text-xs text-slate-500 mt-1.5">
-                      Optionnel - Laissez vide si vous n'avez pas de lettre de motivation.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col xs:flex-row justify-end gap-2 sm:gap-3 pt-2 border-t border-slate-800">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      type="button"
-                      onClick={() => {
-                        setIsApplyModalOpen(false);
-                        setSelectedJob(null);
-                      }}
-                      className="px-4 py-2.5 text-xs sm:text-sm text-slate-400 hover:text-white transition-colors rounded-xl"
+              <div className="p-4 flex flex-col flex-1">
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h4 className="font-extrabold text-[#14532D] text-sm line-clamp-2 flex-1 min-w-0 group-hover:text-[#16A34A] transition-colors">
+                    {job.title}
+                  </h4>
+                  <StatusBadge status={job.status} />
+                </div>
+                <p className="text-xs text-[#14532D]/60 flex items-center gap-1.5">
+                  <Building2 className="w-3 h-3 shrink-0 text-[#16A34A]" />
+                  <span className="truncate font-medium">
+                    {job.organization_name || 'Entreprise'}
+                  </span>
+                </p>
+                <p className="text-xs text-[#14532D]/50 mt-2 flex items-center gap-1.5">
+                  <MapPin className="w-3 h-3 shrink-0" />
+                  <span className="truncate">
+                    {job.city || job.location || 'Non spécifié'}
+                  </span>
+                </p>
+                {job.salary_min && job.salary_max && (
+                  <p className="text-xs text-[#16A34A] mt-2 font-bold truncate">
+                    {job.salary_min.toLocaleString()} - {job.salary_max.toLocaleString()} FCFA
+                  </p>
+                )}
+                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#16A34A]/10 mt-auto">
+                  <Link
+                    to={`/jobs/${job.id}`}
+                    className="flex-1 text-center px-3 py-2 bg-white border border-[#16A34A]/20 text-[#14532D] rounded-lg text-xs font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all"
+                  >
+                    Voir
+                  </Link>
+                  {job.status === 'active' && (
+                    <button
+                      onClick={() => handleApply(job)}
+                      className="px-3 py-2 bg-[#16A34A] text-white rounded-lg text-xs font-bold hover:bg-[#15803D] shadow-[0_2px_8px_-2px_rgba(22,163,74,0.4)] transition-all"
                     >
-                      Annuler
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      type="submit"
-                      disabled={applyMutation.isPending}
-                      className="bg-gradient-to-r from-amber-500 to-amber-600 hover:shadow-lg hover:shadow-amber-500/25 text-slate-950 font-bold px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all duration-300 shadow-lg shadow-amber-500/20 disabled:opacity-50 flex items-center justify-center gap-2"
-                    >
-                      {applyMutation.isPending ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Envoi...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4" />
-                          Confirmer la candidature
-                        </>
-                      )}
-                    </motion.button>
-                  </div>
-                </form>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                      Postuler
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
-        {/* ======================================================
-            FOOTER
-        ====================================================== */}
+      {/* ======================================================
+          MODAL DE CANDIDATURE
+      ====================================================== */}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
+      {isApplyModalOpen && selectedJob && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          onClick={() => {
+            setIsApplyModalOpen(false);
+            setSelectedJob(null);
+          }}
         >
-          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-            <span className="text-slate-500">
-              <span className="text-amber-400 font-medium">{jobs.length}</span> offres disponibles
-            </span>
-            <span className="hidden xs:block w-px h-4 bg-slate-800" />
-            <span className="flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé - Niger</span>
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-amber-400" />
-              v1.0.0
-            </span>
-            <span className="w-px h-4 bg-slate-800" />
-            <span>Liste des offres</span>
-          </div>
-        </motion.div>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto"
+          >
+            <div className="flex items-start justify-between gap-3 border-b border-[#16A34A]/10 pb-4">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-lg font-extrabold text-[#14532D] flex items-center gap-2">
+                  <Send className="w-5 h-5 text-[#16A34A] shrink-0" />
+                  Postuler à l'offre
+                </h3>
+                <p className="text-sm font-bold text-[#16A34A] mt-1 break-words">
+                  {selectedJob.title}
+                </p>
+                <p className="text-xs text-[#14532D]/60 truncate">
+                  {selectedJob.organization_name}
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsApplyModalOpen(false);
+                  setSelectedJob(null);
+                }}
+                className="text-[#14532D]/40 hover:text-rose-500 transition-colors shrink-0"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                applyMutation.mutate({
+                  opportunityId: selectedJob.id,
+                  cover_note: coverNote,
+                });
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="text-xs font-semibold text-[#14532D]/70 uppercase tracking-wider flex items-center gap-2 mb-2">
+                  <FileText className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                  CV / Document
+                </label>
+                {isDocsLoading ? (
+                  <div className="flex items-center gap-2 text-[#14532D]/60">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">Chargement de vos documents...</span>
+                  </div>
+                ) : documents && documents.length > 0 ? (
+                  <select
+                    value={selectedDocId || ''}
+                    onChange={(e) => setSelectedDocId(Number(e.target.value))}
+                    className="w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border border-[#16A34A]/20 text-sm focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  >
+                    <option value="">Sélectionner un document...</option>
+                    {documents.map((doc: any) => (
+                      <option key={doc.id} value={doc.id}>
+                        {doc.original_filename} ({doc.document_type})
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="bg-[#FEF3C7] border border-[#FCD34D]/40 rounded-xl p-3">
+                    <p className="text-xs text-[#B88400] font-medium">
+                      Aucun CV trouvé. Téléversez-en un depuis votre profil.
+                    </p>
+                    <Link
+                      to="/profile"
+                      className="inline-block mt-2 text-xs text-[#16A34A] hover:text-[#15803D] font-bold transition-colors"
+                    >
+                      Aller au profil →
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-[#14532D]/70 uppercase tracking-wider flex items-center gap-2 mb-2">
+                  <FileText className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                  Lettre de motivation
+                </label>
+                <textarea
+                  rows={4}
+                  value={coverNote}
+                  onChange={(e) => setCoverNote(e.target.value)}
+                  placeholder="Présentez brièvement votre profil et vos motivations..."
+                  className="w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border border-[#16A34A]/20 text-sm focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all resize-none placeholder-[#14532D]/30 font-medium"
+                />
+                <p className="text-xs text-[#14532D]/40 mt-1.5">
+                  Optionnel — Laissez vide si vous n'avez pas de lettre.
+                </p>
+              </div>
+
+              <div className="flex flex-col xs:flex-row justify-end gap-3 pt-3 border-t border-[#16A34A]/10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsApplyModalOpen(false);
+                    setSelectedJob(null);
+                  }}
+                  className="px-4 py-2.5 text-sm text-[#14532D]/60 hover:text-[#14532D] transition-colors rounded-xl font-medium"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={applyMutation.isPending}
+                  className="px-5 py-2.5 bg-[#16A34A] text-white font-bold rounded-xl text-sm hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+                >
+                  {applyMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Envoi...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Confirmer la candidature
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================
+          FOOTER
+      ====================================================== */}
+
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">{jobs.length}</span> offre
+            {jobs.length > 1 ? 's' : ''} disponible{jobs.length > 1 ? 's' : ''}
+          </span>
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
+          <span className="flex items-center gap-1.5">
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            v1.0.0
+          </span>
+          <span className="w-px h-4 bg-[#16A34A]/20" />
+          <span>Liste des offres</span>
+        </div>
       </div>
-    </motion.div>
+
+    </div>
   );
 };
 

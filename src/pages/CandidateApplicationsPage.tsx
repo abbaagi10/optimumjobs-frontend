@@ -7,52 +7,16 @@ import { Application, PaginatedResponse } from '../types';
 import {
   Clock, CheckCircle2, XCircle, FileText, Building2, Loader2,
   ArrowLeft, Eye, Trash2, AlertCircle, RefreshCw,
-  Sparkles, TrendingUp, Award, Star, Zap, Calendar,
-  ChevronRight, Filter, Grid3x3, List, Search,
-  Bell, Settings, HelpCircle, Activity, Shield,
-  Home
+  Sparkles, Award, Star, Calendar,
+  Grid3x3, List,
+  Activity, Shield, Home, Inbox, Briefcase,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const slideInLeft = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-const tableRowVariants = {
-  initial: { opacity: 0, x: -10 },
-  animate: { opacity: 1, x: 0 },
-  hover: { backgroundColor: "rgba(255,255,255,0.03)" }
-};
-
-// ==========================================================
-// COMPONENTS
+// STATUS BADGE
 // ==========================================================
 
 const StatusBadge = ({ status }: { status: Application['status'] }) => {
@@ -60,43 +24,43 @@ const StatusBadge = ({ status }: { status: Application['status'] }) => {
     'submitted': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-      dotColor: 'bg-amber-400 animate-pulse'
+      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
+      dotColor: 'bg-[#FCD34D] animate-pulse'
     },
     'under_review': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En examen',
-      className: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      dotColor: 'bg-blue-400'
+      className: 'bg-blue-50 text-blue-700 border-blue-200',
+      dotColor: 'bg-blue-500'
     },
     'shortlisted': {
       icon: <Star className="w-3 h-3" />,
       label: 'Présélectionnée',
-      className: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-      dotColor: 'bg-purple-400'
+      className: 'bg-purple-50 text-purple-700 border-purple-200',
+      dotColor: 'bg-purple-500'
     },
     'interview': {
       icon: <CheckCircle2 className="w-3 h-3" />,
       label: 'Entretien',
-      className: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-      dotColor: 'bg-indigo-400'
+      className: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      dotColor: 'bg-indigo-500'
     },
     'accepted': {
       icon: <Award className="w-3 h-3" />,
-      label: 'Acceptée ✅',
-      className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-      dotColor: 'bg-emerald-400'
+      label: 'Acceptée',
+      className: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+      dotColor: 'bg-[#16A34A]'
     },
     'rejected': {
       icon: <XCircle className="w-3 h-3" />,
       label: 'Refusée',
-      className: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-      dotColor: 'bg-rose-400'
+      className: 'bg-rose-50 text-rose-600 border-rose-200',
+      dotColor: 'bg-rose-500'
     },
     'withdrawn': {
       icon: <XCircle className="w-3 h-3" />,
       label: 'Retirée',
-      className: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+      className: 'bg-slate-100 text-slate-500 border-slate-200',
       dotColor: 'bg-slate-400'
     }
   };
@@ -104,28 +68,28 @@ const StatusBadge = ({ status }: { status: Application['status'] }) => {
   const config = statusMap[status] || {
     icon: null,
     label: status,
-    className: 'bg-slate-800 text-slate-400 border-slate-700',
+    className: 'bg-slate-100 text-slate-500 border-slate-200',
     dotColor: 'bg-slate-400'
   };
 
   return (
-    <motion.span
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border ${config.className}`}
-    >
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold border ${config.className}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
       {config.label}
-    </motion.span>
+    </span>
   );
 };
+
+// ==========================================================
+// APPLICATION CARD (LIST)
+// ==========================================================
 
 const ApplicationCard = ({
   app,
   onWithdraw,
   isPending,
-  index
+  index,
 }: {
   app: Application;
   onWithdraw: (id: number, title: string) => void;
@@ -137,133 +101,121 @@ const ApplicationCard = ({
   const canWithdraw = isActive;
 
   return (
-    <motion.div
-      variants={tableRowVariants}
-      initial="initial"
-      animate="animate"
-      transition={{ delay: index * 0.05 }}
-      whileHover="hover"
-      className={`group bg-slate-900/80 border p-4 sm:p-6 rounded-2xl transition-all duration-300 flex flex-col gap-4 ${
+    <div
+      className={`group relative bg-white border rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
         isWithdrawn
-          ? 'border-slate-700/50 opacity-60 hover:opacity-80 hover:border-slate-600'
-          : 'border-slate-800 hover:border-amber-500/30 hover:shadow-xl hover:shadow-amber-500/5'
+          ? 'border-slate-200 opacity-60 hover:opacity-80'
+          : 'border-[#16A34A]/10 hover:border-[#16A34A]/20 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)]'
       }`}
     >
-      <div className="space-y-2 flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <motion.h3
-            className={`font-bold text-sm sm:text-lg break-words ${
-              isWithdrawn
-                ? 'text-slate-400'
-                : 'text-white group-hover:text-amber-400 transition-colors'
-            }`}
-          >
-            {app.opportunity_title || app.job_details?.title || 'Offre d\'emploi'}
-          </motion.h3>
-          <StatusBadge status={app.status} />
-          {!isWithdrawn && app.status === 'shortlisted' && (
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="text-[10px] sm:text-xs font-bold text-purple-400 bg-purple-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-purple-500/20 flex items-center gap-1"
-            >
-              <Star className="w-3 h-3" /> Présélection
-            </motion.span>
-          )}
-          {!isWithdrawn && app.status === 'interview' && (
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="text-[10px] sm:text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-indigo-500/20 flex items-center gap-1"
-            >
-              <Calendar className="w-3 h-3" /> Entretien
-            </motion.span>
-          )}
-        </div>
+      {/* Bordure top colorée selon statut */}
+      <div className={`h-1 ${
+        isWithdrawn ? 'bg-slate-300' :
+        app.status === 'accepted' ? 'bg-[#16A34A]' :
+        app.status === 'rejected' ? 'bg-rose-500' :
+        app.status === 'submitted' ? 'bg-[#FCD34D]' :
+        app.status === 'under_review' ? 'bg-blue-500' :
+        app.status === 'shortlisted' ? 'bg-purple-500' :
+        app.status === 'interview' ? 'bg-indigo-500' :
+        'bg-[#16A34A]'
+      }`} />
 
-        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-xs text-slate-400">
-          <span className="flex items-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-slate-500 group-hover:text-amber-400 transition-colors shrink-0" />
-            <span className="truncate max-w-[180px] sm:max-w-none">
-              {app.organization_name || app.job_details?.organization_name || 'Entreprise'}
-            </span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-            Postulée le {new Date(app.submitted_at || app.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-          </span>
-          {isWithdrawn && (
-            <span className="flex items-center gap-1.5 text-rose-400">
-              <AlertCircle className="w-3.5 h-3.5" />
-              Retirée
-            </span>
-          )}
-          {!isWithdrawn && app.status === 'accepted' && (
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <Award className="w-3.5 h-3.5" />
-              Félicitations !
-            </span>
-          )}
-        </div>
+      <div className="p-4 sm:p-6">
+        <div className="flex flex-col gap-4">
 
-        {app.cover_note && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={`text-[10px] sm:text-xs bg-slate-950/40 p-2.5 sm:p-3 rounded-lg border border-slate-800/80 mt-2 w-full line-clamp-2 ${
-              isWithdrawn ? 'text-slate-500' : 'text-slate-400 group-hover:text-slate-300 transition-colors'
-            }`}
-          >
-            "{app.cover_note}"
-          </motion.p>
-        )}
-      </div>
+          {/* Header — Titre + badges */}
+          <div className="space-y-2 min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className={`font-extrabold text-base sm:text-lg break-words ${
+                isWithdrawn ? 'text-slate-400' : 'text-[#14532D] group-hover:text-[#16A34A] transition-colors'
+              }`}>
+                {app.opportunity_title || app.job_details?.title || "Offre d'emploi"}
+              </h3>
+              <StatusBadge status={app.status} />
+              {!isWithdrawn && app.status === 'shortlisted' && (
+                <span className="text-[10px] sm:text-xs font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200 flex items-center gap-1">
+                  <Star className="w-3 h-3" /> Présélection
+                </span>
+              )}
+              {!isWithdrawn && app.status === 'interview' && (
+                <span className="text-[10px] sm:text-xs font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-200 flex items-center gap-1">
+                  <Calendar className="w-3 h-3" /> Entretien
+                </span>
+              )}
+            </div>
 
-      {/* Actions : pleine largeur sur mobile */}
-      <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 shrink-0">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="w-full xs:w-auto"
-        >
-          <Link
-            to={`/jobs/${app.opportunity}`}
-            className="w-full xs:w-auto px-4 py-2.5 bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-1.5 group/link"
-          >
-            <Eye className="w-3.5 h-3.5 group-hover/link:scale-110 transition-transform" />
-            Voir l'offre
-          </Link>
-        </motion.div>
+            {/* Meta */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#14532D]/60">
+              <span className="flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                <span className="truncate max-w-[200px] sm:max-w-none font-medium">
+                  {app.organization_name || app.job_details?.organization_name || 'Entreprise'}
+                </span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#14532D]/40 shrink-0" />
+                Postulée le {new Date(app.submitted_at || app.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+              </span>
+              {isWithdrawn && (
+                <span className="flex items-center gap-1.5 text-rose-500 font-medium">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  Retirée
+                </span>
+              )}
+              {!isWithdrawn && app.status === 'accepted' && (
+                <span className="flex items-center gap-1.5 text-[#16A34A] font-semibold">
+                  <Award className="w-3.5 h-3.5" />
+                  Félicitations !
+                </span>
+              )}
+            </div>
 
-        {canWithdraw && (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onWithdraw(app.id, app.opportunity_title || app.job_details?.title || 'cette offre')}
-            disabled={isPending}
-            className="w-full xs:w-auto px-4 py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-rose-500/20 hover:border-rose-500/40 flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isPending ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            ) : (
-              <Trash2 className="w-3.5 h-3.5" />
+            {/* Cover note */}
+            {app.cover_note && (
+              <p className={`text-xs bg-[#FAFAF9] p-3 rounded-xl border border-[#16A34A]/10 mt-2 w-full line-clamp-2 leading-relaxed ${
+                isWithdrawn ? 'text-slate-400' : 'text-[#14532D]/70'
+              }`}>
+                "{app.cover_note}"
+              </p>
             )}
-            Retirer
-          </motion.button>
-        )}
+          </div>
 
-        {isWithdrawn && (
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="w-full xs:w-auto px-4 py-2 bg-slate-800/50 text-slate-500 rounded-xl text-[10px] sm:text-xs font-medium border border-slate-700 flex items-center justify-center gap-1.5"
-          >
-            <XCircle className="w-3.5 h-3.5" />
-            Retirée
-          </motion.span>
-        )}
+          {/* Actions */}
+          <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2 shrink-0 pt-2 border-t border-[#16A34A]/10">
+
+            <Link
+              to={`/jobs/${app.opportunity}`}
+              className="flex-1 xs:flex-none px-4 py-2.5 bg-white border border-[#16A34A]/20 text-[#14532D] rounded-xl text-xs sm:text-sm font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2 group/link"
+            >
+              <Eye className="w-4 h-4 text-[#16A34A] group-hover/link:scale-110 transition-transform" />
+              Voir l'offre
+            </Link>
+
+            {canWithdraw && (
+              <button
+                onClick={() => onWithdraw(app.id, app.opportunity_title || app.job_details?.title || 'cette offre')}
+                disabled={isPending}
+                className="flex-1 xs:flex-none px-4 py-2.5 bg-rose-50 text-rose-600 border border-rose-200 rounded-xl text-xs sm:text-sm font-semibold hover:bg-rose-100 hover:border-rose-300 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+                Retirer
+              </button>
+            )}
+
+            {isWithdrawn && (
+              <span className="flex-1 xs:flex-none px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-xs font-semibold border border-slate-200 flex items-center justify-center gap-1.5">
+                <XCircle className="w-3.5 h-3.5" />
+                Retirée
+              </span>
+            )}
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -274,25 +226,9 @@ const ApplicationCard = ({
 export const CandidateApplicationsPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // QUERY
@@ -309,7 +245,7 @@ export const CandidateApplicationsPage = () => {
       while (hasMore) {
         const response = await applicationsApi.getMyApplications({
           page,
-          page_size: pageSize
+          page_size: pageSize,
         });
         allResults.push(...response.data.results);
         hasMore = !!response.data.next;
@@ -334,16 +270,17 @@ export const CandidateApplicationsPage = () => {
 
   const withdrawMutation = useMutation({
     mutationFn: (id: number) => applicationsApi.withdraw(id),
-    onSuccess: (_, id) => {
-      toast.success('Candidature retirée avec succès');
+    onSuccess: () => {
+      toast.success('Candidature retirée');
       queryClient.invalidateQueries({ queryKey: ['myApplications'] });
       queryClient.invalidateQueries({ queryKey: ['myApplications', 'all'] });
       refetch();
     },
     onError: (err: any) => {
-      const errorMessage = err.response?.data?.detail ||
-                           err.response?.data?.message ||
-                           'Erreur lors du retrait de la candidature';
+      const errorMessage =
+        err.response?.data?.detail ||
+        err.response?.data?.message ||
+        'Erreur lors du retrait de la candidature';
       toast.error(errorMessage);
     },
   });
@@ -377,9 +314,10 @@ export const CandidateApplicationsPage = () => {
   const activeApplications = applications.filter(app => app.status !== 'withdrawn');
   const withdrawnApplications = applications.filter(app => app.status === 'withdrawn');
 
-  const filteredApplications = statusFilter === 'all'
-    ? applications
-    : applications.filter(app => app.status === statusFilter);
+  const filteredApplications =
+    statusFilter === 'all'
+      ? applications
+      : applications.filter(app => app.status === statusFilter);
 
   const statusCounts = {
     all: applications.length,
@@ -398,31 +336,12 @@ export const CandidateApplicationsPage = () => {
 
   if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
-      >
-        <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-        <p className="text-sm text-slate-400">Chargement de vos candidatures...</p>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-amber-500/50"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: i * 0.2,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+        <p className="text-sm text-[#14532D]/60 font-medium">
+          Chargement de vos candidatures...
+        </p>
+      </div>
     );
   }
 
@@ -431,165 +350,109 @@ export const CandidateApplicationsPage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative space-y-4 sm:space-y-6"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[200px] sm:h-[300px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-      </div>
+    <div className="space-y-4 sm:space-y-6">
 
       {/* ======================================================
           BARRE DE NAVIGATION
       ====================================================== */}
 
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={handleGoBack}
-            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
           >
-            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             <span className="hidden sm:inline">Retour</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={handleGoHome}
-            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
           >
-            <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
+            <Home className="h-4 w-4 text-[#16A34A]" />
             <span className="hidden sm:inline">Accueil</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ rotate: 180 }}
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={handleRefresh}
-            className={`p-2 sm:p-2.5 rounded-xl bg-slate-900/50 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all duration-300 ${isRefreshing ? 'animate-spin' : ''}`}
+            className={`group p-2.5 rounded-xl border border-[#16A34A]/15 bg-white text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#16A34A] ${isRefreshing ? 'animate-spin' : ''}`}
+            title="Rafraîchir"
           >
-            <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          </motion.button>
+            <RefreshCw className="w-4 h-4" />
+          </button>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Mes candidatures</span>
-            <Sparkles className="w-3 h-3 text-amber-400" />
+          <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+            </span>
+            <span className="text-xs text-[#14532D]/70 font-semibold">Mes candidatures</span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           EN-TÊTE
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="space-y-2"
-      >
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#14532D] tracking-tight">
             Mes Candidatures
           </h1>
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.3 }}
-            className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full"
-          >
+          <span className="px-3 py-1 text-xs font-extrabold bg-[#16A34A] text-white rounded-full shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]">
             {applications.length}
-          </motion.span>
+          </span>
         </div>
-        <p className="text-xs sm:text-sm text-slate-400">
-          Suivez l'état d'avancement de toutes vos postulations au Niger
+        <p className="text-sm text-[#14532D]/60">
+          Suivez l'état d'avancement de toutes vos postulations au Niger.
         </p>
-        <div className="flex flex-wrap gap-2 sm:gap-4 text-[10px] sm:text-xs">
-          <motion.span
-            whileHover={{ scale: 1.05 }}
-            className="text-slate-500 flex items-center gap-1.5"
-          >
-            <FileText className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            Total : {applications.length} candidature{applications.length > 1 ? 's' : ''}
-          </motion.span>
-          <motion.span
-            whileHover={{ scale: 1.05 }}
-            className="text-emerald-400 flex items-center gap-1.5"
-          >
-            <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            Actives : {activeApplications.length}
-          </motion.span>
+
+        {/* Stats inline */}
+        <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
+          <span className="text-[#14532D]/60 flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-[#16A34A]" />
+            Total : <span className="font-bold text-[#14532D]">{applications.length}</span>
+          </span>
+          <span className="text-[#16A34A] flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5" />
+            Actives : <span className="font-bold">{activeApplications.length}</span>
+          </span>
           {withdrawnApplications.length > 0 && (
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className="text-slate-500 flex items-center gap-1.5"
-            >
-              <XCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-              Retirées : {withdrawnApplications.length}
-            </motion.span>
+            <span className="text-[#14532D]/50 flex items-center gap-1.5">
+              <XCircle className="w-3.5 h-3.5" />
+              Retirées : <span className="font-bold">{withdrawnApplications.length}</span>
+            </span>
           )}
           {statusCounts.accepted > 0 && (
-            <motion.span
-              whileHover={{ scale: 1.05 }}
-              className="text-emerald-400 flex items-center gap-1.5"
-            >
-              <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <span className="text-[#16A34A] flex items-center gap-1.5 font-semibold">
+              <Award className="w-3.5 h-3.5" />
               Acceptées : {statusCounts.accepted} 🎉
-            </motion.span>
+            </span>
           )}
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           FILTRES ET VUE
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="flex flex-col gap-3"
-      >
-        {/* Filtres scrollables horizontalement sur mobile */}
+      <div className="flex flex-col gap-3">
+
+        {/* Filtres scrollables */}
         <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0 pb-1">
           <div className="flex gap-2 min-w-max">
             {['all', 'submitted', 'under_review', 'shortlisted', 'interview', 'accepted', 'rejected', 'withdrawn'].map((status) => (
-              <motion.button
+              <button
                 key={status}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => setStatusFilter(status)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
                   statusFilter === status
-                    ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25'
-                    : 'bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-800'
+                    ? 'bg-[#16A34A] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]'
+                    : 'bg-white text-[#14532D]/60 border border-[#16A34A]/15 hover:border-[#16A34A]/30 hover:text-[#16A34A]'
                 }`}
               >
                 {status === 'all' ? 'Tous' :
@@ -601,178 +464,172 @@ export const CandidateApplicationsPage = () => {
                  status === 'withdrawn' ? 'Retirés' :
                  status.charAt(0).toUpperCase() + status.slice(1)}
                 {status !== 'all' && (
-                  <span className="ml-1 text-[10px] opacity-60">
+                  <span className="ml-1 opacity-70">
                     ({statusCounts[status as keyof typeof statusCounts] || 0})
                   </span>
                 )}
-              </motion.button>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Toggle vue : aligné à droite */}
+        {/* Toggle vue */}
         <div className="flex justify-end">
-          <div className="flex gap-1 bg-slate-900/80 border border-slate-800 rounded-xl p-1">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <div className="flex gap-1 bg-white border border-[#16A34A]/15 rounded-xl p-1">
+            <button
               onClick={() => setViewMode('list')}
-              className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'list' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
+              className={`p-2 rounded-lg transition-all ${
+                viewMode === 'list'
+                  ? 'bg-[#16A34A] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]'
+                  : 'text-[#14532D]/50 hover:text-[#16A34A]'
+              }`}
+              title="Vue liste"
             >
-              <List className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              <List className="w-4 h-4" />
+            </button>
+            <button
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 ${viewMode === 'grid' ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25' : 'text-slate-500 hover:text-white'}`}
+              className={`p-2 rounded-lg transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-[#16A34A] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]'
+                  : 'text-[#14532D]/50 hover:text-[#16A34A]'
+              }`}
+              title="Vue grille"
             >
-              <Grid3x3 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </motion.button>
+              <Grid3x3 className="w-4 h-4" />
+            </button>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           LISTE DES CANDIDATURES
       ====================================================== */}
 
-      <AnimatePresence mode="wait">
-        {filteredApplications.length === 0 ? (
-          <motion.div
-            key="empty"
-            variants={fadeInScale}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="text-center py-12 sm:py-20 bg-slate-900/40 border border-slate-800 rounded-2xl px-4"
-          >
-            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-              <FileText className="w-8 h-8 sm:w-10 sm:h-10 text-slate-600" />
-            </div>
-            <p className="text-base sm:text-lg font-semibold text-white">
-              {statusFilter !== 'all' ? 'Aucune candidature avec ce statut' : 'Aucune candidature'}
-            </p>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
-              {statusFilter !== 'all'
-                ? 'Essayez de modifier votre filtre'
-                : 'Vous n\'avez encore postulé à aucune offre d\'emploi au Niger.'}
-            </p>
-            {statusFilter === 'all' && (
-              <Link
-                to="/jobs"
-                className="inline-block mt-6 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
-              >
-                Voir les offres
-              </Link>
-            )}
-          </motion.div>
-        ) : viewMode === 'list' ? (
-          <motion.div
-            key="list"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-            className="space-y-3 sm:space-y-4"
-          >
-            {filteredApplications.map((app, index) => (
-              <ApplicationCard
-                key={app.id}
-                app={app}
-                onWithdraw={handleWithdraw}
-                isPending={withdrawMutation.isPending}
-                index={index}
-              />
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div
-            key="grid"
-            variants={staggerContainer}
-            initial="initial"
-            animate="animate"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-          >
-            {filteredApplications.map((app, index) => (
-              <motion.div
-                key={app.id}
-                variants={tableRowVariants}
-                initial="initial"
-                animate="animate"
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ scale: 1.02, borderColor: 'rgba(251, 191, 36, 0.3)' }}
-                className={`bg-slate-900/80 border p-3 sm:p-4 rounded-xl transition-all duration-300 flex flex-col ${
-                  app.status === 'withdrawn'
-                    ? 'border-slate-700/50 opacity-60'
-                    : 'border-slate-800 hover:shadow-xl hover:shadow-amber-500/5'
-                }`}
-              >
+      {filteredApplications.length === 0 ? (
+        <div className="text-center py-16 bg-white border border-[#16A34A]/10 rounded-2xl px-4">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+            <Inbox className="w-10 h-10 text-[#16A34A]/40" />
+          </div>
+          <p className="text-lg font-extrabold text-[#14532D]">
+            {statusFilter !== 'all' ? 'Aucune candidature avec ce statut' : 'Aucune candidature'}
+          </p>
+          <p className="text-sm text-[#14532D]/60 mt-1">
+            {statusFilter !== 'all'
+              ? 'Essayez de modifier votre filtre'
+              : "Vous n'avez encore postulé à aucune offre d'emploi au Niger."}
+          </p>
+          {statusFilter === 'all' && (
+            <Link
+              to="/jobs"
+              className="inline-block mt-5 px-6 py-3 bg-[#16A34A] text-white font-bold rounded-xl hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] transition-all"
+            >
+              Voir les offres
+            </Link>
+          )}
+        </div>
+      ) : viewMode === 'list' ? (
+        <div className="space-y-4">
+          {filteredApplications.map((app, index) => (
+            <ApplicationCard
+              key={app.id}
+              app={app}
+              onWithdraw={handleWithdraw}
+              isPending={withdrawMutation.isPending}
+              index={index}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredApplications.map((app) => (
+            <div
+              key={app.id}
+              className={`group bg-white border rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 ${
+                app.status === 'withdrawn'
+                  ? 'border-slate-200 opacity-60'
+                  : 'border-[#16A34A]/10 hover:border-[#16A34A]/20 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)]'
+              }`}
+            >
+              {/* Bordure top */}
+              <div className={`h-1 ${
+                app.status === 'withdrawn' ? 'bg-slate-300' :
+                app.status === 'accepted' ? 'bg-[#16A34A]' :
+                app.status === 'rejected' ? 'bg-rose-500' :
+                app.status === 'submitted' ? 'bg-[#FCD34D]' :
+                'bg-[#16A34A]'
+              }`} />
+
+              <div className="p-4 flex flex-col h-full">
                 <div className="flex items-start justify-between gap-2 mb-3">
-                  <h4 className="font-semibold text-white text-xs sm:text-sm line-clamp-2 flex-1 min-w-0">
+                  <h4 className="font-bold text-[#14532D] text-sm line-clamp-2 flex-1 min-w-0 group-hover:text-[#16A34A] transition-colors">
                     {app.opportunity_title || 'Offre'}
                   </h4>
                   <StatusBadge status={app.status} />
                 </div>
-                <p className="text-[10px] sm:text-xs text-slate-400 flex items-center gap-1.5">
-                  <Building2 className="w-3 h-3 shrink-0" />
-                  <span className="truncate">{app.organization_name || 'Entreprise'}</span>
+                <p className="text-xs text-[#14532D]/60 flex items-center gap-1.5">
+                  <Building2 className="w-3 h-3 shrink-0 text-[#16A34A]" />
+                  <span className="truncate font-medium">
+                    {app.organization_name || 'Entreprise'}
+                  </span>
                 </p>
-                <p className="text-[10px] sm:text-xs text-slate-500 mt-2">
-                  {new Date(app.submitted_at || app.created_at || Date.now()).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                <p className="text-xs text-[#14532D]/40 mt-2">
+                  {new Date(app.submitted_at || app.created_at || Date.now()).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
                 </p>
-                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-800 mt-auto">
+                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-[#16A34A]/10 mt-auto">
                   <Link
                     to={`/jobs/${app.opportunity}`}
-                    className="flex-1 text-center px-3 py-1.5 bg-slate-800 text-white rounded-lg text-[10px] sm:text-xs font-medium hover:bg-slate-700 transition-colors"
+                    className="flex-1 text-center px-3 py-2 bg-white border border-[#16A34A]/20 text-[#14532D] rounded-lg text-xs font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all"
                   >
                     Voir
                   </Link>
-                  {app.status !== 'withdrawn' && (app.status === 'submitted' || app.status === 'under_review') && (
-                    <button
-                      onClick={() => handleWithdraw(app.id, app.opportunity_title || 'cette offre')}
-                      disabled={withdrawMutation.isPending}
-                      className="px-3 py-1.5 bg-rose-500/10 text-rose-400 rounded-lg text-[10px] sm:text-xs font-medium hover:bg-rose-500/20 transition-colors disabled:opacity-50"
-                    >
-                      Retirer
-                    </button>
-                  )}
+                  {app.status !== 'withdrawn' &&
+                    (app.status === 'submitted' || app.status === 'under_review') && (
+                      <button
+                        onClick={() => handleWithdraw(app.id, app.opportunity_title || 'cette offre')}
+                        disabled={withdrawMutation.isPending}
+                        className="px-3 py-2 bg-rose-50 text-rose-600 border border-rose-200 rounded-lg text-xs font-semibold hover:bg-rose-100 transition-all disabled:opacity-50"
+                      >
+                        Retirer
+                      </button>
+                    )}
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* ======================================================
           FOOTER
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-      >
-        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-          <span className="text-slate-500">
-            <span className="text-amber-400 font-medium">{applications.length}</span> candidatures totales
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">{applications.length}</span> candidature{applications.length > 1 ? 's' : ''} au total
           </span>
-          <span className="hidden xs:block w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
           <span className="flex items-center gap-1.5">
-            <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé - Niger</span>
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-amber-400" />
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
             v1.0.0
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="w-px h-4 bg-[#16A34A]/20" />
           <span>Mes candidatures</span>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+
+    </div>
   );
 };
 

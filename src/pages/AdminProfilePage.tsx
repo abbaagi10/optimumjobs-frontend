@@ -1,6 +1,6 @@
 // src/pages/AdminProfilePage.tsx
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -18,67 +18,28 @@ import {
   CheckCircle2,
   ArrowLeft,
   LayoutDashboard,
-  Sparkles,
   Crown,
   Activity,
   Fingerprint,
   Shield,
-  Award,
-  Star,
   Zap,
   Copy,
   Check,
   Camera,
-  Settings,
   Lock,
   Bell,
   HelpCircle,
   ChevronRight,
-  TrendingUp,
-  Calendar
+  Calendar,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
 
 import { profileApi } from '../api/profile';
 import { useAuthStore } from '../store/authStore';
 import { CandidateProfile } from '../types';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const slideInLeft = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-const slideInRight = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-// ==========================================================
-// COMPONENTS
+// TYPES
 // ==========================================================
 
 interface AdminProfileForm {
@@ -104,39 +65,48 @@ const emptyForm: AdminProfileForm = {
   bio: '',
 };
 
+// ==========================================================
+// COMPOSANTS
+// ==========================================================
+
 const ProfileDisplayValue: React.FC<{
   value?: string | null;
   icon?: React.ReactNode;
 }> = ({ value, icon }) => (
-  <motion.div
-    variants={fadeInUp}
-    className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 h-[46px] rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden w-full group hover:border-amber-500/30 transition-all duration-300"
-  >
+  <div className="flex items-center gap-3 px-4 h-[46px] rounded-xl bg-[#FAFAF9] border border-[#16A34A]/15 overflow-hidden w-full group hover:border-[#16A34A]/30 transition-all">
     {icon && (
-      <span className="text-slate-500 group-hover:text-amber-400 transition-colors shrink-0">
+      <span className="text-[#14532D]/40 group-hover:text-[#16A34A] transition-colors shrink-0">
         {icon}
       </span>
     )}
-    <span className="text-xs sm:text-sm text-white truncate min-w-0 flex-1">
+    <span className="text-sm text-[#14532D] font-medium truncate min-w-0 flex-1">
       {value || 'Non renseigné'}
     </span>
-  </motion.div>
+  </div>
 );
 
-const InfoCard = ({ icon: Icon, label, value, color = 'amber' }: any) => (
-  <motion.div
-    variants={fadeInUp}
-    className="p-3 sm:p-4 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-amber-500/30 transition-all duration-300 group"
-  >
-    <div className="flex items-center justify-between gap-2">
-      <span className="text-[10px] sm:text-xs text-slate-500">{label}</span>
-      <div className={`p-1.5 rounded-lg bg-${color}-500/10 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
-        <Icon className={`w-3.5 h-3.5 text-${color}-400`} />
+const InfoCard = ({ icon: Icon, label, value, color = 'green' }: any) => {
+  const colors: any = {
+    green: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+    amber: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
+    blue: 'bg-blue-50 text-blue-600 border-blue-200',
+    purple: 'bg-purple-50 text-purple-600 border-purple-200',
+    emerald: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+  };
+  const c = colors[color] || colors.green;
+
+  return (
+    <div className="p-3 rounded-xl bg-[#FAFAF9] border border-[#16A34A]/10 hover:border-[#16A34A]/30 transition-all group">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs text-[#14532D]/50 font-medium">{label}</span>
+        <div className={`p-1.5 rounded-lg ${c} group-hover:scale-110 transition-transform shrink-0`}>
+          <Icon className="w-3.5 h-3.5" />
+        </div>
       </div>
+      <p className="text-sm font-bold text-[#14532D] mt-2 break-words">{value}</p>
     </div>
-    <p className="text-xs sm:text-sm font-semibold text-white mt-2 break-words">{value}</p>
-  </motion.div>
-);
+  );
+};
 
 // ==========================================================
 // MAIN COMPONENT
@@ -150,23 +120,7 @@ export const AdminProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState<AdminProfileForm>(emptyForm);
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isCopied, setIsCopied] = useState(false);
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // QUERY
@@ -176,7 +130,7 @@ export const AdminProfilePage: React.FC = () => {
     data: profile,
     isLoading,
     isError,
-    refetch
+    refetch,
   } = useQuery<CandidateProfile>({
     queryKey: ['profile'],
     queryFn: async () => {
@@ -186,12 +140,10 @@ export const AdminProfilePage: React.FC = () => {
   });
 
   // ==========================================================
-  // FORM HANDLING
+  // FORM DATA
   // ==========================================================
 
-  const getInitialFormData = (
-    profData?: CandidateProfile | null
-  ): AdminProfileForm => ({
+  const getInitialFormData = (profData?: CandidateProfile | null): AdminProfileForm => ({
     first_name: profData?.first_name || user?.first_name || '',
     last_name: profData?.last_name || user?.last_name || '',
     phone: profData?.phone || user?.phone || '',
@@ -214,7 +166,7 @@ export const AdminProfilePage: React.FC = () => {
     mutationFn: (data: AdminProfileForm) => profileApi.updateProfile(data),
 
     onSuccess: async () => {
-      toast.success('Profil administrateur mis à jour avec succès.');
+      toast.success('Profil mis à jour');
       setIsEditing(false);
 
       await Promise.all([
@@ -268,7 +220,7 @@ export const AdminProfilePage: React.FC = () => {
     if (user?.email) {
       navigator.clipboard.writeText(user.email);
       setIsCopied(true);
-      toast.success('Email copié !');
+      toast.success('Email copié');
       setTimeout(() => setIsCopied(false), 3000);
     }
   };
@@ -292,33 +244,12 @@ export const AdminProfilePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-[60vh] flex items-center justify-center"
-      >
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-          <p className="text-sm text-slate-400">Chargement du profil...</p>
-          <div className="flex gap-1">
-            {[0, 1, 2].map((i) => (
-              <motion.div
-                key={i}
-                className="w-2 h-2 rounded-full bg-amber-500/50"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.3, 1, 0.3],
-                }}
-                transition={{
-                  duration: 1.5,
-                  delay: i * 0.2,
-                  repeat: Infinity,
-                }}
-              />
-            ))}
-          </div>
+          <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+          <p className="text-sm text-[#14532D]/60 font-medium">Chargement du profil...</p>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -328,40 +259,25 @@ export const AdminProfilePage: React.FC = () => {
 
   if (isError) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-3 sm:px-4 py-10"
-      >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
-          >
-            <User className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
-          </motion.div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white">Impossible de charger le profil</h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-2">
-            Une erreur est survenue lors de la récupération de votre profil administrateur.
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-10">
+        <div className="bg-white border border-rose-200 rounded-3xl p-6 sm:p-12 text-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-200">
+            <User className="w-8 h-8 sm:w-10 sm:h-10 text-rose-500" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-[#14532D]">
+            Impossible de charger le profil
+          </h2>
+          <p className="text-xs sm:text-sm text-[#14532D]/60 mt-2">
+            Une erreur est survenue lors de la récupération de votre profil.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => refetch()}
-            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
+            className="mt-6 px-6 sm:px-8 py-3 bg-[#16A34A] text-white font-bold rounded-xl hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] transition-all text-sm sm:text-base"
           >
             Réessayer
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -370,207 +286,139 @@ export const AdminProfilePage: React.FC = () => {
   // ==========================================================
 
   return (
-    <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      onSubmit={handleSave}
-      className="space-y-4 sm:space-y-6 relative"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[200px] sm:h-[300px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-      </div>
+    <form onSubmit={handleSave} className="space-y-4 sm:space-y-6">
 
       {/* ======================================================
           BOUTON RETOUR
       ====================================================== */}
 
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3"
-      >
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+      <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3">
+        <button
           type="button"
           onClick={() => navigate('/admin/dashboard')}
-          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs sm:text-sm font-semibold hover:bg-slate-800 hover:text-white transition-all duration-300 group hover:border-amber-500/30 w-full xs:w-auto justify-center"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#16A34A]/15 text-[#14532D]/70 text-sm font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/30 hover:text-[#14532D] transition-all group w-full xs:w-auto justify-center"
         >
-          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 group-hover:-translate-x-1 transition-transform duration-300" />
-          <LayoutDashboard className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+          <ArrowLeft className="w-4 h-4 text-[#16A34A] group-hover:-translate-x-1 transition-transform" />
+          <LayoutDashboard className="w-4 h-4 text-[#16A34A]" />
           <span>Retour au Tableau de Bord</span>
-        </motion.button>
+        </button>
 
-        <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start xs:self-auto">
-          <Crown className="w-3 h-3 text-amber-500" />
-          <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Admin Niger</span>
+        <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)] self-start xs:self-auto">
+          <Crown className="w-3 h-3 text-[#FCD34D]" />
+          <span className="text-xs text-[#14532D]/70 font-semibold">Admin Niger</span>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           HEADER DE PROFIL
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-      >
-        <div className="flex flex-col gap-5 sm:gap-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 min-w-0 flex-1">
-            {/* Avatar */}
-            <motion.div
-              className="relative shrink-0"
-              onMouseEnter={() => setIsHoveringAvatar(true)}
-              onMouseLeave={() => setIsHoveringAvatar(false)}
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 shadow-xl flex items-center justify-center relative overflow-hidden"
-              >
-                <span className="text-xl sm:text-2xl font-extrabold text-amber-400">
-                  {initials}
-                </span>
-                <AnimatePresence>
-                  {isHoveringAvatar && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute inset-0 bg-slate-950/80 flex items-center justify-center"
-                    >
-                      <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-              <motion.div
-                className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-500 border-2 border-slate-900"
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            </motion.div>
+      <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
+        {/* Bordure top gradient */}
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
 
-            {/* Titres et infos */}
-            <div className="flex-1 min-w-0 w-full">
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-white truncate">
-                  {fullName}
-                </h1>
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 text-amber-400 text-[10px] sm:text-xs font-bold shrink-0"
-                >
-                  <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  Administrateur
-                </motion.span>
+        <div className="p-5 sm:p-6 md:p-8">
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+
+              {/* Avatar */}
+              <div
+                className="relative shrink-0"
+                onMouseEnter={() => setIsHoveringAvatar(true)}
+                onMouseLeave={() => setIsHoveringAvatar(false)}
+              >
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] flex items-center justify-center relative overflow-hidden">
+                  <span className="text-2xl font-extrabold text-white">
+                    {initials}
+                  </span>
+                  {isHoveringAvatar && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                      <Camera className="w-6 h-6 text-white" />
+                    </div>
+                  )}
+                </div>
+                <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#16A34A] border-2 border-white" />
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1.5 sm:mt-2 text-xs sm:text-sm text-slate-400">
-                {user?.email && (
-                  <motion.span
-                    className="inline-flex items-center gap-1.5 max-w-full cursor-pointer group"
-                    onClick={handleCopyEmail}
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-slate-500 group-hover:text-amber-400 transition-colors" />
-                    <span className="truncate group-hover:text-white transition-colors">{user.email}</span>
-                    {isCopied ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    ) : (
-                      <Copy className="w-3 h-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    )}
-                  </motion.span>
-                )}
-
-                {(profile?.city || profile?.country) && (
-                  <span className="inline-flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 text-slate-500" />
-                    <span>
-                      {[profile?.city, profile?.country || 'Niger']
-                        .filter(Boolean)
-                        .join(', ')}
-                    </span>
+              {/* Titres et infos */}
+              <div className="flex-1 min-w-0 w-full">
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-2xl md:text-3xl font-extrabold text-[#14532D] truncate">
+                    {fullName}
+                  </h1>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0FDF4] border border-[#16A34A]/20 text-[#16A34A] text-xs font-bold shrink-0">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    Administrateur
                   </span>
-                )}
+                </div>
 
-                <span className="flex items-center gap-1.5 text-[10px] sm:text-xs text-slate-600">
-                  <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400/70">En ligne</span>
-                </span>
+                <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-[#14532D]/60">
+                  {user?.email && (
+                    <span
+                      className="inline-flex items-center gap-1.5 max-w-full cursor-pointer group"
+                      onClick={handleCopyEmail}
+                    >
+                      <Mail className="w-4 h-4 shrink-0 text-[#16A34A]" />
+                      <span className="truncate group-hover:text-[#14532D] transition-colors">
+                        {user.email}
+                      </span>
+                      {isCopied ? (
+                        <Check className="w-3.5 h-3.5 text-[#16A34A]" />
+                      ) : (
+                        <Copy className="w-3 h-3 text-[#14532D]/30 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      )}
+                    </span>
+                  )}
+
+                  {(profile?.city || profile?.country) && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 shrink-0 text-[#16A34A]" />
+                      <span>
+                        {[profile?.city, profile?.country || 'Niger']
+                          .filter(Boolean)
+                          .join(', ')}
+                      </span>
+                    </span>
+                  )}
+
+                  <span className="flex items-center gap-1.5 text-xs text-[#16A34A] font-medium">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+                    </span>
+                    En ligne
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Boutons d'action */}
-          <div className="flex flex-col xs:flex-row gap-2 w-full sm:w-auto">
-            <AnimatePresence mode="wait">
+            {/* Boutons d'action */}
+            <div className="flex flex-col xs:flex-row gap-2 pt-4 border-t border-[#16A34A]/10">
               {!isEditing ? (
-                <motion.button
-                  key="edit"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   type="button"
                   onClick={() => setIsEditing(true)}
-                  className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 w-full xs:w-auto"
+                  className="px-5 py-2.5 rounded-xl bg-[#16A34A] text-white text-sm font-bold hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 w-full xs:w-auto"
                 >
                   <Edit2 className="w-4 h-4" />
-                  Modifier
-                </motion.button>
+                  Modifier le profil
+                </button>
               ) : (
                 <>
-                  <motion.button
-                    key="cancel"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <button
                     type="button"
                     onClick={handleCancel}
                     disabled={updateProfileMutation.isPending}
-                    className="px-4 sm:px-5 py-2.5 rounded-xl bg-slate-800 text-white text-xs sm:text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 w-full xs:w-auto"
+                    className="px-5 py-2.5 rounded-xl bg-white border border-[#16A34A]/20 text-[#14532D] text-sm font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50 w-full xs:w-auto"
                   >
                     <X className="w-4 h-4" />
                     Annuler
-                  </motion.button>
+                  </button>
 
-                  <motion.button
-                    key="save"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <button
                     type="submit"
                     disabled={updateProfileMutation.isPending}
-                    className="px-4 sm:px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs sm:text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 w-full xs:w-auto"
+                    className="px-5 py-2.5 rounded-xl bg-[#16A34A] text-white text-sm font-bold hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 w-full xs:w-auto"
                   >
                     {updateProfileMutation.isPending ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -578,50 +426,43 @@ export const AdminProfilePage: React.FC = () => {
                       <Save className="w-4 h-4" />
                     )}
                     Enregistrer
-                  </motion.button>
+                  </button>
                 </>
               )}
-            </AnimatePresence>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           CONTENU PRINCIPAL
       ====================================================== */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Colonne de gauche - Informations personnelles */}
+
+        {/* Colonne gauche — Infos personnelles */}
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex items-center gap-3 pb-4 sm:pb-5 border-b border-slate-800">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center shrink-0">
-                <User className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+
+            <div className="flex items-center gap-3 pb-5 border-b border-[#16A34A]/10">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)]">
+                <User className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h2 className="text-base sm:text-lg font-bold text-white">
+                <h2 className="text-lg font-extrabold text-[#14532D]">
                   Informations personnelles
                 </h2>
-                <p className="text-[10px] sm:text-xs text-slate-500">
+                <p className="text-xs text-[#14532D]/50">
                   Gérez les informations de votre compte administrateur.
                 </p>
               </div>
             </div>
 
-            <motion.div
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mt-5 sm:mt-6"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6">
+
               {/* Prénom */}
-              <motion.div variants={fadeInUp}>
-                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+              <div>
+                <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                   Prénom
                 </label>
                 {isEditing ? (
@@ -631,16 +472,16 @@ export const AdminProfilePage: React.FC = () => {
                     value={form.first_name}
                     onChange={handleChange}
                     placeholder="Votre prénom"
-                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
+                    className="w-full px-4 h-[46px] rounded-xl bg-white text-[#14532D] border border-[#16A34A]/20 placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-sm font-medium"
                   />
                 ) : (
                   <ProfileDisplayValue value={profile?.first_name} />
                 )}
-              </motion.div>
+              </div>
 
               {/* Nom */}
-              <motion.div variants={fadeInUp}>
-                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+              <div>
+                <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                   Nom
                 </label>
                 {isEditing ? (
@@ -650,109 +491,106 @@ export const AdminProfilePage: React.FC = () => {
                     value={form.last_name}
                     onChange={handleChange}
                     placeholder="Votre nom"
-                    className="w-full px-3 sm:px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
+                    className="w-full px-4 h-[46px] rounded-xl bg-white text-[#14532D] border border-[#16A34A]/20 placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-sm font-medium"
                   />
                 ) : (
                   <ProfileDisplayValue value={profile?.last_name} />
                 )}
-              </motion.div>
+              </div>
 
               {/* Email */}
-              <motion.div variants={fadeInUp}>
-                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+              <div>
+                <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                   Adresse email
                 </label>
                 <ProfileDisplayValue
-                  icon={<Mail className="w-4 h-4 text-slate-500 shrink-0" />}
+                  icon={<Mail className="w-4 h-4 shrink-0" />}
                   value={user?.email}
                 />
-                <p className="text-[10px] sm:text-[11px] text-slate-600 mt-1.5">
+                <p className="text-xs text-[#14532D]/40 mt-1.5">
                   L'adresse email est gérée par le compte utilisateur.
                 </p>
-              </motion.div>
+              </div>
 
               {/* Téléphone */}
-              <motion.div variants={fadeInUp}>
-                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+              <div>
+                <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                   Téléphone
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <Phone className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#16A34A] pointer-events-none" />
                     <input
                       type="text"
                       name="phone"
                       value={form.phone}
                       onChange={handleChange}
                       placeholder="Ex : +227 XX XX XX XX"
-                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
+                      className="w-full pl-11 pr-4 h-[46px] rounded-xl bg-white text-[#14532D] border border-[#16A34A]/20 placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-sm font-medium"
                     />
                   </div>
                 ) : (
                   <ProfileDisplayValue
-                    icon={<Phone className="w-4 h-4 text-slate-500 shrink-0" />}
+                    icon={<Phone className="w-4 h-4 shrink-0" />}
                     value={profile?.phone}
                   />
                 )}
-              </motion.div>
+              </div>
 
               {/* Ville */}
-              <motion.div variants={fadeInUp}>
-                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+              <div>
+                <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                   Ville
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <MapPin className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#16A34A] pointer-events-none" />
                     <input
                       type="text"
                       name="city"
                       value={form.city}
                       onChange={handleChange}
                       placeholder="Votre ville"
-                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
+                      className="w-full pl-11 pr-4 h-[46px] rounded-xl bg-white text-[#14532D] border border-[#16A34A]/20 placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-sm font-medium"
                     />
                   </div>
                 ) : (
                   <ProfileDisplayValue
-                    icon={<MapPin className="w-4 h-4 text-slate-500 shrink-0" />}
+                    icon={<MapPin className="w-4 h-4 shrink-0" />}
                     value={profile?.city}
                   />
                 )}
-              </motion.div>
+              </div>
 
               {/* Pays */}
-              <motion.div variants={fadeInUp}>
-                <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+              <div>
+                <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                   Pays
                 </label>
                 {isEditing ? (
                   <div className="relative">
-                    <Globe className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                    <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#16A34A] pointer-events-none" />
                     <input
                       type="text"
                       name="country"
                       value={form.country}
                       onChange={handleChange}
                       placeholder="Votre pays"
-                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 h-[46px] text-xs sm:text-sm"
+                      className="w-full pl-11 pr-4 h-[46px] rounded-xl bg-white text-[#14532D] border border-[#16A34A]/20 placeholder-[#14532D]/30 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-sm font-medium"
                     />
                   </div>
                 ) : (
                   <ProfileDisplayValue
-                    icon={<Globe className="w-4 h-4 text-slate-500 shrink-0" />}
+                    icon={<Globe className="w-4 h-4 shrink-0" />}
                     value={profile?.country || 'Niger'}
                   />
                 )}
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
 
             {/* Biographie */}
-            <motion.div
-              variants={fadeInUp}
-              className="mt-5"
-            >
-              <label className="block text-[10px] sm:text-xs font-semibold text-slate-400 mb-2">
+            <div className="mt-5">
+              <label className="block text-xs font-semibold text-[#14532D]/70 mb-2">
                 Biographie / Présentation
               </label>
               {isEditing ? (
@@ -762,45 +600,33 @@ export const AdminProfilePage: React.FC = () => {
                   onChange={handleChange}
                   rows={4}
                   placeholder="Présentez-vous brièvement..."
-                  className="w-full px-3 sm:px-4 py-3 rounded-xl bg-slate-950 text-white border border-slate-800 placeholder:text-slate-600 resize-none focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500/50 transition-all duration-300 text-xs sm:text-sm"
+                  className="w-full px-4 py-3 rounded-xl bg-white text-[#14532D] border border-[#16A34A]/20 placeholder-[#14532D]/30 resize-none focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all text-sm font-medium"
                 />
               ) : (
-                <motion.div
-                  whileHover={{ borderColor: 'rgba(251, 191, 36, 0.3)' }}
-                  className="min-h-[100px] sm:min-h-[110px] px-3 sm:px-4 py-3 rounded-xl bg-slate-950/60 border border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed break-words transition-all duration-300"
-                >
+                <div className="min-h-[110px] px-4 py-3 rounded-xl bg-[#FAFAF9] border border-[#16A34A]/15 text-sm text-[#14532D]/80 leading-relaxed break-words">
                   {profile?.bio || 'Aucune présentation renseignée.'}
-                </motion.div>
+                </div>
               )}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
 
-        {/* Colonne de droite - Compte & Sécurité */}
+        {/* Colonne droite — Compte & Actions */}
         <div className="space-y-4 sm:space-y-6">
+
           {/* Informations du compte */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex items-center gap-3 pb-4 sm:pb-5 border-b border-slate-800">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <div className="flex items-center gap-3 pb-5 border-b border-[#16A34A]/10">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)]">
+                <ShieldCheck className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h2 className="text-base sm:text-lg font-bold text-white">Compte</h2>
-                <p className="text-[10px] sm:text-xs text-slate-500">Informations de sécurité</p>
+                <h2 className="text-lg font-extrabold text-[#14532D]">Compte</h2>
+                <p className="text-xs text-[#14532D]/50">Informations de sécurité</p>
               </div>
             </div>
 
-            <motion.div
-              variants={staggerContainer}
-              initial="initial"
-              animate="animate"
-              className="space-y-3 mt-5 sm:mt-6"
-            >
+            <div className="space-y-3 mt-6">
               <InfoCard
                 icon={ShieldCheck}
                 label="Rôle"
@@ -825,79 +651,70 @@ export const AdminProfilePage: React.FC = () => {
                 value={`#${user?.id || 'N/A'}`}
                 color="purple"
               />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* Actions rapides */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Zap className="w-4 h-4 text-amber-400" />
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Zap className="w-4 h-4 text-[#FCD34D]" />
               Actions rapides
             </h2>
             <div className="space-y-2">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <button
                 type="button"
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium"
               >
                 <span className="flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <Lock className="w-4 h-4 text-[#16A34A]" />
                   Changer le mot de passe
                 </span>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                <ChevronRight className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button
                 type="button"
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium"
               >
                 <span className="flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <Bell className="w-4 h-4 text-[#16A34A]" />
                   Notifications
                 </span>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                <ChevronRight className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button
                 type="button"
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
+                className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium"
               >
                 <span className="flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <HelpCircle className="w-4 h-4 text-[#16A34A]" />
                   Aide & Support
                 </span>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+                <ChevronRight className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Session info */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.35 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-slate-500">
+          {/* Session */}
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-[#14532D]/60">
               <span className="flex items-center gap-1.5">
-                <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                Session active
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+                </span>
+                <span className="font-medium text-[#16A34A]">Session active</span>
               </span>
-              <span className="w-px h-4 bg-slate-800" />
+              <span className="w-px h-4 bg-[#16A34A]/20" />
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
-                {new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                {new Date().toLocaleDateString('fr-FR', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })}
               </span>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -905,32 +722,28 @@ export const AdminProfilePage: React.FC = () => {
           FOOTER
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-      >
-        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-          <span className="text-slate-500">
-            <span className="text-amber-400 font-medium">Admin</span> • Profil
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">Admin</span> • Profil
           </span>
-          <span className="hidden xs:block w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
           <span className="flex items-center gap-1.5">
-            <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé - Niger</span>
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-amber-400" />
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
             v1.0.0
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="w-px h-4 bg-[#16A34A]/20" />
           <span>Profil Admin</span>
         </div>
-      </motion.div>
-    </motion.form>
+      </div>
+
+    </form>
   );
 };
 

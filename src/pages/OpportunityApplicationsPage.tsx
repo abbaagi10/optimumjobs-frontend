@@ -1,54 +1,24 @@
 // src/pages/OpportunityApplicationsPage.tsx
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { Application, ApplicationStatus } from '../types';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Home, Loader2, Eye, FileText, Download,
-  User, Briefcase, GraduationCap, MapPin, Mail, Phone,
-  CheckCircle, XCircle, Clock, Users, ChevronDown, ChevronUp,
-  ExternalLink, Building2, Calendar, DollarSign, Globe,
-  Edit2, Trash2, Sparkles, Zap, Shield, Activity, Crown,
-  ChevronRight, Award, Star, TrendingUp, Filter,
-  Search, Send, AlertCircle, CheckCircle2
+  User, Briefcase, MapPin, Mail, Phone,
+  CheckCircle, XCircle, Clock, Users, ChevronDown,
+  ExternalLink, Building2, Calendar, Globe,
+  Edit2, Trash2, Zap, Shield, Activity, Crown,
+  ChevronRight, Award, Star, TrendingUp,
+  Search, AlertCircle,
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const tableRowVariants = {
-  initial: { opacity: 0, x: -10 },
-  animate: { opacity: 1, x: 0 },
-  hover: { backgroundColor: "rgba(255,255,255,0.03)" }
-};
-
-// ==========================================================
-// COMPOSANTS
+// STATUS BADGE
 // ==========================================================
 
 const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
@@ -56,43 +26,43 @@ const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
     'submitted': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-      dotColor: 'bg-amber-400 animate-pulse'
+      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
+      dotColor: 'bg-[#FCD34D] animate-pulse'
     },
     'under_review': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En examen',
-      className: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      dotColor: 'bg-blue-400'
+      className: 'bg-blue-50 text-blue-700 border-blue-200',
+      dotColor: 'bg-blue-500'
     },
     'shortlisted': {
       icon: <Star className="w-3 h-3" />,
       label: 'Présélectionnée',
-      className: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-      dotColor: 'bg-purple-400'
+      className: 'bg-purple-50 text-purple-700 border-purple-200',
+      dotColor: 'bg-purple-500'
     },
     'interview': {
       icon: <Users className="w-3 h-3" />,
       label: 'Entretien',
-      className: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-      dotColor: 'bg-indigo-400'
+      className: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      dotColor: 'bg-indigo-500'
     },
     'accepted': {
       icon: <Award className="w-3 h-3" />,
       label: 'Acceptée',
-      className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-      dotColor: 'bg-emerald-400'
+      className: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+      dotColor: 'bg-[#16A34A]'
     },
     'rejected': {
       icon: <XCircle className="w-3 h-3" />,
       label: 'Refusée',
-      className: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-      dotColor: 'bg-rose-400'
+      className: 'bg-rose-50 text-rose-600 border-rose-200',
+      dotColor: 'bg-rose-500'
     },
     'withdrawn': {
       icon: <XCircle className="w-3 h-3" />,
       label: 'Retirée',
-      className: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+      className: 'bg-slate-100 text-slate-500 border-slate-200',
       dotColor: 'bg-slate-400'
     }
   };
@@ -100,51 +70,67 @@ const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
   const config = statusMap[status] || {
     icon: null,
     label: status,
-    className: 'bg-slate-800 text-slate-400 border-slate-700',
+    className: 'bg-slate-100 text-slate-500 border-slate-200',
     dotColor: 'bg-slate-400'
   };
 
   return (
-    <motion.span
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] font-medium border ${config.className}`}
-    >
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border ${config.className}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
       {config.label}
-    </motion.span>
+    </span>
   );
 };
 
-const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => (
-  <motion.div
-    variants={fadeInUp}
-    whileHover={{ scale: 1.02, y: -2 }}
-    className="relative group bg-slate-900/80 border border-slate-800 p-3 sm:p-4 rounded-2xl transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-slate-900/50 cursor-pointer overflow-hidden"
-  >
-    <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-    <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${color}-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700`} />
+// ==========================================================
+// STAT CARD
+// ==========================================================
 
-    <div className="relative z-10">
-      <div className="flex items-center justify-between mb-1 gap-2">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 truncate">
+const StatCard = ({ title, value, icon: Icon, color }: any) => {
+  const colorMap: any = {
+    green: {
+      bar: 'bg-[#16A34A]',
+      iconBg: 'bg-gradient-to-br from-[#16A34A] to-[#15803D]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]',
+    },
+    amber: {
+      bar: 'bg-[#FCD34D]',
+      iconBg: 'bg-gradient-to-br from-[#FCD34D] to-[#EAB308]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)]',
+    },
+    blue: {
+      bar: 'bg-blue-500',
+      iconBg: 'bg-gradient-to-br from-blue-500 to-blue-600',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(59,130,246,0.3)]',
+    },
+    purple: {
+      bar: 'bg-purple-500',
+      iconBg: 'bg-gradient-to-br from-purple-500 to-purple-600',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(168,85,247,0.3)]',
+    },
+  };
+  const c = colorMap[color] || colorMap.green;
+
+  return (
+    <div className="group relative bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#16A34A]/20 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:-translate-y-1">
+      <div className={`h-1 ${c.bar}`} />
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3 gap-2">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${c.iconBg} ${c.shadow} group-hover:scale-105 transition-transform shrink-0`}>
+            <Icon className="w-5 h-5 text-white" />
+          </div>
+        </div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-[#14532D]/50 mb-1 truncate">
           {title}
-        </span>
-        <div className={`p-1.5 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
-          <Icon className="w-3.5 h-3.5" />
+        </div>
+        <div className="text-2xl font-extrabold text-[#14532D] tracking-tight">
+          {value}
         </div>
       </div>
-      <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
-        {value}
-      </div>
-      {subtitle && (
-        <div className="mt-0.5 text-[10px] text-slate-500 line-clamp-1">{subtitle}</div>
-      )}
-      <div className="mt-2 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-${color}-500 to-transparent transition-all duration-700" />
     </div>
-  </motion.div>
-);
+  );
+};
 
 // ==========================================================
 // COMPOSANT PRINCIPAL
@@ -157,23 +143,7 @@ export const OpportunityApplicationsPage = () => {
   const { user } = useAuthStore();
   const [expandedApplication, setExpandedApplication] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>('');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [searchTerm, setSearchTerm] = useState('');
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // QUERIES
@@ -200,12 +170,14 @@ export const OpportunityApplicationsPage = () => {
     retry: 1,
   });
 
-  const { data: applicationsData, isLoading: isLoadingApps, refetch } = useQuery({
+  const { data: applicationsData, isLoading: isLoadingApps } = useQuery({
     queryKey: ['opportunityApplications', id, selectedStatus],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (selectedStatus) params.append('status', selectedStatus);
-      const response = await apiClient.get(`/opportunities/${id}/applications/?${params.toString()}`);
+      const response = await apiClient.get(
+        `/opportunities/${id}/applications/?${params.toString()}`
+      );
       return response.data;
     },
     enabled: !!id,
@@ -220,7 +192,7 @@ export const OpportunityApplicationsPage = () => {
     mutationFn: ({ applicationId, status }: { applicationId: number; status: ApplicationStatus }) =>
       apiClient.patch(`/applications/${applicationId}/status/`, { status }),
     onSuccess: () => {
-      toast.success('Statut mis à jour avec succès');
+      toast.success('Statut mis à jour');
       queryClient.invalidateQueries({ queryKey: ['opportunityApplications', id] });
     },
     onError: (error: any) => {
@@ -233,7 +205,7 @@ export const OpportunityApplicationsPage = () => {
       return apiClient.delete(`/opportunities/manage/${id}/`);
     },
     onSuccess: () => {
-      toast.success('Offre supprimée avec succès');
+      toast.success('Offre supprimée');
       navigate('/organization/dashboard');
     },
     onError: (error: any) => {
@@ -246,7 +218,7 @@ export const OpportunityApplicationsPage = () => {
       return apiClient.post(`/opportunities/manage/${id}/publish/`);
     },
     onSuccess: () => {
-      toast.success('Offre publiée avec succès ! 🚀');
+      toast.success('Offre publiée');
       queryClient.invalidateQueries({ queryKey: ['opportunityManage', id] });
     },
     onError: (error: any) => {
@@ -259,7 +231,7 @@ export const OpportunityApplicationsPage = () => {
       return apiClient.post(`/opportunities/manage/${id}/close/`);
     },
     onSuccess: () => {
-      toast.success('Offre fermée avec succès');
+      toast.success('Offre fermée');
       queryClient.invalidateQueries({ queryKey: ['opportunityManage', id] });
     },
     onError: (error: any) => {
@@ -276,7 +248,9 @@ export const OpportunityApplicationsPage = () => {
   const handleGoToDashboard = () => navigate('/organization/dashboard');
 
   const handleToggleExpand = (applicationId: number) => {
-    setExpandedApplication(expandedApplication === applicationId ? null : applicationId);
+    setExpandedApplication(
+      expandedApplication === applicationId ? null : applicationId
+    );
   };
 
   const handleDelete = () => {
@@ -304,7 +278,9 @@ export const OpportunityApplicationsPage = () => {
   const applications = applicationsData?.results || applicationsData || [];
 
   const filteredApplications = applications.filter((app: any) => {
-    const name = `${app.candidate_details?.first_name || ''} ${app.candidate_details?.last_name || ''}`.toLowerCase();
+    const name = `${app.candidate_details?.first_name || ''} ${
+      app.candidate_details?.last_name || ''
+    }`.toLowerCase();
     const email = (app.candidate_details?.email || '').toLowerCase();
     const search = searchTerm.toLowerCase();
     return name.includes(search) || email.includes(search);
@@ -312,8 +288,12 @@ export const OpportunityApplicationsPage = () => {
 
   const stats = {
     total: applications.length,
-    pending: applications.filter((a: any) => a.status === 'submitted' || a.status === 'under_review').length,
-    shortlisted: applications.filter((a: any) => a.status === 'shortlisted' || a.status === 'interview').length,
+    pending: applications.filter(
+      (a: any) => a.status === 'submitted' || a.status === 'under_review'
+    ).length,
+    shortlisted: applications.filter(
+      (a: any) => a.status === 'shortlisted' || a.status === 'interview'
+    ).length,
     accepted: applications.filter((a: any) => a.status === 'accepted').length,
   };
 
@@ -323,31 +303,12 @@ export const OpportunityApplicationsPage = () => {
 
   if (isLoadingOpp || isLoadingApps) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
-      >
-        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-amber-500" />
-        <p className="text-xs sm:text-sm text-slate-400">Chargement des candidatures...</p>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-amber-500/50"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: i * 0.2,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+        <p className="text-sm text-[#14532D]/60 font-medium">
+          Chargement des candidatures...
+        </p>
+      </div>
     );
   }
 
@@ -357,38 +318,23 @@ export const OpportunityApplicationsPage = () => {
 
   if (oppError || !opportunity) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-3 sm:px-4 py-12"
-      >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
-          >
-            <Building2 className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
-          </motion.div>
-          <p className="text-base sm:text-lg font-semibold text-white">Offre non trouvée</p>
-          <p className="text-xs sm:text-sm text-slate-400 mt-2">Vous n'avez pas accès à cette offre ou elle n'existe pas.</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="bg-white border border-rose-200 rounded-3xl p-8 sm:p-12 text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-200">
+            <Building2 className="w-10 h-10 text-rose-500" />
+          </div>
+          <p className="text-lg font-extrabold text-[#14532D]">Offre non trouvée</p>
+          <p className="text-sm text-[#14532D]/60 mt-2">
+            Vous n'avez pas accès à cette offre ou elle n'existe pas.
+          </p>
+          <button
             onClick={handleGoToDashboard}
-            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-xs sm:text-sm"
+            className="mt-6 px-8 py-3 bg-[#16A34A] text-white font-bold rounded-xl hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] transition-all"
           >
             Retour au dashboard
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -397,184 +343,140 @@ export const OpportunityApplicationsPage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative space-y-4 sm:space-y-6"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 10,
-            y: mousePosition.y * 10,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
+    <div className="max-w-6xl mx-auto space-y-6">
+
+      {/* ======================================================
+          NAVIGATION
+      ====================================================== */}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button
+            onClick={handleGoBack}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="hidden sm:inline">Retour</span>
+          </button>
+
+          <button
+            onClick={handleGoHome}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <Home className="h-4 w-4 text-[#16A34A]" />
+            <span className="hidden sm:inline">Accueil</span>
+          </button>
+
+          <button
+            onClick={handleGoToDashboard}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <Building2 className="h-4 w-4 text-[#16A34A]" />
+            <span className="hidden sm:inline">Dashboard</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)] self-start sm:self-auto">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+          </span>
+          <span className="text-xs text-[#14532D]/70 font-semibold">
+            Gestion des candidatures
+          </span>
+        </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8">
+      {/* ======================================================
+          DÉTAILS DE L'OFFRE
+      ====================================================== */}
 
-        {/* ======================================================
-            NAVIGATION
-        ====================================================== */}
+      <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
 
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-        >
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoBack}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-              <span className="hidden sm:inline">Retour</span>
-            </motion.button>
+        <div className="p-5 sm:p-6 md:p-8 space-y-6">
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoHome}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
-            >
-              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span className="hidden sm:inline">Accueil</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoToDashboard}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white"
-            >
-              <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="hidden sm:inline">Dashboard</span>
-            </motion.button>
-          </div>
-
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Gestion des candidatures</span>
-            <Crown className="w-3 h-3 text-amber-400" />
-          </div>
-        </motion.div>
-
-        {/* ======================================================
-            DÉTAILS DE L'OFFRE
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300 space-y-4 sm:space-y-6"
-        >
           <div className="flex flex-col gap-4">
-            <div className="space-y-2 sm:space-y-3 flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                <h1 className="text-lg sm:text-2xl lg:text-3xl font-black text-white break-words">
+            <div className="space-y-3 flex-1 min-w-0">
+
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#14532D] break-words">
                   {opportunity.title}
                 </h1>
+
                 {opportunity.status === 'active' && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-[10px] sm:text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1"
-                  >
+                  <span className="text-xs font-bold bg-[#F0FDF4] text-[#16A34A] border border-[#16A34A]/20 px-2.5 py-1 rounded-full flex items-center gap-1">
                     <CheckCircle className="w-3 h-3" />
                     Active
-                  </motion.span>
+                  </span>
                 )}
                 {opportunity.status === 'pending_review' && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1"
-                  >
+                  <span className="text-xs font-bold bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40 px-2.5 py-1 rounded-full flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     En attente
-                  </motion.span>
+                  </span>
                 )}
                 {opportunity.status === 'closed' && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-[10px] sm:text-xs font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1"
-                  >
+                  <span className="text-xs font-bold bg-slate-100 text-slate-500 border border-slate-200 px-2.5 py-1 rounded-full flex items-center gap-1">
                     <XCircle className="w-3 h-3" />
                     Fermée
-                  </motion.span>
+                  </span>
                 )}
                 {opportunity.is_urgent && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="text-[10px] sm:text-xs font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20 flex items-center gap-1"
-                  >
+                  <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 flex items-center gap-1">
                     <Zap className="w-3 h-3" /> Urgent
-                  </motion.span>
+                  </span>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-x-3 gap-y-2 text-[10px] sm:text-sm text-slate-400">
+              {/* Meta */}
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[#14532D]/60">
                 <span className="flex items-center gap-1.5">
-                  <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
-                  <span className="truncate">{opportunity.organization_name || 'Mon organisation'}</span>
+                  <Building2 className="w-4 h-4 text-[#16A34A] shrink-0" />
+                  <span className="truncate font-medium">
+                    {opportunity.organization_name || 'Mon organisation'}
+                  </span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
-                  <span className="truncate">{opportunity.city || opportunity.location || 'Non spécifié'}</span>
+                  <MapPin className="w-4 h-4 text-[#14532D]/40 shrink-0" />
+                  <span className="truncate">
+                    {opportunity.city || opportunity.location || 'Non spécifié'}
+                  </span>
                 </span>
                 {opportunity.salary_min && opportunity.salary_max && (
-                  <span className="flex items-center gap-1.5 text-amber-400 font-medium">
-                    <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+                  <span className="flex items-center gap-1.5 text-[#16A34A] font-bold">
+                    <TrendingUp className="w-4 h-4 shrink-0" />
                     <span className="truncate">
                       {opportunity.salary_min.toLocaleString()} - {opportunity.salary_max.toLocaleString()} FCFA
                     </span>
                   </span>
                 )}
                 {opportunity.is_remote && (
-                  <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  <span className="flex items-center gap-1 text-[#16A34A] bg-[#F0FDF4] px-2 py-0.5 rounded-full border border-[#16A34A]/20 font-semibold">
                     <Globe className="w-3 h-3" />
                     Télétravail
                   </span>
                 )}
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-500 shrink-0" />
-                  Publiée le {new Date(opportunity.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  <Calendar className="w-4 h-4 text-[#14532D]/40 shrink-0" />
+                  Publiée le{' '}
+                  {new Date(opportunity.created_at).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
                 </span>
               </div>
             </div>
 
-            {/* Actions sur l'offre : grid sur mobile */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 shrink-0">
+            {/* Actions sur l'offre */}
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 pt-4 border-t border-[#16A34A]/10">
               {opportunity.status === 'pending_review' && (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={handlePublish}
                   disabled={publishOpportunityMutation.isPending}
-                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-emerald-500/20 hover:border-emerald-500/40 flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50"
+                  className="px-4 py-2.5 bg-[#16A34A] text-white rounded-xl text-sm font-bold hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {publishOpportunityMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -582,16 +484,14 @@ export const OpportunityApplicationsPage = () => {
                     <CheckCircle className="w-4 h-4" />
                   )}
                   Publier
-                </motion.button>
+                </button>
               )}
 
               {opportunity.status === 'active' && (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={handleClose}
                   disabled={closeOpportunityMutation.isPending}
-                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-amber-500/20 hover:border-amber-500/40 flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50"
+                  className="px-4 py-2.5 bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40 rounded-xl text-sm font-bold hover:bg-[#FCD34D]/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {closeOpportunityMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -599,23 +499,21 @@ export const OpportunityApplicationsPage = () => {
                     <XCircle className="w-4 h-4" />
                   )}
                   Fermer
-                </motion.button>
+                </button>
               )}
 
               <Link
                 to={`/organization/opportunities/${opportunity.id}/edit`}
-                className="px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-blue-500/20 hover:border-blue-500/40 flex items-center justify-center gap-1.5 sm:gap-2"
+                className="px-4 py-2.5 bg-white border border-blue-200 text-blue-700 rounded-xl text-sm font-bold hover:bg-blue-50 transition-all flex items-center justify-center gap-2"
               >
                 <Edit2 className="w-4 h-4" />
                 Modifier
               </Link>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={handleDelete}
                 disabled={deleteOpportunityMutation.isPending}
-                className="px-3 sm:px-4 py-2 sm:py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 border border-rose-500/20 hover:border-rose-500/40 flex items-center justify-center gap-1.5 sm:gap-2 disabled:opacity-50"
+                className="px-4 py-2.5 bg-white border border-rose-200 text-rose-600 rounded-xl text-sm font-bold hover:bg-rose-50 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {deleteOpportunityMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -623,18 +521,18 @@ export const OpportunityApplicationsPage = () => {
                   <Trash2 className="w-4 h-4" />
                 )}
                 Supprimer
-              </motion.button>
+              </button>
             </div>
           </div>
 
           {/* Description */}
           {opportunity.description && (
-            <div className="pt-3 sm:pt-4 border-t border-slate-800">
-              <h2 className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
-                <FileText className="w-3.5 h-3.5 text-amber-400" />
+            <div className="pt-4 border-t border-[#16A34A]/10">
+              <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-3">
+                <FileText className="w-4 h-4 text-[#16A34A]" />
                 Description
               </h2>
-              <p className="text-xs sm:text-sm text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <p className="text-sm text-[#14532D]/80 whitespace-pre-wrap leading-relaxed">
                 {opportunity.description}
               </p>
             </div>
@@ -643,342 +541,312 @@ export const OpportunityApplicationsPage = () => {
           {/* Prérequis */}
           {opportunity.requirements && opportunity.requirements.length > 0 && (
             <div>
-              <h2 className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-2">
-                <Award className="w-3.5 h-3.5 text-amber-400" />
+              <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-3">
+                <Award className="w-4 h-4 text-[#16A34A]" />
                 Prérequis
               </h2>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
+              <div className="flex flex-wrap gap-2">
                 {opportunity.requirements.map((req: string, index: number) => (
-                  <motion.span
+                  <span
                     key={index}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="px-2 sm:px-3 py-0.5 sm:py-1 bg-slate-950/60 border border-slate-800 rounded-lg text-[10px] sm:text-xs text-slate-300"
+                    className="px-3 py-1.5 bg-[#F0FDF4] border border-[#16A34A]/15 rounded-lg text-xs text-[#14532D] font-medium"
                   >
                     {req}
-                  </motion.span>
+                  </span>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Stats rapides */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-slate-800">
-            <StatCard title="Total" value={stats.total} icon={Users} color="amber" />
-            <StatCard title="En attente" value={stats.pending} icon={Clock} color="blue" />
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-[#16A34A]/10">
+            <StatCard title="Total" value={stats.total} icon={Users} color="green" />
+            <StatCard title="En attente" value={stats.pending} icon={Clock} color="amber" />
             <StatCard title="Présélectionnés" value={stats.shortlisted} icon={Star} color="purple" />
-            <StatCard title="Acceptés" value={stats.accepted} icon={Award} color="emerald" />
+            <StatCard title="Acceptés" value={stats.accepted} icon={Award} color="green" />
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* ======================================================
-            LISTE DES CANDIDATURES
-        ====================================================== */}
+      {/* ======================================================
+          LISTE DES CANDIDATURES
+      ====================================================== */}
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-        >
-          <div className="flex flex-col gap-3 sm:gap-4 border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 shrink-0">
-                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-              </div>
-              <h2 className="text-base sm:text-lg font-bold text-white truncate">Candidatures reçues</h2>
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="text-[10px] sm:text-xs font-bold bg-amber-500/10 text-amber-400 px-2 sm:px-2.5 py-0.5 rounded-full border border-amber-500/20 shrink-0"
-              >
-                {applications.length}
-              </motion.span>
+      <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+
+        <div className="flex flex-col gap-4 border-b border-[#16A34A]/10 pb-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)]">
+              <Users className="w-5 h-5 text-white" />
             </div>
+            <h2 className="text-lg font-extrabold text-[#14532D] truncate">
+              Candidatures reçues
+            </h2>
+            <span className="text-xs font-extrabold bg-[#16A34A] text-white px-2.5 py-1 rounded-full shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]">
+              {applications.length}
+            </span>
+          </div>
 
-            <div className="flex items-center gap-2">
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="flex-1 sm:flex-none bg-slate-950/80 text-slate-300 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl border border-slate-800 text-xs sm:text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 cursor-pointer hover:border-slate-700"
-              >
-                <option value="">📊 Tous les statuts</option>
-                <option value="submitted">📩 En attente</option>
-                <option value="under_review">🔍 En examen</option>
-                <option value="shortlisted">⭐ Présélectionnée</option>
-                <option value="interview">📞 Entretien</option>
-                <option value="accepted">✅ Acceptée</option>
-                <option value="rejected">❌ Refusée</option>
-              </select>
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="w-full sm:w-auto bg-[#FAFAF9] text-[#14532D] px-4 py-2.5 rounded-xl border border-[#16A34A]/15 text-sm focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all cursor-pointer font-semibold"
+          >
+            <option value="">Tous les statuts</option>
+            <option value="submitted">En attente</option>
+            <option value="under_review">En examen</option>
+            <option value="shortlisted">Présélectionnée</option>
+            <option value="interview">Entretien</option>
+            <option value="accepted">Acceptée</option>
+            <option value="rejected">Refusée</option>
+          </select>
+        </div>
+
+        {/* Recherche */}
+        <div className="relative mt-4">
+          <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#14532D]/40" />
+          <input
+            type="text"
+            placeholder="Rechercher un candidat..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-[#FAFAF9] text-[#14532D] pl-11 pr-4 py-3 rounded-xl border border-[#16A34A]/15 focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 focus:bg-white transition-all text-sm placeholder-[#14532D]/30 font-medium"
+          />
+        </div>
+
+        {filteredApplications.length === 0 ? (
+          <div className="text-center py-16 mt-4">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+              <Users className="w-10 h-10 text-[#16A34A]/40" />
             </div>
+            <p className="text-lg font-extrabold text-[#14532D]">
+              {searchTerm || selectedStatus
+                ? 'Aucun candidat ne correspond à vos filtres'
+                : 'Aucune candidature reçue'}
+            </p>
+            <p className="text-sm text-[#14532D]/60 mt-1">
+              {searchTerm || selectedStatus
+                ? 'Essayez de modifier vos filtres de recherche'
+                : "Partagez l'offre pour attirer des candidats au Niger."}
+            </p>
           </div>
-
-          {/* Recherche */}
-          <div className="relative mt-3 sm:mt-4">
-            <Search className="w-4 h-4 absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-            <input
-              type="text"
-              placeholder="Rechercher un candidat..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-950/80 text-white pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 text-xs sm:text-sm placeholder:text-slate-600"
-            />
-          </div>
-
-          <AnimatePresence mode="wait">
-            {filteredApplications.length === 0 ? (
-              <motion.div
-                key="empty"
-                variants={fadeInScale}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="text-center py-10 sm:py-16 text-slate-400 px-4"
+        ) : (
+          <div className="mt-4 space-y-3">
+            {filteredApplications.map((app: any) => (
+              <div
+                key={app.id}
+                className={`bg-[#FAFAF9] border rounded-xl overflow-hidden transition-all ${
+                  expandedApplication === app.id
+                    ? 'border-[#16A34A]/40 bg-white'
+                    : 'border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-white'
+                }`}
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-slate-800/50 flex items-center justify-center">
-                  <Users className="w-7 h-7 sm:w-8 sm:h-8 text-slate-600" />
-                </div>
-                <p className="text-base sm:text-lg font-semibold text-white">
-                  {searchTerm || selectedStatus ? 'Aucun candidat ne correspond à vos filtres' : 'Aucune candidature reçue'}
-                </p>
-                <p className="text-xs sm:text-sm mt-1">
-                  {searchTerm || selectedStatus
-                    ? 'Essayez de modifier vos filtres de recherche'
-                    : 'Partagez l\'offre pour attirer des candidats au Niger.'}
-                </p>
-              </motion.div>
-            ) : (
-              <motion.div
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
-                className="mt-3 sm:mt-4 space-y-2 sm:space-y-3"
-              >
-                {filteredApplications.map((app: any, index: number) => (
-                  <motion.div
-                    key={app.id}
-                    variants={tableRowVariants}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ delay: index * 0.03 }}
-                    whileHover="hover"
-                    className={`bg-slate-950/50 border rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5 ${
-                      expandedApplication === app.id
-                        ? 'border-amber-500/40'
-                        : 'border-slate-800 hover:border-amber-500/20'
-                    }`}
-                  >
-                    {/* En-tête cliquable */}
-                    <div
-                      className="p-3 sm:p-4 cursor-pointer hover:bg-slate-900/30 transition-colors duration-200"
-                      onClick={() => handleToggleExpand(app.id)}
-                    >
-                      <div className="flex items-start sm:items-center justify-between gap-3">
-                        <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs sm:text-sm shrink-0"
-                          >
-                            {app.candidate_details?.first_name?.[0] || 'C'}
-                          </motion.div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-semibold text-white text-xs sm:text-sm group-hover:text-amber-400 transition-colors truncate">
-                                {app.candidate_details?.first_name || 'Candidat'} {app.candidate_details?.last_name || ''}
-                              </span>
-                              <StatusBadge status={app.status} />
-                            </div>
-                            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] sm:text-xs text-slate-400 mt-0.5">
-                              <span className="flex items-center gap-1 min-w-0">
-                                <Mail className="w-3 h-3 shrink-0" />
-                                <span className="truncate max-w-[180px] sm:max-w-none">
-                                  {app.candidate_details?.email || 'Email non disponible'}
-                                </span>
-                              </span>
-                              <span className="flex items-center gap-1 shrink-0">
-                                <Calendar className="w-3 h-3" />
-                                {new Date(app.submitted_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                              </span>
-                            </div>
-                          </div>
+                {/* En-tête cliquable */}
+                <div
+                  className="p-4 cursor-pointer"
+                  onClick={() => handleToggleExpand(app.id)}
+                >
+                  <div className="flex items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)]">
+                        {(app.candidate_details?.first_name?.[0] || 'C').toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-extrabold text-[#14532D] text-sm truncate">
+                            {app.candidate_details?.first_name || 'Candidat'}{' '}
+                            {app.candidate_details?.last_name || ''}
+                          </span>
+                          <StatusBadge status={app.status} />
                         </div>
-
-                        <div className="flex items-center gap-2 shrink-0">
-                          <motion.div
-                            animate={{ rotate: expandedApplication === app.id ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <ChevronDown className="w-4 h-4 text-slate-400" />
-                          </motion.div>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#14532D]/60 mt-1">
+                          <span className="flex items-center gap-1 min-w-0">
+                            <Mail className="w-3 h-3 shrink-0 text-[#16A34A]" />
+                            <span className="truncate max-w-[200px]">
+                              {app.candidate_details?.email || 'Email non disponible'}
+                            </span>
+                          </span>
+                          <span className="flex items-center gap-1 shrink-0">
+                            <Calendar className="w-3 h-3" />
+                            {new Date(app.submitted_at).toLocaleDateString('fr-FR', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })}
+                          </span>
                         </div>
                       </div>
                     </div>
+                    <ChevronDown
+                      className={`w-4 h-4 text-[#14532D]/40 shrink-0 transition-transform ${
+                        expandedApplication === app.id ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </div>
+                </div>
 
-                    {/* Détails étendus */}
-                    <AnimatePresence>
-                      {expandedApplication === app.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className="border-t border-slate-800 p-3 sm:p-4 bg-slate-900/30 overflow-hidden"
+                {/* Détails étendus */}
+                {expandedApplication === app.id && (
+                  <div className="border-t border-[#16A34A]/10 p-4 bg-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                      {/* Colonne gauche */}
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2">
+                          <User className="w-3.5 h-3.5 text-[#16A34A]" />
+                          Informations
+                        </h4>
+                        <div className="space-y-2 text-sm">
+                          {app.candidate_details?.phone && (
+                            <p className="flex items-center gap-2 text-[#14532D]/80">
+                              <Phone className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                              <span className="truncate">{app.candidate_details.phone}</span>
+                            </p>
+                          )}
+                          {app.candidate_details?.city && (
+                            <p className="flex items-center gap-2 text-[#14532D]/80">
+                              <MapPin className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                              <span className="truncate">
+                                {app.candidate_details.city}
+                                {app.candidate_details.country &&
+                                  `, ${app.candidate_details.country}`}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+
+                        {app.cover_note && (
+                          <div>
+                            <h5 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider">
+                              Lettre de motivation
+                            </h5>
+                            <p className="text-xs text-[#14532D]/70 bg-[#FAFAF9] p-3 rounded-lg border border-[#16A34A]/10 mt-1.5 leading-relaxed">
+                              {app.cover_note}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Colonne droite */}
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2">
+                          <Briefcase className="w-3.5 h-3.5 text-[#16A34A]" />
+                          Compétences & CV
+                        </h4>
+
+                        {app.candidate_details?.skills &&
+                          app.candidate_details.skills.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {app.candidate_details.skills.slice(0, 6).map((skill: any) => (
+                                <span
+                                  key={skill.id}
+                                  className="text-[10px] bg-[#F0FDF4] text-[#16A34A] px-2 py-0.5 rounded-full border border-[#16A34A]/20 font-semibold"
+                                >
+                                  {skill.name}
+                                </span>
+                              ))}
+                              {app.candidate_details.skills.length > 6 && (
+                                <span className="text-[10px] text-[#14532D]/40">
+                                  +{app.candidate_details.skills.length - 6}
+                                </span>
+                              )}
+                            </div>
+                          )}
+
+                        {app.documents && app.documents.length > 0 && (
+                          <div className="flex flex-wrap gap-2">
+                            {app.documents.map((doc: any) => (
+                              <a
+                                key={doc.id}
+                                href={`/api/v1/documents/${doc.document}/download/`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-[#16A34A] hover:text-[#15803D] transition-colors flex items-center gap-1.5 bg-[#F0FDF4] px-3 py-1.5 rounded-lg border border-[#16A34A]/20 hover:border-[#16A34A]/40 font-semibold"
+                              >
+                                <FileText className="w-3 h-3 shrink-0" />
+                                <span className="truncate max-w-[100px]">
+                                  {doc.document_name || 'CV'}
+                                </span>
+                                <Download className="w-3 h-3 shrink-0" />
+                              </a>
+                            ))}
+                          </div>
+                        )}
+
+                        <Link
+                          to={`/profile/${app.candidate}`}
+                          className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 transition-colors font-semibold group/link"
                         >
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Colonne de gauche */}
-                            <div className="space-y-3">
-                              <h4 className="text-[10px] sm:text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                                <User className="w-3.5 h-3.5" />
-                                Informations
-                              </h4>
-                              <div className="space-y-1.5 text-xs sm:text-sm">
-                                {app.candidate_details?.phone && (
-                                  <p className="flex items-center gap-2 text-slate-300">
-                                    <Phone className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                                    <span className="truncate">{app.candidate_details.phone}</span>
-                                  </p>
-                                )}
-                                {app.candidate_details?.city && (
-                                  <p className="flex items-center gap-2 text-slate-300">
-                                    <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                                    <span className="truncate">
-                                      {app.candidate_details.city}
-                                      {app.candidate_details.country && `, ${app.candidate_details.country}`}
-                                    </span>
-                                  </p>
-                                )}
-                              </div>
+                          <ExternalLink className="w-3 h-3 group-hover/link:scale-110 transition-transform" />
+                          Voir le profil complet
+                          <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
 
-                              {app.cover_note && (
-                                <div>
-                                  <h5 className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                                    Lettre de motivation
-                                  </h5>
-                                  <p className="text-xs text-slate-300 bg-slate-950/60 p-2.5 sm:p-3 rounded-lg border border-slate-800 mt-1 leading-relaxed">
-                                    {app.cover_note}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Colonne de droite */}
-                            <div className="space-y-3">
-                              <h4 className="text-[10px] sm:text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                                <Briefcase className="w-3.5 h-3.5" />
-                                Compétences & CV
-                              </h4>
-
-                              {app.candidate_details?.skills && app.candidate_details.skills.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5">
-                                  {app.candidate_details.skills.slice(0, 6).map((skill: any) => (
-                                    <span key={skill.id} className="text-[10px] bg-slate-800/60 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700">
-                                      {skill.name}
-                                    </span>
-                                  ))}
-                                  {app.candidate_details.skills.length > 6 && (
-                                    <span className="text-[10px] text-slate-500">+{app.candidate_details.skills.length - 6}</span>
-                                  )}
-                                </div>
-                              )}
-
-                              {app.documents && app.documents.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
-                                  {app.documents.map((doc: any) => (
-                                    <a
-                                      key={doc.id}
-                                      href={`/api/v1/documents/${doc.document}/download/`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 bg-slate-950/60 px-2 sm:px-3 py-1.5 rounded-lg border border-slate-800 hover:border-amber-500/30"
-                                    >
-                                      <FileText className="w-3 h-3 shrink-0" />
-                                      <span className="truncate max-w-[100px]">{doc.document_name || 'CV'}</span>
-                                      <Download className="w-3 h-3 shrink-0" />
-                                    </a>
-                                  ))}
-                                </div>
-                              )}
-
-                              <Link
-                                to={`/profile/${app.candidate}`}
-                                className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-blue-400 hover:text-blue-300 transition-colors group/link"
-                              >
-                                <ExternalLink className="w-3 h-3 group-hover/link:scale-110 transition-transform" />
-                                Voir le profil complet
-                                <ChevronRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                              </Link>
-                            </div>
-                          </div>
-
-                          {/* Actions */}
-                          <div className="mt-3 sm:mt-4 pt-3 border-t border-slate-800 flex flex-col xs:flex-row items-start xs:items-center gap-2 sm:gap-3">
-                            <div className="flex items-center gap-2 w-full xs:w-auto">
-                              <span className="text-[10px] sm:text-xs text-slate-400 shrink-0">Statut :</span>
-                              <select
-                                value={app.status}
-                                onChange={(e) => {
-                                  updateStatusMutation.mutate({
-                                    applicationId: app.id,
-                                    status: e.target.value as ApplicationStatus,
-                                  });
-                                }}
-                                disabled={updateStatusMutation.isPending}
-                                className="flex-1 xs:flex-none bg-slate-950/80 text-white px-2 sm:px-3 py-1.5 rounded-lg border border-slate-800 text-[10px] sm:text-xs focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 disabled:opacity-50 cursor-pointer hover:border-slate-700"
-                              >
-                                <option value="submitted">📩 En attente</option>
-                                <option value="under_review">🔍 En examen</option>
-                                <option value="shortlisted">⭐ Présélectionner</option>
-                                <option value="interview">📞 Entretien</option>
-                                <option value="accepted">✅ Accepter</option>
-                                <option value="rejected">❌ Refuser</option>
-                              </select>
-                            </div>
-                            {updateStatusMutation.isPending && (
-                              <Loader2 className="w-3 h-3 animate-spin text-amber-500" />
-                            )}
-                          </div>
-                        </motion.div>
+                    {/* Actions */}
+                    <div className="mt-4 pt-4 border-t border-[#16A34A]/10 flex flex-col xs:flex-row items-start xs:items-center gap-3">
+                      <div className="flex items-center gap-2 w-full xs:w-auto">
+                        <span className="text-xs text-[#14532D]/50 shrink-0 font-semibold">
+                          Statut :
+                        </span>
+                        <select
+                          value={app.status}
+                          onChange={(e) => {
+                            updateStatusMutation.mutate({
+                              applicationId: app.id,
+                              status: e.target.value as ApplicationStatus,
+                            });
+                          }}
+                          disabled={updateStatusMutation.isPending}
+                          className="flex-1 xs:flex-none bg-[#FAFAF9] text-[#14532D] px-3 py-2 rounded-lg border border-[#16A34A]/15 text-xs focus:outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all disabled:opacity-50 cursor-pointer font-semibold"
+                        >
+                          <option value="submitted">En attente</option>
+                          <option value="under_review">En examen</option>
+                          <option value="shortlisted">Présélectionner</option>
+                          <option value="interview">Entretien</option>
+                          <option value="accepted">Accepter</option>
+                          <option value="rejected">Refuser</option>
+                        </select>
+                      </div>
+                      {updateStatusMutation.isPending && (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#16A34A]" />
                       )}
-                    </AnimatePresence>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* ======================================================
-            FOOTER
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-        >
-          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-            <span className="text-slate-500 truncate max-w-[200px] sm:max-w-none">
-              <span className="text-amber-400 font-medium truncate">{opportunity.title}</span> • Candidatures
-            </span>
-            <span className="hidden xs:block w-px h-4 bg-slate-800" />
-            <span className="flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé - Niger</span>
-            </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-amber-400" />
-              v1.0.0
-            </span>
-            <span className="w-px h-4 bg-slate-800" />
-            <span>Gestion des candidatures</span>
-          </div>
-        </motion.div>
-
+        )}
       </div>
-    </motion.div>
+
+      {/* ======================================================
+          FOOTER
+      ====================================================== */}
+
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span className="truncate max-w-[220px] sm:max-w-none">
+            <span className="text-[#16A34A] font-bold truncate">{opportunity.title}</span> • Candidatures
+          </span>
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
+          <span className="flex items-center gap-1.5">
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            v1.0.0
+          </span>
+          <span className="w-px h-4 bg-[#16A34A]/20" />
+          <span>Gestion des candidatures</span>
+        </div>
+      </div>
+
+    </div>
   );
 };
 

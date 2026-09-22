@@ -28,10 +28,7 @@ import {
   Globe,
   ArrowLeft,
   Home,
-  Sparkles,
   Award,
-  Star,
-  Zap,
   Shield,
   Activity,
   Crown,
@@ -39,21 +36,15 @@ import {
   CheckCircle2,
   AlertCircle,
   Calendar,
-  Building2,
-  AtSign,
-  Link2,
   Copy,
-  Eye,
-  Heart,
-  Share2,
   Settings,
   Bell,
   HelpCircle,
-  Camera
+  Camera,
+  Zap,
 } from 'lucide-react';
 
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
 
 import { profileApi } from '../api/profile';
 import { documentsApi } from '../api/documents';
@@ -68,45 +59,6 @@ import {
   LanguageLevel,
   UserDocument,
 } from '../types';
-
-// ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const slideInLeft = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-const slideInRight = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-const statCardVariants = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 },
-  hover: { scale: 1.02, transition: { type: "spring", stiffness: 400, damping: 17 } }
-};
 
 // ==========================================================
 // TYPES LOCAUX
@@ -142,59 +94,33 @@ type LanguageForm = {
 
 const getErrorMessage = (error: any, fallback: string) => {
   console.error('❌ Erreur complète:', error);
-  console.error('❌ Response:', error?.response);
-  console.error('❌ Response data:', error?.response?.data);
-
   const data = error?.response?.data;
 
-  if (!data) {
-    return fallback;
-  }
+  if (!data) return fallback;
 
   if (data.errors) {
     const messages = Object.values(data.errors).flat();
     return messages.join(' ');
   }
 
-  if (typeof data === 'string') {
-    return data;
-  }
-
-  if (data.detail) {
-    return data.detail;
-  }
-
-  if (data.message) {
-    return data.message;
-  }
-
-  if (data.non_field_errors?.length) {
-    return data.non_field_errors[0];
-  }
+  if (typeof data === 'string') return data;
+  if (data.detail) return data.detail;
+  if (data.message) return data.message;
+  if (data.non_field_errors?.length) return data.non_field_errors[0];
 
   const firstKey = Object.keys(data)[0];
   if (firstKey) {
     const value = data[firstKey];
-    if (Array.isArray(value)) {
-      return `${firstKey}: ${value.join(' ')}`;
-    }
-    if (typeof value === 'string') {
-      return `${firstKey}: ${value}`;
-    }
+    if (Array.isArray(value)) return `${firstKey}: ${value.join(' ')}`;
+    if (typeof value === 'string') return `${firstKey}: ${value}`;
   }
 
   return fallback;
 };
 
 const normalizeList = <T,>(data: any): T[] => {
-  if (Array.isArray(data)) {
-    return data;
-  }
-
-  if (Array.isArray(data?.results)) {
-    return data.results;
-  }
-
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.results)) return data.results;
   return [];
 };
 
@@ -209,12 +135,7 @@ const cleanExperienceData = (form: ExperienceForm) => {
   if (form.location?.trim()) data.location = form.location.trim();
   if (form.description?.trim()) data.description = form.description.trim();
 
-  if (!form.is_current) {
-    data.end_date = form.end_date || null;
-  } else {
-    data.end_date = null;
-  }
-
+  data.end_date = !form.is_current ? form.end_date || null : null;
   return data;
 };
 
@@ -228,21 +149,14 @@ const cleanEducationData = (form: EducationForm) => {
 
   if (form.field_of_study?.trim()) data.field_of_study = form.field_of_study.trim();
 
-  if (!form.is_current) {
-    data.end_date = form.end_date || null;
-  } else {
-    data.end_date = null;
-  }
-
+  data.end_date = !form.is_current ? form.end_date || null : null;
   return data;
 };
 
-const cleanLanguageData = (form: LanguageForm) => {
-  return {
-    name: form.name.trim(),
-    level: form.level,
-  };
-};
+const cleanLanguageData = (form: LanguageForm) => ({
+  name: form.name.trim(),
+  level: form.level,
+});
 
 // ==========================================================
 // VALEURS INITIALES
@@ -276,49 +190,66 @@ const emptyLanguageForm: LanguageForm = {
 // COMPOSANTS
 // ==========================================================
 
-const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => (
-  <motion.div
-    variants={statCardVariants}
-    initial="initial"
-    animate="animate"
-    whileHover="hover"
-    className="relative group bg-slate-900/80 border border-slate-800 p-4 rounded-2xl transition-all duration-300 hover:border-slate-700 hover:shadow-xl hover:shadow-slate-900/50 cursor-pointer overflow-hidden"
-  >
-    <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-    <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${color}-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700`} />
+const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => {
+  const colorMap: any = {
+    green: {
+      bar: 'bg-[#16A34A]',
+      iconBg: 'bg-gradient-to-br from-[#16A34A] to-[#15803D]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]',
+    },
+    amber: {
+      bar: 'bg-[#FCD34D]',
+      iconBg: 'bg-gradient-to-br from-[#FCD34D] to-[#EAB308]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)]',
+    },
+    blue: {
+      bar: 'bg-blue-500',
+      iconBg: 'bg-gradient-to-br from-blue-500 to-blue-600',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(59,130,246,0.3)]',
+    },
+    purple: {
+      bar: 'bg-purple-500',
+      iconBg: 'bg-gradient-to-br from-purple-500 to-purple-600',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(168,85,247,0.3)]',
+    },
+  };
+  const c = colorMap[color] || colorMap.green;
 
-    <div className="relative z-10">
-      <div className="flex items-center justify-between mb-2 gap-2">
-        <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500 truncate">
-          {title}
-        </span>
-        <div className={`p-1.5 sm:p-2 rounded-xl bg-${color}-500/10 text-${color}-400 group-hover:scale-110 transition-transform duration-300 shrink-0`}>
-          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+  return (
+    <div className="group relative bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#16A34A]/20 hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.15)] hover:-translate-y-1">
+      <div className={`h-1 ${c.bar}`} />
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3 gap-2">
+          <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${c.iconBg} ${c.shadow} group-hover:scale-105 transition-transform shrink-0`}>
+            <Icon className="w-5 h-5 text-white" />
+          </div>
         </div>
+        <div className="text-xs font-semibold uppercase tracking-wider text-[#14532D]/50 mb-1 truncate">
+          {title}
+        </div>
+        <div className="text-2xl font-extrabold text-[#14532D] tracking-tight">
+          {value}
+        </div>
+        {subtitle && (
+          <div className="text-xs text-[#14532D]/50 mt-1 line-clamp-2">{subtitle}</div>
+        )}
       </div>
-      <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
-        {value}
-      </div>
-      {subtitle && (
-        <div className="mt-1 text-[10px] sm:text-xs text-slate-500 line-clamp-2">{subtitle}</div>
-      )}
-      <div className="mt-3 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-${color}-500 to-transparent transition-all duration-700" />
     </div>
-  </motion.div>
-);
+  );
+};
 
 const LevelBadge = ({ level }: { level: LanguageLevel }) => {
   const levels = {
-    basic: { label: 'Notions', color: 'text-slate-400 bg-slate-500/10 border-slate-500/20' },
-    intermediate: { label: 'Intermédiaire', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-    fluent: { label: 'Courant', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
-    native: { label: 'Maternelle', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
+    basic: { label: 'Notions', color: 'text-slate-600 bg-slate-100 border-slate-200' },
+    intermediate: { label: 'Intermédiaire', color: 'text-blue-700 bg-blue-50 border-blue-200' },
+    fluent: { label: 'Courant', color: 'text-[#16A34A] bg-[#F0FDF4] border-[#16A34A]/20' },
+    native: { label: 'Maternelle', color: 'text-[#B88400] bg-[#FEF3C7] border-[#FCD34D]/40' },
   };
 
   const config = levels[level] || levels.intermediate;
 
   return (
-    <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${config.color}`}>
+    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${config.color}`}>
       {config.label}
     </span>
   );
@@ -332,22 +263,6 @@ export const CandidateProfilePage = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // ETATS
@@ -408,7 +323,7 @@ export const CandidateProfilePage = () => {
   const documents = documentsData ?? [];
 
   // ==========================================================
-  // SYNCHRONISATION DU FORMULAIRE PROFIL
+  // SYNCHRONISATION DU FORMULAIRE
   // ==========================================================
 
   useEffect(() => {
@@ -431,7 +346,7 @@ export const CandidateProfilePage = () => {
   const updateProfileMutation = useMutation({
     mutationFn: (data: Partial<CandidateProfile>) => profileApi.updateProfile(data),
     onSuccess: () => {
-      toast.success('Profil mis à jour avec succès.');
+      toast.success('Profil mis à jour');
       setIsEditingProfile(false);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
@@ -443,7 +358,7 @@ export const CandidateProfilePage = () => {
   const addExperienceMutation = useMutation({
     mutationFn: (data: Omit<Experience, 'id'>) => profileApi.addExperience(data),
     onSuccess: () => {
-      toast.success('Expérience ajoutée avec succès.');
+      toast.success('Expérience ajoutée');
       setExperienceForm(emptyExperienceForm);
       setShowExperienceForm(false);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -457,7 +372,7 @@ export const CandidateProfilePage = () => {
     mutationFn: ({ id, data }: { id: number; data: Partial<Experience> }) =>
       profileApi.updateExperience(id, data),
     onSuccess: () => {
-      toast.success('Expérience modifiée avec succès.');
+      toast.success('Expérience modifiée');
       setEditingExperienceId(null);
       setExperienceForm(emptyExperienceForm);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -470,7 +385,7 @@ export const CandidateProfilePage = () => {
   const deleteExperienceMutation = useMutation({
     mutationFn: (id: number) => profileApi.deleteExperience(id),
     onSuccess: () => {
-      toast.success('Expérience supprimée.');
+      toast.success('Expérience supprimée');
       queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
     onError: (error: any) => {
@@ -481,7 +396,7 @@ export const CandidateProfilePage = () => {
   const addEducationMutation = useMutation({
     mutationFn: (data: Omit<Education, 'id'>) => profileApi.addEducation(data),
     onSuccess: () => {
-      toast.success('Formation ajoutée avec succès.');
+      toast.success('Formation ajoutée');
       setEducationForm(emptyEducationForm);
       setShowEducationForm(false);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -495,7 +410,7 @@ export const CandidateProfilePage = () => {
     mutationFn: ({ id, data }: { id: number; data: Partial<Education> }) =>
       profileApi.updateEducation(id, data),
     onSuccess: () => {
-      toast.success('Formation modifiée avec succès.');
+      toast.success('Formation modifiée');
       setEditingEducationId(null);
       setEducationForm(emptyEducationForm);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -508,7 +423,7 @@ export const CandidateProfilePage = () => {
   const deleteEducationMutation = useMutation({
     mutationFn: (id: number) => profileApi.deleteEducation(id),
     onSuccess: () => {
-      toast.success('Formation supprimée.');
+      toast.success('Formation supprimée');
       queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
     onError: (error: any) => {
@@ -519,7 +434,7 @@ export const CandidateProfilePage = () => {
   const addLanguageMutation = useMutation({
     mutationFn: (data: Omit<Language, 'id'>) => profileApi.addLanguage(data),
     onSuccess: () => {
-      toast.success('Langue ajoutée avec succès.');
+      toast.success('Langue ajoutée');
       setLanguageForm(emptyLanguageForm);
       setShowLanguageForm(false);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -533,7 +448,7 @@ export const CandidateProfilePage = () => {
     mutationFn: ({ id, data }: { id: number; data: Partial<Language> }) =>
       profileApi.updateLanguage(id, data),
     onSuccess: () => {
-      toast.success('Langue modifiée avec succès.');
+      toast.success('Langue modifiée');
       setEditingLanguageId(null);
       setLanguageForm(emptyLanguageForm);
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -546,7 +461,7 @@ export const CandidateProfilePage = () => {
   const deleteLanguageMutation = useMutation({
     mutationFn: (id: number) => profileApi.deleteLanguage(id),
     onSuccess: () => {
-      toast.success('Langue supprimée.');
+      toast.success('Langue supprimée');
       queryClient.invalidateQueries({ queryKey: ['profile'] });
     },
     onError: (error: any) => {
@@ -558,7 +473,7 @@ export const CandidateProfilePage = () => {
     mutationFn: ({ file, type }: { file: File; type: DocumentType }) =>
       documentsApi.upload(file, type),
     onSuccess: () => {
-      toast.success('Document téléversé avec succès.');
+      toast.success('Document téléversé');
       queryClient.invalidateQueries({ queryKey: ['documents'] });
     },
     onError: (error: any) => {
@@ -569,7 +484,7 @@ export const CandidateProfilePage = () => {
   const deleteDocMutation = useMutation({
     mutationFn: (id: number) => documentsApi.delete(id),
     onSuccess: () => {
-      toast.success('Document supprimé.');
+      toast.success('Document supprimé');
       queryClient.invalidateQueries({ queryKey: ['documents'] });
     },
     onError: (error: any) => {
@@ -592,14 +507,10 @@ export const CandidateProfilePage = () => {
     if (user?.email) {
       navigator.clipboard.writeText(user.email);
       setIsCopied(true);
-      toast.success('Email copié !');
+      toast.success('Email copié');
       setTimeout(() => setIsCopied(false), 3000);
     }
   };
-
-  // ==========================================================
-  // HANDLERS EXPERIENCE
-  // ==========================================================
 
   const handleExperienceSubmit = () => {
     if (!experienceForm.title.trim()) {
@@ -643,10 +554,6 @@ export const CandidateProfilePage = () => {
     setShowExperienceForm(false);
   };
 
-  // ==========================================================
-  // HANDLERS EDUCATION
-  // ==========================================================
-
   const handleEducationSubmit = () => {
     if (!educationForm.degree.trim()) {
       toast.error('Veuillez renseigner le diplôme.');
@@ -688,10 +595,6 @@ export const CandidateProfilePage = () => {
     setShowEducationForm(false);
   };
 
-  // ==========================================================
-  // HANDLERS LANGUAGE
-  // ==========================================================
-
   const handleLanguageSubmit = () => {
     if (!languageForm.name.trim()) {
       toast.error('Veuillez renseigner la langue.');
@@ -720,10 +623,6 @@ export const CandidateProfilePage = () => {
     setLanguageForm(emptyLanguageForm);
     setShowLanguageForm(false);
   };
-
-  // ==========================================================
-  // HANDLER UPLOAD
-  // ==========================================================
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -783,31 +682,12 @@ export const CandidateProfilePage = () => {
 
   if (isProfileLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
-      >
-        <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-        <p className="text-sm text-slate-400">Chargement de votre profil...</p>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-amber-500/50"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: i * 0.2,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+        <p className="text-sm text-[#14532D]/60 font-medium">
+          Chargement de votre profil...
+        </p>
+      </div>
     );
   }
 
@@ -817,26 +697,22 @@ export const CandidateProfilePage = () => {
 
   if (isProfileError || !profile) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-3xl mx-auto px-3 sm:px-4 py-12"
-      >
-        <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-6 sm:p-8 text-center backdrop-blur-xl">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
-            <AlertCircle className="w-7 h-7 sm:w-8 sm:h-8 text-rose-400" />
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <div className="bg-white border border-rose-200 rounded-3xl p-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-200">
+            <AlertCircle className="w-8 h-8 text-rose-500" />
           </div>
-          <p className="text-base sm:text-lg font-semibold text-white">Impossible de charger votre profil.</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <p className="text-lg font-extrabold text-[#14532D]">
+            Impossible de charger votre profil.
+          </p>
+          <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ['profile'] })}
-            className="mt-4 rounded-xl bg-slate-800 px-5 sm:px-6 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
+            className="mt-4 rounded-xl bg-[#16A34A] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] transition-all"
           >
             Réessayer
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -845,356 +721,263 @@ export const CandidateProfilePage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative space-y-4 sm:space-y-6"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 10,
-            y: mousePosition.y * 10,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-      </div>
+    <div className="space-y-4 sm:space-y-6">
 
       {/* ======================================================
           BARRE DE NAVIGATION
       ====================================================== */}
 
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={handleGoBack}
-            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
           >
-            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             <span className="hidden sm:inline">Retour</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={handleGoHome}
-            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
           >
-            <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
+            <Home className="h-4 w-4 text-[#16A34A]" />
             <span className="hidden sm:inline">Accueil</span>
-          </motion.button>
+          </button>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 self-start sm:self-auto">
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Mon profil</span>
-            <Crown className="w-3 h-3 text-amber-400" />
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+            </span>
+            <span className="text-xs text-[#14532D]/70 font-semibold">Mon profil</span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           EN-TÊTE PROFIL
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-      >
-        <div className="flex flex-col lg:flex-row lg:items-center gap-5 sm:gap-6">
-          {/* Avatar */}
-          <motion.div
-            className="relative shrink-0 self-start lg:self-center"
-            onMouseEnter={() => setIsHoveringAvatar(true)}
-            onMouseLeave={() => setIsHoveringAvatar(false)}
-          >
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border-2 border-amber-500/30 flex items-center justify-center text-2xl sm:text-3xl font-bold text-amber-400 shadow-xl shadow-amber-500/10 relative overflow-hidden"
+      <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+
+        <div className="p-5 sm:p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-6">
+            {/* Avatar */}
+            <div
+              className="relative shrink-0 self-start lg:self-center"
+              onMouseEnter={() => setIsHoveringAvatar(true)}
+              onMouseLeave={() => setIsHoveringAvatar(false)}
             >
-              {profile.first_name?.[0]?.toUpperCase() || profile.last_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'C'}
-              <AnimatePresence>
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center text-3xl font-extrabold text-white shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] relative overflow-hidden">
+                {profile.first_name?.[0]?.toUpperCase() || profile.last_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'C'}
                 {isHoveringAvatar && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute inset-0 bg-slate-950/80 flex items-center justify-center"
-                  >
-                    <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400" />
-                  </motion.div>
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
                 )}
-              </AnimatePresence>
-            </motion.div>
-            <motion.div
-              className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900"
-              animate={{
-                scale: [1, 1.2, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          </motion.div>
+              </div>
+              <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#16A34A] border-2 border-white" />
+            </div>
 
-          {/* Informations */}
-          <div className="flex-1 min-w-0 w-full">
-            {isEditingProfile ? (
-              <motion.div
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
-                className="space-y-3 sm:space-y-4"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <motion.input
-                    variants={fadeInUp}
-                    type="text"
-                    value={editForm.first_name}
-                    onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
-                    placeholder="Prénom"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                  />
-                  <motion.input
-                    variants={fadeInUp}
-                    type="text"
-                    value={editForm.last_name}
-                    onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
-                    placeholder="Nom"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                  />
-                </div>
-
-                <motion.div
-                  variants={fadeInUp}
-                  className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-3 sm:px-4 py-3"
-                >
-                  <Mail className="h-4 w-4 shrink-0 text-slate-500" />
-                  <span className="text-xs sm:text-sm text-slate-400 truncate">{user?.email}</span>
-                </motion.div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <motion.div variants={fadeInUp} className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 shrink-0 text-slate-500" />
+            {/* Infos */}
+            <div className="flex-1 min-w-0 w-full">
+              {isEditingProfile ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
                       type="text"
-                      value={editForm.phone}
-                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                      placeholder="Téléphone"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      value={editForm.first_name}
+                      onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
+                      placeholder="Prénom"
+                      className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
                     />
-                  </motion.div>
-                  <motion.div variants={fadeInUp} className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 shrink-0 text-slate-500" />
                     <input
                       type="text"
-                      value={editForm.city}
-                      onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
-                      placeholder="Ville"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      value={editForm.last_name}
+                      onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
+                      placeholder="Nom"
+                      className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
                     />
-                  </motion.div>
-                </div>
+                  </div>
 
-                <motion.div variants={fadeInUp} className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 shrink-0 text-slate-500" />
-                  <input
-                    type="text"
-                    value={editForm.country}
-                    onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
-                    placeholder="Pays"
-                    className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                  <div className="flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-[#FAFAF9] px-4 py-3">
+                    <Mail className="h-4 w-4 shrink-0 text-[#16A34A]" />
+                    <span className="text-sm text-[#14532D]/70 truncate">{user?.email}</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 shrink-0 text-[#16A34A]" />
+                      <input
+                        type="text"
+                        value={editForm.phone}
+                        onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                        placeholder="Téléphone"
+                        className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 shrink-0 text-[#16A34A]" />
+                      <input
+                        type="text"
+                        value={editForm.city}
+                        onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                        placeholder="Ville"
+                        className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-4 w-4 shrink-0 text-[#16A34A]" />
+                    <input
+                      type="text"
+                      value={editForm.country}
+                      onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
+                      placeholder="Pays"
+                      className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                    />
+                  </div>
+
+                  <textarea
+                    value={editForm.bio}
+                    onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                    placeholder="Bio / Présentation"
+                    rows={4}
+                    className="w-full resize-none rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
                   />
-                </motion.div>
-
-                <motion.textarea
-                  variants={fadeInUp}
-                  value={editForm.bio}
-                  onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
-                  placeholder="Bio / Présentation"
-                  rows={4}
-                  className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                variants={staggerContainer}
-                initial="initial"
-                animate="animate"
-                className="space-y-2 sm:space-y-3"
-              >
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                  <motion.h1 variants={fadeInUp} className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white break-words">
-                    {profile.first_name || profile.last_name
-                      ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
-                      : 'Mon profil'}
-                  </motion.h1>
-                  <motion.span
-                    variants={fadeInUp}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
-                  >
-                    CANDIDAT
-                  </motion.span>
                 </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#14532D] break-words">
+                      {profile.first_name || profile.last_name
+                        ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+                        : 'Mon profil'}
+                    </h1>
+                    <span className="px-3 py-1 text-xs font-bold bg-[#16A34A] text-white rounded-full shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)]">
+                      CANDIDAT
+                    </span>
+                  </div>
 
-                <motion.div variants={fadeInUp} className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-slate-400">
-                  <span className="flex items-center gap-1.5 group cursor-pointer min-w-0" onClick={handleCopyEmail}>
-                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 group-hover:text-amber-400 transition-colors shrink-0" />
-                    <span className="truncate max-w-[180px] sm:max-w-none">{profile.email || user?.email}</span>
-                    {isCopied ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    ) : (
-                      <Copy className="w-3 h-3 text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  <div className="flex flex-wrap gap-4 text-sm text-[#14532D]/60">
+                    <span className="flex items-center gap-1.5 group cursor-pointer min-w-0" onClick={handleCopyEmail}>
+                      <Mail className="h-4 w-4 text-[#16A34A] shrink-0" />
+                      <span className="truncate max-w-[220px]">{profile.email || user?.email}</span>
+                      {isCopied ? (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />
+                      ) : (
+                        <Copy className="w-3 h-3 text-[#14532D]/30 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                      )}
+                    </span>
+                    {profile.phone && (
+                      <span className="flex items-center gap-1.5">
+                        <Phone className="h-4 w-4 text-[#16A34A] shrink-0" />
+                        {profile.phone}
+                      </span>
                     )}
-                  </span>
-                  {profile.phone && (
-                    <span className="flex items-center gap-1.5">
-                      <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 shrink-0" />
-                      {profile.phone}
-                    </span>
-                  )}
-                  {(profile.city || profile.country) && (
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 shrink-0" />
-                      {[profile.city, profile.country].filter(Boolean).join(', ')}
-                    </span>
-                  )}
-                </motion.div>
+                    {(profile.city || profile.country) && (
+                      <span className="flex items-center gap-1.5">
+                        <MapPin className="h-4 w-4 text-[#16A34A] shrink-0" />
+                        {[profile.city, profile.country].filter(Boolean).join(', ')}
+                      </span>
+                    )}
+                  </div>
 
-                {profile.bio && (
-                  <motion.p variants={fadeInUp} className="text-xs sm:text-sm leading-6 text-slate-300">
-                    {profile.bio}
-                  </motion.p>
-                )}
-              </motion.div>
-            )}
-          </div>
-
-          {/* Actions profil */}
-          <div className="flex flex-col xs:flex-row shrink-0 gap-2 w-full lg:w-auto">
-            {isEditingProfile ? (
-              <>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  type="button"
-                  onClick={() => {
-                    setIsEditingProfile(false);
-                    setEditForm({
-                      first_name: profile.first_name || '',
-                      last_name: profile.last_name || '',
-                      phone: profile.phone || '',
-                      city: profile.city || '',
-                      country: profile.country || '',
-                      bio: profile.bio || '',
-                    });
-                  }}
-                  className="flex-1 lg:flex-none flex items-center justify-center gap-2 rounded-xl bg-slate-800 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
-                >
-                  <X className="h-4 w-4" />
-                  Annuler
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  type="button"
-                  onClick={handleSaveProfile}
-                  disabled={updateProfileMutation.isPending}
-                  className="flex-1 lg:flex-none flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
-                >
-                  {updateProfileMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4" />
+                  {profile.bio && (
+                    <p className="text-sm leading-6 text-[#14532D]/80 max-w-3xl">
+                      {profile.bio}
+                    </p>
                   )}
-                  Enregistrer
-                </motion.button>
-              </>
-            ) : (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => setIsEditingProfile(true)}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300"
-              >
-                <Edit2 className="h-4 w-4" />
-                Modifier
-              </motion.button>
-            )}
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col xs:flex-row shrink-0 gap-2 w-full lg:w-auto">
+              {isEditingProfile ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditingProfile(false);
+                      setEditForm({
+                        first_name: profile.first_name || '',
+                        last_name: profile.last_name || '',
+                        phone: profile.phone || '',
+                        city: profile.city || '',
+                        country: profile.country || '',
+                        bio: profile.bio || '',
+                      });
+                    }}
+                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 rounded-xl bg-white border border-[#16A34A]/20 px-5 py-2.5 text-sm font-semibold text-[#14532D] hover:bg-[#F0FDF4] transition-all"
+                  >
+                    <X className="h-4 w-4" />
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveProfile}
+                    disabled={updateProfileMutation.isPending}
+                    className="flex-1 lg:flex-none flex items-center justify-center gap-2 rounded-xl bg-[#16A34A] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                  >
+                    {updateProfileMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4" />
+                    )}
+                    Enregistrer
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsEditingProfile(true)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#16A34A] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all"
+                >
+                  <Edit2 className="h-4 w-4" />
+                  Modifier le profil
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
-          STATISTIQUES RAPIDES
+          STATS RAPIDES
       ====================================================== */}
 
-      <motion.div
-        variants={staggerContainer}
-        initial="initial"
-        animate="animate"
-        className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4"
-      >
-        <StatCard title="Expériences" value={stats.experiences} icon={Briefcase} color="amber" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard title="Expériences" value={stats.experiences} icon={Briefcase} color="green" />
         <StatCard title="Formations" value={stats.education} icon={GraduationCap} color="blue" />
         <StatCard title="Langues" value={stats.languages} icon={Languages} color="purple" />
-        <StatCard title="Documents" value={stats.documents} icon={FileText} color="emerald" />
-      </motion.div>
+        <StatCard title="Documents" value={stats.documents} icon={FileText} color="amber" />
+      </div>
 
       {/* ======================================================
           CONTENU PRINCIPAL
       ====================================================== */}
 
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:gap-8 lg:grid-cols-3">
         {/* Colonne principale */}
-        <div className="space-y-4 sm:space-y-6 lg:space-y-8 lg:col-span-2">
-          {/* EXPERIENCES */}
-          <motion.section
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 sm:pb-4">
-              <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-amber-400 min-w-0">
-                <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+        <div className="space-y-6 lg:col-span-2">
+
+          {/* EXPÉRIENCES */}
+          <section className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-2 border-b border-[#16A34A]/10 pb-4">
+              <div className="flex items-center gap-2 text-base font-extrabold text-[#14532D] min-w-0">
+                <Briefcase className="h-5 w-5 text-[#16A34A] shrink-0" />
                 <h2 className="truncate">Expériences</h2>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({experiences.length})</span>
+                <span className="text-xs text-[#14532D]/40 font-normal shrink-0">
+                  ({experiences.length})
+                </span>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 type="button"
                 onClick={() => {
                   if (showExperienceForm && !editingExperienceId) {
@@ -1205,153 +988,138 @@ export const CandidateProfilePage = () => {
                     setShowExperienceForm(true);
                   }
                 }}
-                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20 shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-[#16A34A] text-white rounded-xl hover:bg-[#15803D] shadow-[0_2px_8px_-2px_rgba(22,163,74,0.4)] transition-all shrink-0"
               >
-                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <Plus className="h-3.5 w-3.5" />
                 Ajouter
-              </motion.button>
+              </button>
             </div>
 
-            <AnimatePresence>
-              {showExperienceForm && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-4 sm:mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-4 sm:p-5 overflow-hidden"
-                >
-                  <div className="mb-4 flex items-center justify-between gap-2">
-                    <h3 className="font-bold text-white text-sm sm:text-base truncate">
-                      {editingExperienceId ? 'Modifier l’expérience' : 'Ajouter une expérience'}
-                    </h3>
-                    <button type="button" onClick={cancelExperienceForm} className="text-slate-400 hover:text-white transition-colors shrink-0">
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
+            {showExperienceForm && (
+              <div className="mt-5 rounded-2xl border border-[#16A34A]/20 bg-[#FAFAF9] p-5">
+                <div className="mb-4 flex items-center justify-between gap-2">
+                  <h3 className="font-extrabold text-[#14532D] text-sm">
+                    {editingExperienceId ? 'Modifier l’expérience' : 'Ajouter une expérience'}
+                  </h3>
+                  <button type="button" onClick={cancelExperienceForm} className="text-[#14532D]/40 hover:text-rose-500 transition-colors shrink-0">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
 
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
-                    <input
-                      type="text"
-                      value={experienceForm.title}
-                      onChange={(e) => setExperienceForm({ ...experienceForm, title: e.target.value })}
-                      placeholder="Intitulé du poste"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
-                    <input
-                      type="text"
-                      value={experienceForm.company}
-                      onChange={(e) => setExperienceForm({ ...experienceForm, company: e.target.value })}
-                      placeholder="Entreprise"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
-                    <input
-                      type="text"
-                      value={experienceForm.location}
-                      onChange={(e) => setExperienceForm({ ...experienceForm, location: e.target.value })}
-                      placeholder="Lieu"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <input
+                    type="text"
+                    value={experienceForm.title}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, title: e.target.value })}
+                    placeholder="Intitulé du poste"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <input
+                    type="text"
+                    value={experienceForm.company}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, company: e.target.value })}
+                    placeholder="Entreprise"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <input
+                    type="text"
+                    value={experienceForm.location}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, location: e.target.value })}
+                    placeholder="Lieu"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <input
+                    type="date"
+                    value={experienceForm.start_date}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, start_date: e.target.value })}
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  {!experienceForm.is_current && (
                     <input
                       type="date"
-                      value={experienceForm.start_date}
-                      onChange={(e) => setExperienceForm({ ...experienceForm, start_date: e.target.value })}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      value={experienceForm.end_date}
+                      onChange={(e) => setExperienceForm({ ...experienceForm, end_date: e.target.value })}
+                      className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
                     />
-                    {!experienceForm.is_current && (
-                      <input
-                        type="date"
-                        value={experienceForm.end_date}
-                        onChange={(e) => setExperienceForm({ ...experienceForm, end_date: e.target.value })}
-                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                      />
-                    )}
-                  </div>
+                  )}
+                </div>
 
-                  <label className="mt-4 flex cursor-pointer items-center gap-2 text-xs sm:text-sm text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={experienceForm.is_current}
-                      onChange={(e) => setExperienceForm({
-                        ...experienceForm,
-                        is_current: e.target.checked,
-                        end_date: e.target.checked ? '' : experienceForm.end_date,
-                      })}
-                      className="h-4 w-4 accent-amber-500"
-                    />
-                    Poste actuel
-                  </label>
-
-                  <textarea
-                    value={experienceForm.description}
-                    onChange={(e) => setExperienceForm({ ...experienceForm, description: e.target.value })}
-                    placeholder="Description de l’expérience"
-                    rows={4}
-                    className="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300 mt-4"
+                <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-[#14532D]/80">
+                  <input
+                    type="checkbox"
+                    checked={experienceForm.is_current}
+                    onChange={(e) => setExperienceForm({
+                      ...experienceForm,
+                      is_current: e.target.checked,
+                      end_date: e.target.checked ? '' : experienceForm.end_date,
+                    })}
+                    className="h-4 w-4 accent-[#16A34A]"
                   />
+                  Poste actuel
+                </label>
 
-                  <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={cancelExperienceForm}
-                      className="rounded-xl bg-slate-800 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
-                    >
-                      Annuler
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleExperienceSubmit}
-                      disabled={isSavingExperience}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
-                    >
-                      {isSavingExperience && <Loader2 className="h-4 w-4 animate-spin" />}
-                      {editingExperienceId ? 'Modifier' : 'Ajouter'}
-                    </motion.button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                <textarea
+                  value={experienceForm.description}
+                  onChange={(e) => setExperienceForm({ ...experienceForm, description: e.target.value })}
+                  placeholder="Description de l’expérience"
+                  rows={4}
+                  className="w-full resize-none rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all mt-4 font-medium"
+                />
 
-            <div className="mt-4 sm:mt-5 space-y-3 sm:space-y-4">
-              {experiences.length === 0 ? (
-                <motion.div
-                  variants={fadeInScale}
-                  className="py-6 sm:py-8 text-center text-slate-500"
-                >
-                  <Briefcase className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
-                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucune expérience renseignée</p>
-                  <p className="mt-1 text-[10px] sm:text-xs text-slate-600">Ajoutez vos expériences professionnelles</p>
-                </motion.div>
-              ) : (
-                experiences.map((exp, index) => (
-                  <motion.div
-                    key={exp.id}
-                    variants={fadeInUp}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ delay: index * 0.05 }}
-                    className="group rounded-xl border border-slate-800 bg-slate-950/40 p-3 sm:p-4 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
+                <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={cancelExperienceForm}
+                    className="rounded-xl bg-white border border-[#16A34A]/20 px-4 py-2 text-sm font-semibold text-[#14532D] hover:bg-[#F0FDF4] transition-all"
                   >
-                    <div className="flex items-start justify-between gap-3 sm:gap-4">
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleExperienceSubmit}
+                    disabled={isSavingExperience}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[#16A34A] px-4 py-2 text-sm font-bold text-white hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] transition-all disabled:opacity-50"
+                  >
+                    {isSavingExperience && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {editingExperienceId ? 'Modifier' : 'Ajouter'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-5 space-y-4">
+              {experiences.length === 0 ? (
+                <div className="py-8 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+                    <Briefcase className="h-7 w-7 text-[#16A34A]/40" />
+                  </div>
+                  <p className="text-sm font-bold text-[#14532D]">Aucune expérience renseignée</p>
+                  <p className="mt-1 text-xs text-[#14532D]/50">Ajoutez vos expériences professionnelles</p>
+                </div>
+              ) : (
+                experiences.map((exp) => (
+                  <div
+                    key={exp.id}
+                    className="group rounded-xl border border-[#16A34A]/10 bg-[#FAFAF9] p-4 hover:border-[#16A34A]/30 hover:bg-white transition-all"
+                  >
+                    <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-bold text-white group-hover:text-amber-400 transition-colors text-sm sm:text-base break-words">
+                          <h3 className="font-extrabold text-[#14532D] group-hover:text-[#16A34A] transition-colors text-sm sm:text-base break-words">
                             {exp.title}
                           </h3>
-                          <span className="text-xs text-amber-400/70 hidden sm:inline">•</span>
-                          <p className="text-xs sm:text-sm text-amber-400 break-words">{exp.company}</p>
+                          <span className="text-[#16A34A] font-bold text-sm">•</span>
+                          <p className="text-sm text-[#16A34A] font-semibold break-words">{exp.company}</p>
                           {exp.is_current && (
-                            <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
+                            <span className="px-2 py-0.5 text-[10px] font-bold bg-[#F0FDF4] text-[#16A34A] rounded-full border border-[#16A34A]/20">
                               Actuel
                             </span>
                           )}
                         </div>
-                        <p className="mt-2 text-[10px] sm:text-xs text-slate-500 flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <p className="mt-2 text-xs text-[#14532D]/50 flex flex-wrap items-center gap-x-3 gap-y-1">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {exp.start_date}
-                            {' — '}
+                            {exp.start_date}{' — '}
                             {exp.is_current ? 'Présent' : exp.end_date || 'Non précisé'}
                           </span>
                           {exp.location && (
@@ -1362,57 +1130,48 @@ export const CandidateProfilePage = () => {
                           )}
                         </p>
                         {exp.description && (
-                          <p className="mt-2 sm:mt-3 text-xs sm:text-sm leading-6 text-slate-400 group-hover:text-slate-300 transition-colors">
+                          <p className="mt-3 text-sm leading-6 text-[#14532D]/70">
                             {exp.description}
                           </p>
                         )}
                       </div>
-                      <div className="flex gap-0.5 sm:gap-1 shrink-0">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                      <div className="flex gap-1 shrink-0">
+                        <button
                           type="button"
                           onClick={() => handleEditExperience(exp)}
-                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                          className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-[#16A34A] transition-all"
                           title="Modifier"
                         >
-                          <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
                           type="button"
                           onClick={() => deleteExperienceMutation.mutate(exp.id)}
                           disabled={deleteExperienceMutation.isPending}
-                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                          className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-rose-500 transition-all"
                           title="Supprimer"
                         >
-                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        </motion.button>
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))
               )}
             </div>
-          </motion.section>
+          </section>
 
           {/* FORMATIONS */}
-          <motion.section
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 sm:pb-4">
-              <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-amber-400 min-w-0">
-                <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+          <section className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-2 border-b border-[#16A34A]/10 pb-4">
+              <div className="flex items-center gap-2 text-base font-extrabold text-[#14532D] min-w-0">
+                <GraduationCap className="h-5 w-5 text-[#16A34A] shrink-0" />
                 <h2 className="truncate">Formations</h2>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({education.length})</span>
+                <span className="text-xs text-[#14532D]/40 font-normal shrink-0">
+                  ({education.length})
+                </span>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 type="button"
                 onClick={() => {
                   if (showEducationForm && !editingEducationId) {
@@ -1423,193 +1182,169 @@ export const CandidateProfilePage = () => {
                     setShowEducationForm(true);
                   }
                 }}
-                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20 shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-[#16A34A] text-white rounded-xl hover:bg-[#15803D] shadow-[0_2px_8px_-2px_rgba(22,163,74,0.4)] transition-all shrink-0"
               >
-                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <Plus className="h-3.5 w-3.5" />
                 Ajouter
-              </motion.button>
+              </button>
             </div>
 
-            <AnimatePresence>
-              {showEducationForm && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-4 sm:mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-4 sm:p-5 overflow-hidden"
-                >
-                  <div className="mb-4 flex items-center justify-between gap-2">
-                    <h3 className="font-bold text-white text-sm sm:text-base truncate">
-                      {editingEducationId ? 'Modifier la formation' : 'Ajouter une formation'}
-                    </h3>
-                    <button type="button" onClick={cancelEducationForm} className="text-slate-400 hover:text-white transition-colors shrink-0">
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
+            {showEducationForm && (
+              <div className="mt-5 rounded-2xl border border-[#16A34A]/20 bg-[#FAFAF9] p-5">
+                <div className="mb-4 flex items-center justify-between gap-2">
+                  <h3 className="font-extrabold text-[#14532D] text-sm">
+                    {editingEducationId ? 'Modifier la formation' : 'Ajouter une formation'}
+                  </h3>
+                  <button type="button" onClick={cancelEducationForm} className="text-[#14532D]/40 hover:text-rose-500 transition-colors shrink-0">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
 
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
-                    <input
-                      type="text"
-                      value={educationForm.degree}
-                      onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
-                      placeholder="Diplôme"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
-                    <input
-                      type="text"
-                      value={educationForm.institution}
-                      onChange={(e) => setEducationForm({ ...educationForm, institution: e.target.value })}
-                      placeholder="Établissement"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
-                    <input
-                      type="text"
-                      value={educationForm.field_of_study}
-                      onChange={(e) => setEducationForm({ ...educationForm, field_of_study: e.target.value })}
-                      placeholder="Domaine d'étude"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <input
+                    type="text"
+                    value={educationForm.degree}
+                    onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
+                    placeholder="Diplôme"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <input
+                    type="text"
+                    value={educationForm.institution}
+                    onChange={(e) => setEducationForm({ ...educationForm, institution: e.target.value })}
+                    placeholder="Établissement"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <input
+                    type="text"
+                    value={educationForm.field_of_study}
+                    onChange={(e) => setEducationForm({ ...educationForm, field_of_study: e.target.value })}
+                    placeholder="Domaine d'étude"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <input
+                    type="date"
+                    value={educationForm.start_date}
+                    onChange={(e) => setEducationForm({ ...educationForm, start_date: e.target.value })}
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  {!educationForm.is_current && (
                     <input
                       type="date"
-                      value={educationForm.start_date}
-                      onChange={(e) => setEducationForm({ ...educationForm, start_date: e.target.value })}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                      value={educationForm.end_date}
+                      onChange={(e) => setEducationForm({ ...educationForm, end_date: e.target.value })}
+                      className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
                     />
-                    {!educationForm.is_current && (
-                      <input
-                        type="date"
-                        value={educationForm.end_date}
-                        onChange={(e) => setEducationForm({ ...educationForm, end_date: e.target.value })}
-                        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                      />
-                    )}
-                  </div>
+                  )}
+                </div>
 
-                  <label className="mt-4 flex cursor-pointer items-center gap-2 text-xs sm:text-sm text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={educationForm.is_current}
-                      onChange={(e) => setEducationForm({
-                        ...educationForm,
-                        is_current: e.target.checked,
-                        end_date: e.target.checked ? '' : educationForm.end_date,
-                      })}
-                      className="h-4 w-4 accent-amber-500"
-                    />
-                    Formation en cours
-                  </label>
+                <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-[#14532D]/80">
+                  <input
+                    type="checkbox"
+                    checked={educationForm.is_current}
+                    onChange={(e) => setEducationForm({
+                      ...educationForm,
+                      is_current: e.target.checked,
+                      end_date: e.target.checked ? '' : educationForm.end_date,
+                    })}
+                    className="h-4 w-4 accent-[#16A34A]"
+                  />
+                  Formation en cours
+                </label>
 
-                  <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={cancelEducationForm}
-                      className="rounded-xl bg-slate-800 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
-                    >
-                      Annuler
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleEducationSubmit}
-                      disabled={isSavingEducation}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
-                    >
-                      {isSavingEducation && <Loader2 className="h-4 w-4 animate-spin" />}
-                      {editingEducationId ? 'Modifier' : 'Ajouter'}
-                    </motion.button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="mt-4 sm:mt-5 space-y-3 sm:space-y-4">
-              {education.length === 0 ? (
-                <motion.div
-                  variants={fadeInScale}
-                  className="py-6 sm:py-8 text-center text-slate-500"
-                >
-                  <GraduationCap className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
-                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucune formation renseignée</p>
-                  <p className="mt-1 text-[10px] sm:text-xs text-slate-600">Ajoutez vos diplômes et formations</p>
-                </motion.div>
-              ) : (
-                education.map((edu, index) => (
-                  <motion.div
-                    key={edu.id}
-                    variants={fadeInUp}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ delay: index * 0.05 }}
-                    className="group rounded-xl border border-slate-800 bg-slate-950/40 p-3 sm:p-4 hover:border-amber-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/5"
+                <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={cancelEducationForm}
+                    className="rounded-xl bg-white border border-[#16A34A]/20 px-4 py-2 text-sm font-semibold text-[#14532D] hover:bg-[#F0FDF4] transition-all"
                   >
-                    <div className="flex items-start justify-between gap-3 sm:gap-4">
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleEducationSubmit}
+                    disabled={isSavingEducation}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[#16A34A] px-4 py-2 text-sm font-bold text-white hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] transition-all disabled:opacity-50"
+                  >
+                    {isSavingEducation && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {editingEducationId ? 'Modifier' : 'Ajouter'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="mt-5 space-y-4">
+              {education.length === 0 ? (
+                <div className="py-8 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+                    <GraduationCap className="h-7 w-7 text-[#16A34A]/40" />
+                  </div>
+                  <p className="text-sm font-bold text-[#14532D]">Aucune formation renseignée</p>
+                  <p className="mt-1 text-xs text-[#14532D]/50">Ajoutez vos diplômes et formations</p>
+                </div>
+              ) : (
+                education.map((edu) => (
+                  <div
+                    key={edu.id}
+                    className="group rounded-xl border border-[#16A34A]/10 bg-[#FAFAF9] p-4 hover:border-[#16A34A]/30 hover:bg-white transition-all"
+                  >
+                    <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="font-bold text-white group-hover:text-amber-400 transition-colors text-sm sm:text-base break-words">
+                          <h3 className="font-extrabold text-[#14532D] group-hover:text-[#16A34A] transition-colors text-sm sm:text-base break-words">
                             {edu.degree}
                             {edu.field_of_study && <> en {edu.field_of_study}</>}
                           </h3>
                           {edu.is_current && (
-                            <span className="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 rounded-full border border-emerald-500/20">
+                            <span className="px-2 py-0.5 text-[10px] font-bold bg-[#F0FDF4] text-[#16A34A] rounded-full border border-[#16A34A]/20">
                               En cours
                             </span>
                           )}
                         </div>
-                        <p className="text-xs sm:text-sm text-amber-400 break-words">{edu.institution}</p>
-                        <p className="mt-2 text-[10px] sm:text-xs text-slate-500 flex items-center gap-2">
+                        <p className="text-sm text-[#16A34A] font-semibold break-words">{edu.institution}</p>
+                        <p className="mt-2 text-xs text-[#14532D]/50 flex items-center gap-2">
                           <Calendar className="w-3 h-3 shrink-0" />
-                          {edu.start_date}
-                          {' — '}
+                          {edu.start_date}{' — '}
                           {edu.is_current ? 'En cours' : edu.end_date || 'Non précisé'}
                         </p>
                       </div>
-                      <div className="flex gap-0.5 sm:gap-1 shrink-0">
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                      <div className="flex gap-1 shrink-0">
+                        <button
                           type="button"
                           onClick={() => handleEditEducation(edu)}
-                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                          className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-[#16A34A] transition-all"
                           title="Modifier"
                         >
-                          <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
                           type="button"
                           onClick={() => deleteEducationMutation.mutate(edu.id)}
                           disabled={deleteEducationMutation.isPending}
-                          className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                          className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-rose-500 transition-all"
                           title="Supprimer"
                         >
-                          <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        </motion.button>
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))
               )}
             </div>
-          </motion.section>
+          </section>
 
           {/* LANGUES */}
-          <motion.section
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3 sm:pb-4">
-              <div className="flex items-center gap-2 text-base sm:text-lg font-bold text-amber-400 min-w-0">
-                <Languages className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+          <section className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <div className="flex items-center justify-between gap-2 border-b border-[#16A34A]/10 pb-4">
+              <div className="flex items-center gap-2 text-base font-extrabold text-[#14532D] min-w-0">
+                <Languages className="h-5 w-5 text-[#16A34A] shrink-0" />
                 <h2 className="truncate">Langues</h2>
-                <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({languages.length})</span>
+                <span className="text-xs text-[#14532D]/40 font-normal shrink-0">
+                  ({languages.length})
+                </span>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 type="button"
                 onClick={() => {
                   if (showLanguageForm && !editingLanguageId) {
@@ -1620,154 +1355,135 @@ export const CandidateProfilePage = () => {
                     setShowLanguageForm(true);
                   }
                 }}
-                className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold bg-amber-500/10 text-amber-400 rounded-xl hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/20 shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-[#16A34A] text-white rounded-xl hover:bg-[#15803D] shadow-[0_2px_8px_-2px_rgba(22,163,74,0.4)] transition-all shrink-0"
               >
-                <Plus className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <Plus className="h-3.5 w-3.5" />
                 Ajouter
-              </motion.button>
+              </button>
             </div>
 
-            <AnimatePresence>
-              {showLanguageForm && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-4 sm:mt-5 rounded-2xl border border-slate-700 bg-slate-950 p-4 sm:p-5 overflow-hidden"
-                >
-                  <div className="mb-4 flex items-center justify-between gap-2">
-                    <h3 className="font-bold text-white text-sm sm:text-base truncate">
-                      {editingLanguageId ? 'Modifier la langue' : 'Ajouter une langue'}
-                    </h3>
-                    <button type="button" onClick={cancelLanguageForm} className="text-slate-400 hover:text-white transition-colors shrink-0">
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
+            {showLanguageForm && (
+              <div className="mt-5 rounded-2xl border border-[#16A34A]/20 bg-[#FAFAF9] p-5">
+                <div className="mb-4 flex items-center justify-between gap-2">
+                  <h3 className="font-extrabold text-[#14532D] text-sm">
+                    {editingLanguageId ? 'Modifier la langue' : 'Ajouter une langue'}
+                  </h3>
+                  <button type="button" onClick={cancelLanguageForm} className="text-[#14532D]/40 hover:text-rose-500 transition-colors shrink-0">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
 
-                  <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
-                    <input
-                      type="text"
-                      value={languageForm.name}
-                      onChange={(e) => setLanguageForm({ ...languageForm, name: e.target.value })}
-                      placeholder="Langue (ex. Français)"
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    />
-                    <select
-                      value={languageForm.level}
-                      onChange={(e) => setLanguageForm({ ...languageForm, level: e.target.value as LanguageLevel })}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
-                    >
-                      <option value="basic">Notions</option>
-                      <option value="intermediate">Intermédiaire</option>
-                      <option value="fluent">Courant</option>
-                      <option value="native">Langue maternelle</option>
-                    </select>
-                  </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <input
+                    type="text"
+                    value={languageForm.name}
+                    onChange={(e) => setLanguageForm({ ...languageForm, name: e.target.value })}
+                    placeholder="Langue (ex. Français)"
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] placeholder-[#14532D]/30 outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  />
+                  <select
+                    value={languageForm.level}
+                    onChange={(e) => setLanguageForm({ ...languageForm, level: e.target.value as LanguageLevel })}
+                    className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
+                  >
+                    <option value="basic">Notions</option>
+                    <option value="intermediate">Intermédiaire</option>
+                    <option value="fluent">Courant</option>
+                    <option value="native">Langue maternelle</option>
+                  </select>
+                </div>
 
-                  <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={cancelLanguageForm}
-                      className="rounded-xl bg-slate-800 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-slate-700 transition-all duration-300"
-                    >
-                      Annuler
-                    </button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      type="button"
-                      onClick={handleLanguageSubmit}
-                      disabled={isSavingLanguage}
-                      className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 disabled:opacity-50"
-                    >
-                      {isSavingLanguage && <Loader2 className="h-4 w-4 animate-spin" />}
-                      {editingLanguageId ? 'Modifier' : 'Ajouter'}
-                    </motion.button>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                <div className="mt-4 flex flex-col xs:flex-row justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={cancelLanguageForm}
+                    className="rounded-xl bg-white border border-[#16A34A]/20 px-4 py-2 text-sm font-semibold text-[#14532D] hover:bg-[#F0FDF4] transition-all"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleLanguageSubmit}
+                    disabled={isSavingLanguage}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[#16A34A] px-4 py-2 text-sm font-bold text-white hover:bg-[#15803D] shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] transition-all disabled:opacity-50"
+                  >
+                    {isSavingLanguage && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {editingLanguageId ? 'Modifier' : 'Ajouter'}
+                  </button>
+                </div>
+              </div>
+            )}
 
-            <div className="mt-4 sm:mt-5 space-y-2">
+            <div className="mt-5 space-y-3">
               {languages.length === 0 ? (
-                <motion.div
-                  variants={fadeInScale}
-                  className="py-6 sm:py-8 text-center text-slate-500"
-                >
-                  <Languages className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
-                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucune langue renseignée</p>
-                </motion.div>
+                <div className="py-8 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+                    <Languages className="h-7 w-7 text-[#16A34A]/40" />
+                  </div>
+                  <p className="text-sm font-bold text-[#14532D]">Aucune langue renseignée</p>
+                </div>
               ) : (
-                languages.map((language, index) => (
-                  <motion.div
+                languages.map((language) => (
+                  <div
                     key={language.id}
-                    variants={fadeInUp}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-950/40 p-2.5 sm:p-3 hover:border-amber-500/30 transition-all duration-300 group"
+                    className="flex items-center justify-between gap-2 rounded-xl border border-[#16A34A]/10 bg-[#FAFAF9] p-3 hover:border-[#16A34A]/30 hover:bg-white transition-all group"
                   >
                     <div className="min-w-0 flex-1">
-                      <span className="font-semibold text-white group-hover:text-amber-400 transition-colors text-xs sm:text-sm block truncate">
+                      <span className="font-extrabold text-[#14532D] group-hover:text-[#16A34A] transition-colors text-sm block truncate">
                         {language.name}
                       </span>
                       <div className="mt-1">
                         <LevelBadge level={language.level} />
                       </div>
                     </div>
-                    <div className="flex gap-0.5 sm:gap-1 shrink-0">
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                    <div className="flex gap-1 shrink-0">
+                      <button
                         type="button"
                         onClick={() => handleEditLanguage(language)}
-                        className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                        className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-[#16A34A] transition-all"
                         title="Modifier"
                       >
-                        <Edit2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button
                         type="button"
                         onClick={() => deleteLanguageMutation.mutate(language.id)}
                         disabled={deleteLanguageMutation.isPending}
-                        className="rounded-lg p-1.5 sm:p-2 text-slate-500 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                        className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-rose-500 transition-all"
                         title="Supprimer"
                       >
-                        <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </motion.button>
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
-                  </motion.div>
+                  </div>
                 ))
               )}
             </div>
-          </motion.section>
+          </section>
         </div>
 
         {/* ======================================================
-            COLONNE DOCUMENTS
+            COLONNE DROITE — DOCUMENTS + ACTIONS
         ====================================================== */}
 
-        <div className="space-y-4 sm:space-y-6">
-          <motion.section
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="lg:sticky lg:top-24 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-3 sm:pb-4 text-base sm:text-lg font-bold text-amber-400">
-              <FileText className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
+        <div className="space-y-6">
+
+          {/* Documents */}
+          <section className="lg:sticky lg:top-24 bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <div className="flex items-center gap-2 border-b border-[#16A34A]/10 pb-4 text-base font-extrabold text-[#14532D]">
+              <FileText className="h-5 w-5 text-[#16A34A] shrink-0" />
               <h2 className="truncate">Mes documents</h2>
-              <span className="text-[10px] sm:text-xs text-slate-500 font-normal shrink-0">({documents.length})</span>
+              <span className="text-xs text-[#14532D]/40 font-normal shrink-0">
+                ({documents.length})
+              </span>
             </div>
 
             {/* Upload */}
-            <div className="mt-4 sm:mt-5 space-y-3">
+            <div className="mt-5 space-y-3">
               <select
                 value={selectedDocType}
                 onChange={(e) => setSelectedDocType(e.target.value as DocumentType)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 sm:px-4 py-3 text-xs sm:text-sm text-white placeholder-slate-500 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all duration-300"
+                className="w-full rounded-xl border border-[#16A34A]/20 bg-white px-4 py-3 text-sm text-[#14532D] outline-none focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10 transition-all font-medium"
               >
                 <option value="cv">Curriculum Vitae (CV)</option>
                 <option value="diploma">Diplôme</option>
@@ -1776,14 +1492,12 @@ export const CandidateProfilePage = () => {
                 <option value="other">Autre</option>
               </select>
 
-              <motion.label
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-800 bg-slate-950/30 p-4 sm:p-5 transition-all duration-300 hover:border-amber-500/50 hover:bg-slate-950/50"
-              >
-                <Upload className="mb-2 h-6 w-6 sm:h-7 sm:w-7 text-slate-500" />
-                <span className="text-xs sm:text-sm font-medium text-slate-300">Ajouter un document</span>
-                <span className="mt-1 text-[10px] text-slate-500 text-center">PDF, DOC, DOCX — Max 5 Mo</span>
+              <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#16A34A]/30 bg-[#FAFAF9] p-5 transition-all hover:border-[#16A34A]/60 hover:bg-[#F0FDF4]">
+                <div className="w-12 h-12 rounded-xl bg-[#F0FDF4] border border-[#16A34A]/20 flex items-center justify-center mb-3">
+                  <Upload className="h-6 w-6 text-[#16A34A]" />
+                </div>
+                <span className="text-sm font-bold text-[#14532D]">Ajouter un document</span>
+                <span className="mt-1 text-xs text-[#14532D]/50 text-center">PDF, DOC, DOCX — Max 5 Mo</span>
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
@@ -1792,126 +1506,99 @@ export const CandidateProfilePage = () => {
                   className="hidden"
                 />
                 {uploading && (
-                  <Loader2 className="mt-3 h-5 w-5 animate-spin text-amber-500" />
+                  <Loader2 className="mt-3 h-5 w-5 animate-spin text-[#16A34A]" />
                 )}
-              </motion.label>
+              </label>
             </div>
 
-            {/* Liste documents */}
-            <div className="mt-5 sm:mt-6 space-y-2">
+            {/* Liste */}
+            <div className="mt-5 space-y-2">
               {isDocsLoading ? (
                 <div className="flex justify-center py-6">
-                  <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+                  <Loader2 className="h-6 w-6 animate-spin text-[#16A34A]" />
                 </div>
               ) : documents.length === 0 ? (
-                <motion.div
-                  variants={fadeInScale}
-                  className="py-6 sm:py-8 text-center text-slate-500"
-                >
-                  <FileText className="mx-auto mb-3 h-8 w-8 sm:h-10 sm:w-10 opacity-30" />
-                  <p className="text-xs sm:text-sm font-medium text-slate-400">Aucun document</p>
-                  <p className="mt-1 text-[10px] sm:text-xs text-slate-600">Ajoutez vos documents</p>
-                </motion.div>
+                <div className="py-8 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-[#F0FDF4] border border-[#16A34A]/10 flex items-center justify-center">
+                    <FileText className="h-7 w-7 text-[#16A34A]/40" />
+                  </div>
+                  <p className="text-sm font-bold text-[#14532D]">Aucun document</p>
+                </div>
               ) : (
-                documents.map((doc, index) => (
-                  <motion.div
+                documents.map((doc) => (
+                  <div
                     key={doc.id}
-                    variants={fadeInUp}
-                    initial="initial"
-                    animate="animate"
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-950/60 p-2.5 sm:p-3 hover:border-amber-500/30 transition-all duration-300 group"
+                    className="flex items-center justify-between gap-2 rounded-xl border border-[#16A34A]/10 bg-[#FAFAF9] p-3 hover:border-[#16A34A]/30 hover:bg-white transition-all group"
                   >
-                    <div className="flex min-w-0 items-center gap-2 sm:gap-3 flex-1">
-                      <div className="p-1.5 rounded-lg bg-amber-500/10 shrink-0">
-                        <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400" />
+                    <div className="flex min-w-0 items-center gap-3 flex-1">
+                      <div className="p-2 rounded-lg bg-[#F0FDF4] border border-[#16A34A]/10 shrink-0">
+                        <FileText className="h-4 w-4 text-[#16A34A]" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[10px] sm:text-xs font-semibold text-white group-hover:text-amber-400 transition-colors">
+                        <p className="truncate text-xs font-bold text-[#14532D] group-hover:text-[#16A34A] transition-colors">
                           {doc.original_filename}
                         </p>
-                        <p className="mt-0.5 text-[10px] uppercase text-slate-500 truncate">
+                        <p className="mt-0.5 text-[10px] uppercase text-[#14532D]/40 truncate font-semibold">
                           {doc.document_type}
                         </p>
                       </div>
                     </div>
                     <div className="flex shrink-0 gap-0.5">
-                      <motion.a
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                      <a
                         href={documentsApi.getDownloadUrl(doc.id)}
                         target="_blank"
                         rel="noreferrer"
-                        className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-amber-400 transition-all duration-300"
+                        className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-[#16A34A] transition-all"
                         title="Ouvrir"
                       >
-                        <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </motion.a>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                      <button
                         type="button"
                         onClick={() => deleteDocMutation.mutate(doc.id)}
                         disabled={deleteDocMutation.isPending}
-                        className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-rose-400 transition-all duration-300"
+                        className="rounded-lg p-2 text-[#14532D]/40 hover:bg-white hover:text-rose-500 transition-all"
                         title="Supprimer"
                       >
-                        <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </motion.button>
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
-                  </motion.div>
+                  </div>
                 ))
               )}
             </div>
-          </motion.section>
+          </section>
 
           {/* Actions rapides */}
-          <motion.section
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <h3 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-3 sm:mb-4">
-              <Zap className="w-4 h-4 text-amber-400" />
+          <section className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <h3 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Zap className="w-4 h-4 text-[#FCD34D]" />
               Actions rapides
             </h3>
             <div className="space-y-2">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
-              >
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium">
                 <span className="flex items-center gap-2">
-                  <Settings className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <Settings className="w-4 h-4 text-[#16A34A]" />
                   Paramètres du compte
                 </span>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
-              >
+                <ChevronRight className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium">
                 <span className="flex items-center gap-2">
-                  <Bell className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <Bell className="w-4 h-4 text-[#16A34A]" />
                   Notifications
                 </span>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
-              >
+                <ChevronRight className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium">
                 <span className="flex items-center gap-2">
-                  <HelpCircle className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <HelpCircle className="w-4 h-4 text-[#16A34A]" />
                   Aide & Support
                 </span>
-                <ChevronRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+                <ChevronRight className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
-          </motion.section>
+          </section>
         </div>
       </div>
 
@@ -1919,32 +1606,28 @@ export const CandidateProfilePage = () => {
           FOOTER
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-      >
-        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-          <span className="text-slate-500">
-            <span className="text-amber-400 font-medium">{profile.first_name || 'Candidat'}</span> • Profil
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">{profile.first_name || 'Candidat'}</span> • Profil
           </span>
-          <span className="hidden xs:block w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
           <span className="flex items-center gap-1.5">
-            <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé</span>
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-amber-400" />
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
             V1.0.0
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="w-px h-4 bg-[#16A34A]/20" />
           <span>Profil Candidat</span>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+
+    </div>
   );
 };
 

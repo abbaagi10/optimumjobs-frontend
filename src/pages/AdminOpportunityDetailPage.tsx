@@ -1,58 +1,23 @@
 // src/pages/AdminOpportunityDetailPage.tsx
-// Page de détails d'offre pour l'administrateur - Version Niger
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '../api/admin';
 import {
-  ArrowLeft, Home, Loader2, Building2, MapPin, Calendar,
+  ArrowLeft, Loader2, Building2, MapPin, Calendar,
   Briefcase, Check, X, Clock, AlertCircle, Users,
-  FileText, Mail, Phone, Globe, RefreshCw,
+  FileText, Globe, RefreshCw,
   Shield, Award, Sparkles, Zap, TrendingUp,
-  Eye, Heart, Share2, Bookmark, ChevronRight,
-  Crown, Star, UserCheck, UserX, Activity,
-  Link2, ExternalLink, Send, Copy, CheckCircle2,
-  GraduationCap
+  Eye, Share2, ChevronRight,
+  Crown, Activity,
+  Link2, ExternalLink, Send, CheckCircle2,
+  GraduationCap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const slideInLeft = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-const slideInRight = {
-  initial: { opacity: 0, x: 20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-// ==========================================================
-// COMPONENTS
+// STATUS BADGE
 // ==========================================================
 
 const StatusBadge = ({ status }: { status: string }) => {
@@ -60,43 +25,43 @@ const StatusBadge = ({ status }: { status: string }) => {
     'draft': {
       icon: <Clock className="w-3 h-3" />,
       label: 'Brouillon',
-      className: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+      className: 'bg-slate-100 text-slate-600 border-slate-200',
       dotColor: 'bg-slate-400'
     },
     'pending_review': {
       icon: <Clock className="w-3 h-3 animate-pulse" />,
       label: 'En attente',
-      className: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-      dotColor: 'bg-amber-400 animate-pulse'
+      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
+      dotColor: 'bg-[#FCD34D] animate-pulse'
     },
     'approved': {
       icon: <CheckCircle2 className="w-3 h-3" />,
       label: 'Approuvée',
-      className: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-      dotColor: 'bg-blue-400'
+      className: 'bg-blue-50 text-blue-700 border-blue-200',
+      dotColor: 'bg-blue-500'
     },
     'published': {
       icon: <Sparkles className="w-3 h-3" />,
       label: 'Publiée',
-      className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-      dotColor: 'bg-emerald-400'
+      className: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
+      dotColor: 'bg-[#16A34A]'
     },
     'rejected': {
       icon: <X className="w-3 h-3" />,
       label: 'Rejetée',
-      className: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-      dotColor: 'bg-rose-400'
+      className: 'bg-rose-50 text-rose-600 border-rose-200',
+      dotColor: 'bg-rose-500'
     },
     'closed': {
       icon: <X className="w-3 h-3" />,
       label: 'Clôturée',
-      className: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+      className: 'bg-slate-100 text-slate-500 border-slate-200',
       dotColor: 'bg-slate-400'
     },
     'archived': {
       icon: <Clock className="w-3 h-3" />,
       label: 'Archivée',
-      className: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+      className: 'bg-slate-100 text-slate-500 border-slate-200',
       dotColor: 'bg-slate-400'
     }
   };
@@ -104,37 +69,38 @@ const StatusBadge = ({ status }: { status: string }) => {
   const config = statusMap[status] || {
     icon: null,
     label: status,
-    className: 'bg-slate-800 text-slate-400 border-slate-700',
+    className: 'bg-slate-100 text-slate-500 border-slate-200',
     dotColor: 'bg-slate-400'
   };
 
   return (
-    <motion.span
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className={`inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border ${config.className}`}
-    >
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold border ${config.className}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.icon}
       {config.label}
-    </motion.span>
+    </span>
   );
 };
 
-const InfoItem = ({ label, value, icon: Icon, color = 'text-slate-400' }: any) => (
-  <motion.div
-    variants={fadeInUp}
-    className="flex justify-between items-center py-3 border-b border-slate-800/50 last:border-0 group hover:bg-slate-800/20 px-2 sm:px-3 -mx-2 sm:-mx-3 rounded-lg transition-colors duration-200 gap-3"
-  >
-    <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-2 shrink-0">
+// ==========================================================
+// INFO ITEM
+// ==========================================================
+
+const InfoItem = ({ label, value, icon: Icon, color = 'text-[#16A34A]' }: any) => (
+  <div className="flex justify-between items-center py-3 border-b border-[#16A34A]/10 last:border-0 gap-3 group hover:bg-[#F0FDF4] px-2 -mx-2 rounded-lg transition-colors">
+    <span className="text-sm text-[#14532D]/60 flex items-center gap-2 shrink-0 font-medium">
       <Icon className={`w-4 h-4 ${color} shrink-0`} />
       {label}
     </span>
-    <span className="text-xs sm:text-sm text-white font-medium text-right group-hover:text-amber-400 transition-colors break-words">
+    <span className="text-sm text-[#14532D] font-semibold text-right group-hover:text-[#16A34A] transition-colors break-words">
       {value}
     </span>
-  </motion.div>
+  </div>
 );
+
+// ==========================================================
+// ACTION BUTTON
+// ==========================================================
 
 const ActionButton = ({
   onClick,
@@ -146,19 +112,18 @@ const ActionButton = ({
   className = ''
 }: any) => {
   const variants = {
-    primary: 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40',
-    success: 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40',
-    danger: 'bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white shadow-lg shadow-rose-500/20 hover:shadow-rose-500/40',
-    secondary: 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700',
+    primary: 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)]',
+    success: 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)]',
+    amber: 'bg-[#FCD34D] hover:bg-[#EAB308] text-[#14532D] shadow-[0_4px_12px_-2px_rgba(252,211,77,0.5)] hover:shadow-[0_8px_16px_-4px_rgba(252,211,77,0.6)]',
+    danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-[0_4px_12px_-2px_rgba(244,63,94,0.4)]',
+    secondary: 'bg-white border border-[#16A34A]/20 text-[#14532D] hover:bg-[#F0FDF4] hover:border-[#16A34A]/40',
   };
 
   return (
-    <motion.button
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+    <button
       onClick={onClick}
       disabled={disabled || isLoading}
-      className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
+      className={`px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${variants[variant]} ${className}`}
     >
       {isLoading ? (
         <Loader2 className="w-4 h-4 animate-spin" />
@@ -166,7 +131,7 @@ const ActionButton = ({
         <Icon className="w-4 h-4" />
       )}
       {label}
-    </motion.button>
+    </button>
   );
 };
 
@@ -181,25 +146,9 @@ export const AdminOpportunityDetailPage = () => {
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // ==========================================================
-  // RÉCUPÉRATION DES DONNÉES
+  // QUERIES
   // ==========================================================
 
   const { data: job, isLoading, refetch } = useQuery({
@@ -209,13 +158,13 @@ export const AdminOpportunityDetailPage = () => {
   });
 
   // ==========================================================
-  // MUTATIONS - ACTIONS ADMIN
+  // MUTATIONS
   // ==========================================================
 
   const approveMutation = useMutation({
     mutationFn: () => adminApi.reviewOpportunity(Number(id), 'approve'),
     onSuccess: () => {
-      toast.success('✅ Offre approuvée avec succès');
+      toast.success('Offre approuvée');
       queryClient.invalidateQueries({ queryKey: ['admin-opportunity', id] });
       queryClient.invalidateQueries({ queryKey: ['admin-pending-jobs'] });
       queryClient.invalidateQueries({ queryKey: ['admin-all-jobs'] });
@@ -247,7 +196,7 @@ export const AdminOpportunityDetailPage = () => {
   const publishMutation = useMutation({
     mutationFn: () => adminApi.publishOpportunity(Number(id)),
     onSuccess: () => {
-      toast.success('✅ Offre publiée avec succès');
+      toast.success('Offre publiée');
       queryClient.invalidateQueries({ queryKey: ['admin-opportunity', id] });
       queryClient.invalidateQueries({ queryKey: ['admin-all-jobs'] });
       queryClient.invalidateQueries({ queryKey: ['admin-stats'] });
@@ -280,7 +229,7 @@ export const AdminOpportunityDetailPage = () => {
     const url = `${window.location.origin}/jobs/${id}`;
     navigator.clipboard.writeText(url);
     setIsCopied(true);
-    toast.success('Lien copié !');
+    toast.success('Lien copié');
     setTimeout(() => setIsCopied(false), 3000);
   };
 
@@ -290,72 +239,36 @@ export const AdminOpportunityDetailPage = () => {
 
   if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
-      >
-        <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-        <p className="text-sm text-slate-400">Chargement des détails...</p>
-        <div className="flex gap-1 mt-2">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-amber-500/50"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: i * 0.2,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+        <p className="text-sm text-[#14532D]/60 font-medium">Chargement des détails...</p>
+      </div>
     );
   }
 
   // ==========================================================
-  // ERREUR
+  // ERROR
   // ==========================================================
 
   if (!job) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto px-3 sm:px-4 py-12"
-      >
-        <div className="bg-slate-900/80 border border-rose-500/20 rounded-3xl p-6 sm:p-12 text-center backdrop-blur-xl">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20"
-          >
-            <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10 text-rose-400" />
-          </motion.div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white">Offre non trouvée</h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-2">L'offre que vous recherchez n'existe pas ou a été supprimée.</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-12">
+        <div className="bg-white border border-rose-200 rounded-3xl p-6 sm:p-12 text-center">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-200">
+            <AlertCircle className="w-8 h-8 sm:w-10 sm:h-10 text-rose-500" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-[#14532D]">Offre non trouvée</h2>
+          <p className="text-xs sm:text-sm text-[#14532D]/60 mt-2">
+            L'offre que vous recherchez n'existe pas ou a été supprimée.
+          </p>
+          <button
             onClick={() => navigate('/admin/dashboard')}
-            className="mt-6 px-6 sm:px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 text-sm sm:text-base"
+            className="mt-6 px-6 sm:px-8 py-3 bg-[#16A34A] text-white font-bold rounded-xl hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] transition-all text-sm sm:text-base"
           >
             Retour au dashboard
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -364,265 +277,224 @@ export const AdminOpportunityDetailPage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-4 sm:space-y-6 relative"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] sm:w-[600px] h-[200px] sm:h-[300px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-      </div>
+    <div className="space-y-4 sm:space-y-6">
 
       {/* ======================================================
           NAVIGATION
       ====================================================== */}
 
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => navigate('/admin/dashboard')}
-            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-3 sm:px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
           >
-            <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             <span>Retour</span>
-          </motion.button>
+          </button>
 
-          <motion.button
-            whileHover={{ rotate: 180 }}
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={() => refetch()}
-            className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-slate-900/50 border border-slate-800 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-700 hover:text-white"
+            className="group p-2.5 rounded-xl border border-[#16A34A]/15 bg-white text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#16A34A]"
+            title="Rafraîchir"
           >
-            <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:rotate-180" />
-            <span className="hidden xs:inline">Rafraîchir</span>
-          </motion.button>
+            <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180" />
+          </button>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={handleCopyLink}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-slate-900/50 border border-slate-800 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-amber-500/30 hover:text-amber-400"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl bg-white border border-[#16A34A]/15 px-3 sm:px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:text-[#16A34A]"
           >
             {isCopied ? (
-              <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
             ) : (
-              <Link2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Link2 className="w-4 h-4" />
             )}
-            <span className="hidden xs:inline">{isCopied ? 'Copié !' : 'Copier le lien'}</span>
-          </motion.button>
+            <span className="hidden xs:inline">
+              {isCopied ? 'Copié !' : 'Copier le lien'}
+            </span>
+          </button>
 
-          <div className="hidden sm:flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800">
-            <Crown className="w-3 h-3 text-amber-500" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Admin Niger</span>
+          <div className="hidden sm:flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-3 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
+            <Crown className="w-3 h-3 text-[#FCD34D]" />
+            <span className="text-xs text-[#14532D]/70 font-semibold">Admin Niger</span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ======================================================
           EN-TÊTE DE L'OFFRE
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl transition-all duration-300 hover:border-slate-700"
-      >
-        <div className="flex flex-col gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-2 mb-2">
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="text-[10px] sm:text-xs text-amber-400 uppercase font-bold bg-amber-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-amber-500/20"
-              >
-                {job.opportunity_type || 'Offre'}
-              </motion.span>
-              <StatusBadge status={job.status} />
-              {job.is_urgent && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="text-[10px] sm:text-xs font-bold text-rose-400 bg-rose-500/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border border-rose-500/20 flex items-center gap-1"
-                >
-                  <Zap className="w-3 h-3" /> Urgent
-                </motion.span>
-              )}
-            </div>
-            <h1 className="text-lg sm:text-2xl lg:text-3xl font-black text-white tracking-tight break-words">
-              {job.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mt-2">
-              <span className="text-xs sm:text-sm text-slate-400 flex items-center gap-1.5">
-                <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
-                <span className="truncate">{job.organization_name || 'Entreprise'}</span>
-              </span>
-              {job.city && (
-                <span className="text-xs sm:text-sm text-slate-500 flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
-                  <span className="truncate">
-                    {job.city}{job.country ? `, ${job.country}` : ', Niger'}
+      <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
+        {/* Bordure top colorée */}
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-col gap-5">
+            <div className="flex-1 min-w-0">
+
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="text-xs text-[#16A34A] uppercase font-bold bg-[#F0FDF4] px-2.5 py-1 rounded-full border border-[#16A34A]/20">
+                  {job.opportunity_type || 'Offre'}
+                </span>
+                <StatusBadge status={job.status} />
+                {job.is_urgent && (
+                  <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-200 flex items-center gap-1">
+                    <Zap className="w-3 h-3" /> Urgent
+                  </span>
+                )}
+              </div>
+
+              {/* Titre */}
+              <h1 className="text-2xl lg:text-3xl font-extrabold text-[#14532D] tracking-tight break-words">
+                {job.title}
+              </h1>
+
+              {/* Meta */}
+              <div className="flex flex-wrap items-center gap-3 mt-3">
+                <span className="text-sm text-[#14532D]/70 flex items-center gap-1.5">
+                  <Building2 className="w-4 h-4 text-[#16A34A] shrink-0" />
+                  <span className="truncate font-medium">
+                    {job.organization_name || 'Entreprise'}
                   </span>
                 </span>
-              )}
-              {job.is_remote && (
-                <span className="text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                  <Globe className="w-3 h-3" />
-                  Télétravail
-                </span>
-              )}
-            </div>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-3 text-[10px] sm:text-xs text-slate-500">
-              {job.created_at && (
+                {job.city && (
+                  <span className="text-sm text-[#14532D]/60 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">
+                      {job.city}{job.country ? `, ${job.country}` : ', Niger'}
+                    </span>
+                  </span>
+                )}
+                {job.is_remote && (
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-[#F0FDF4] text-[#16A34A] border border-[#16A34A]/20 flex items-center gap-1 font-semibold">
+                    <Globe className="w-3 h-3" />
+                    Télétravail
+                  </span>
+                )}
+              </div>
+
+              {/* Dates */}
+              <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-[#14532D]/50">
+                {job.created_at && (
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                    Créée le{' '}
+                    {new Date(job.created_at).toLocaleDateString('fr-FR', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </span>
+                )}
+                {job.published_at && (
+                  <span className="flex items-center gap-1.5 text-[#16A34A] font-semibold">
+                    <Check className="w-3.5 h-3.5" />
+                    Publiée le{' '}
+                    {new Date(job.published_at).toLocaleDateString('fr-FR', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </span>
+                )}
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  Créée le {new Date(job.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  <Activity className="w-3.5 h-3.5" />
+                  ID: #{job.id}
                 </span>
+              </div>
+
+              {/* Motif de rejet */}
+              {job.rejection_reason && (
+                <div className="mt-4 p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                  <p className="text-xs text-rose-700 flex items-start gap-2 font-medium">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>Motif du rejet : {job.rejection_reason}</span>
+                  </p>
+                </div>
               )}
-              {job.published_at && (
-                <span className="flex items-center gap-1.5 text-emerald-400">
-                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  Publiée le {new Date(job.published_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5 text-slate-600">
-                <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                ID: #{job.id}
-              </span>
             </div>
-            {job.rejection_reason && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="mt-3 p-3 sm:p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl"
-              >
-                <p className="text-[10px] sm:text-xs text-rose-400 flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>Motif du rejet: {job.rejection_reason}</span>
-                </p>
-              </motion.div>
-            )}
-          </div>
 
-          {/* Actions Admin */}
-          <div className="flex flex-col xs:flex-row flex-wrap gap-2">
-            {job.status === 'pending_review' && (
-              <>
+            {/* Actions admin */}
+            <div className="flex flex-col xs:flex-row flex-wrap gap-2 pt-4 border-t border-[#16A34A]/10">
+              {job.status === 'pending_review' && (
+                <>
+                  <ActionButton
+                    onClick={() => approveMutation.mutate()}
+                    disabled={approveMutation.isPending}
+                    isLoading={approveMutation.isPending}
+                    icon={Check}
+                    label="Approuver"
+                    variant="success"
+                    className="w-full xs:w-auto"
+                  />
+                  <ActionButton
+                    onClick={() => setShowRejectForm(!showRejectForm)}
+                    disabled={false}
+                    isLoading={false}
+                    icon={X}
+                    label="Refuser"
+                    variant="danger"
+                    className="w-full xs:w-auto"
+                  />
+                </>
+              )}
+
+              {job.status === 'approved' && (
                 <ActionButton
-                  onClick={() => approveMutation.mutate()}
-                  disabled={approveMutation.isPending}
-                  isLoading={approveMutation.isPending}
-                  icon={Check}
-                  label="Approuver"
-                  variant="success"
+                  onClick={() => publishMutation.mutate()}
+                  disabled={publishMutation.isPending}
+                  isLoading={publishMutation.isPending}
+                  icon={Sparkles}
+                  label="Publier l'offre"
+                  variant="amber"
                   className="w-full xs:w-auto"
                 />
+              )}
+
+              {job.status === 'published' && (
                 <ActionButton
-                  onClick={() => setShowRejectForm(!showRejectForm)}
-                  disabled={false}
-                  isLoading={false}
+                  onClick={() => closeMutation.mutate()}
+                  disabled={closeMutation.isPending}
+                  isLoading={closeMutation.isPending}
                   icon={X}
-                  label="Refuser"
-                  variant="danger"
+                  label="Clôturer"
+                  variant="secondary"
                   className="w-full xs:w-auto"
                 />
-              </>
-            )}
-
-            {job.status === 'approved' && (
-              <ActionButton
-                onClick={() => publishMutation.mutate()}
-                disabled={publishMutation.isPending}
-                isLoading={publishMutation.isPending}
-                icon={Sparkles}
-                label="Publier l'offre"
-                variant="primary"
-                className="w-full xs:w-auto"
-              />
-            )}
-
-            {job.status === 'published' && (
-              <ActionButton
-                onClick={() => closeMutation.mutate()}
-                disabled={closeMutation.isPending}
-                isLoading={closeMutation.isPending}
-                icon={X}
-                label="Clôturer"
-                variant="secondary"
-                className="w-full xs:w-auto"
-              />
-            )}
-
-            {job.status === 'rejected' && (
-              <ActionButton
-                onClick={() => navigate('/admin/dashboard')}
-                disabled={false}
-                isLoading={false}
-                icon={ArrowLeft}
-                label="Retour"
-                variant="secondary"
-                className="w-full xs:w-auto"
-              />
-            )}
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Formulaire de rejet */}
-        <AnimatePresence>
+          {/* Formulaire de rejet */}
           {showRejectForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-4 p-3 sm:p-4 bg-slate-950/60 border border-rose-500/20 rounded-xl overflow-hidden"
-            >
-              <p className="text-xs sm:text-sm text-slate-400 mb-3 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-rose-400" />
-                Motif du rejet :
+            <div className="mt-5 p-4 bg-rose-50 border border-rose-200 rounded-xl">
+              <p className="text-sm text-rose-700 font-semibold mb-3 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" />
+                Motif du rejet
               </p>
               <textarea
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 placeholder="Expliquez pourquoi cette offre est rejetée..."
-                className="w-full bg-slate-950 border border-slate-800 text-white p-3 sm:p-3.5 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20 transition-all duration-300 placeholder:text-slate-600"
+                className="w-full bg-white border border-rose-200 text-[#14532D] p-3.5 rounded-xl text-sm focus:outline-none focus:border-rose-400 focus:ring-4 focus:ring-rose-100 transition-all placeholder-[#14532D]/40 resize-none"
                 rows={3}
               />
               <div className="flex flex-col xs:flex-row justify-end gap-2 mt-3">
                 <button
                   onClick={() => setShowRejectForm(false)}
-                  className="px-4 py-2 text-xs sm:text-sm text-slate-400 hover:text-white transition-colors rounded-lg"
+                  className="px-4 py-2 text-sm text-[#14532D]/60 hover:text-[#14532D] transition-colors font-medium"
                 >
                   Annuler
                 </button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <button
                   onClick={() => rejectMutation.mutate()}
                   disabled={rejectMutation.isPending || !rejectionReason.trim()}
-                  className="px-4 sm:px-6 py-2 bg-rose-600 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-rose-500 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-rose-500/25"
+                  className="px-5 py-2 bg-rose-600 text-white text-sm font-bold rounded-xl hover:bg-rose-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_4px_12px_-2px_rgba(244,63,94,0.4)]"
                 >
                   {rejectMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -630,77 +502,61 @@ export const AdminOpportunityDetailPage = () => {
                     <X className="w-4 h-4" />
                   )}
                   Confirmer le rejet
-                </motion.button>
+                </button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
-      </motion.div>
+        </div>
+      </div>
 
       {/* ======================================================
           CONTENU PRINCIPAL
       ====================================================== */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Colonne de gauche - Description */}
+
+        {/* Colonne gauche — Description + Compétences */}
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+
           {/* Description */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <FileText className="w-4 h-4 text-amber-400" />
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <FileText className="w-4 h-4 text-[#16A34A]" />
               Description du poste
             </h2>
-            <div className="text-slate-300 whitespace-pre-wrap leading-relaxed text-xs sm:text-sm">
+            <div className="text-[#14532D]/80 whitespace-pre-wrap leading-relaxed text-sm">
               {job.description || 'Aucune description disponible.'}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Compétences requises */}
+          {/* Compétences */}
           {job.requirements && job.requirements.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-            >
-              <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-                <Users className="w-4 h-4 text-amber-400" />
+            <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+              <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+                <Users className="w-4 h-4 text-[#16A34A]" />
                 Compétences requises
               </h2>
               <div className="flex flex-wrap gap-2">
-                {job.requirements.map((req, index) => (
-                  <motion.span
+                {job.requirements.map((req: string, index: number) => (
+                  <span
                     key={index}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 bg-slate-950/60 border border-slate-800 rounded-xl text-xs sm:text-sm text-slate-300 hover:border-amber-500/30 hover:text-amber-400 transition-all duration-300"
+                    className="px-3 py-1.5 bg-[#F0FDF4] border border-[#16A34A]/15 rounded-lg text-sm text-[#14532D] font-medium hover:border-[#16A34A]/40 hover:-translate-y-0.5 transition-all cursor-default"
                   >
                     {req}
-                  </motion.span>
+                  </span>
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
 
-        {/* Colonne de droite - Informations */}
+        {/* Colonne droite — Informations */}
         <div className="space-y-4 sm:space-y-6">
-          {/* Informations générales */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Briefcase className="w-4 h-4 text-amber-400" />
+
+          {/* Informations */}
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Briefcase className="w-4 h-4 text-[#16A34A]" />
               Informations
             </h2>
             <div className="space-y-1">
@@ -708,14 +564,14 @@ export const AdminOpportunityDetailPage = () => {
                 label="Type"
                 value={job.opportunity_type || 'Non spécifié'}
                 icon={Briefcase}
-                color="text-amber-400"
+                color="text-[#16A34A]"
               />
               {job.contract_type && (
                 <InfoItem
                   label="Contrat"
                   value={job.contract_type}
                   icon={FileText}
-                  color="text-blue-400"
+                  color="text-blue-500"
                 />
               )}
               {job.experience_level && (
@@ -723,7 +579,7 @@ export const AdminOpportunityDetailPage = () => {
                   label="Expérience"
                   value={job.experience_level}
                   icon={Award}
-                  color="text-emerald-400"
+                  color="text-[#16A34A]"
                 />
               )}
               {job.education_level && (
@@ -731,7 +587,7 @@ export const AdminOpportunityDetailPage = () => {
                   label="Niveau d'étude"
                   value={job.education_level}
                   icon={GraduationCap}
-                  color="text-purple-400"
+                  color="text-purple-500"
                 />
               )}
               {job.salary_min && job.salary_max && (
@@ -739,126 +595,102 @@ export const AdminOpportunityDetailPage = () => {
                   label="Salaire"
                   value={`${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} FCFA`}
                   icon={TrendingUp}
-                  color="text-amber-400"
+                  color="text-[#16A34A]"
                 />
               )}
               {job.is_remote && (
                 <InfoItem
                   label="Télétravail"
-                  value="✅ Oui"
+                  value="Oui"
                   icon={Globe}
-                  color="text-emerald-400"
+                  color="text-[#16A34A]"
                 />
               )}
               {job.application_deadline && (
                 <InfoItem
                   label="Date limite"
-                  value={new Date(job.application_deadline).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  value={new Date(job.application_deadline).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
                   icon={Calendar}
-                  color="text-amber-400"
+                  color="text-[#FCD34D]"
                 />
               )}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Statistiques de l'offre */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Activity className="w-4 h-4 text-amber-400" />
+          {/* Statistiques */}
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Activity className="w-4 h-4 text-[#16A34A]" />
               Statistiques
             </h2>
             <div className="grid grid-cols-2 gap-3">
-              <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-slate-950/60 p-3 sm:p-4 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
-              >
-                <p className="text-[10px] sm:text-xs text-slate-500">Candidatures</p>
-                <p className="text-xl sm:text-2xl font-bold text-white">0</p>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="bg-slate-950/60 p-3 sm:p-4 rounded-xl text-center border border-slate-800 hover:border-amber-500/30 transition-all duration-300"
-              >
-                <p className="text-[10px] sm:text-xs text-slate-500">Vues</p>
-                <p className="text-xl sm:text-2xl font-bold text-white">0</p>
-              </motion.div>
+              <div className="bg-[#F0FDF4] p-4 rounded-xl text-center border border-[#16A34A]/10 hover:-translate-y-0.5 transition-transform">
+                <p className="text-xs text-[#14532D]/50 font-medium">Candidatures</p>
+                <p className="text-2xl font-extrabold text-[#14532D] mt-1">0</p>
+              </div>
+              <div className="bg-[#F0FDF4] p-4 rounded-xl text-center border border-[#16A34A]/10 hover:-translate-y-0.5 transition-transform">
+                <p className="text-xs text-[#14532D]/50 font-medium">Vues</p>
+                <p className="text-2xl font-extrabold text-[#14532D] mt-1">0</p>
+              </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Actions rapides */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.35 }}
-            className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-          >
-            <h2 className="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Zap className="w-4 h-4 text-amber-400" />
+          <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+            <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
+              <Zap className="w-4 h-4 text-[#FCD34D]" />
               Actions rapides
             </h2>
             <div className="space-y-2">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
-              >
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium">
                 <span className="flex items-center gap-2">
-                  <Eye className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <Eye className="w-4 h-4 text-[#16A34A]" />
                   Voir l'offre en ligne
                 </span>
-                <ExternalLink className="w-4 h-4 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-950/60 rounded-xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 text-xs sm:text-sm text-slate-300 hover:text-white group"
-              >
+                <ExternalLink className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+              <button className="w-full flex items-center justify-between px-4 py-3 bg-[#FAFAF9] rounded-xl border border-[#16A34A]/10 hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] transition-all text-sm text-[#14532D]/80 hover:text-[#14532D] group font-medium">
                 <span className="flex items-center gap-2">
-                  <Send className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                  <Send className="w-4 h-4 text-[#16A34A]" />
                   Partager l'offre
                 </span>
-                <Share2 className="w-4 h-4 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
-              </motion.button>
+                <Share2 className="w-4 h-4 text-[#14532D]/40 group-hover:translate-x-0.5 transition-transform" />
+              </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* ======================================================
-          FOOTER DE PAGE
+          FOOTER
       ====================================================== */}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-      >
-        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-          <span className="text-slate-500">
-            <span className="text-amber-400 font-medium">{job.id}</span> • Offre #{job.id}
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">Offre</span> #{job.id}
           </span>
-          <span className="hidden xs:block w-px h-4 bg-slate-800" />
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
           <span className="flex items-center gap-1.5">
-            <Shield className="w-3 h-3 text-emerald-400" />
-            <span className="text-emerald-400/70">Sécurisé - Niger</span>
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-amber-400" />
-            Statut: {job.status}
+          <span className="flex items-center gap-1.5">
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            Statut : <span className="font-semibold text-[#14532D]">{job.status}</span>
           </span>
-          <span className="w-px h-4 bg-slate-800" />
+          <span className="w-px h-4 bg-[#16A34A]/20" />
           <span>v1.0.0</span>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+
+    </div>
   );
 };
 

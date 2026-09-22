@@ -6,40 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { organizationApi } from '../api/organization';
 import {
   Building2, Save, X, Loader2, ArrowLeft, Home,
-  Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
-  Globe, MapPin, Phone, Mail, Link2, Info,
-  CheckCircle2, AlertCircle, Award, Users, Briefcase,
-  TrendingUp, Calendar, Star, Plus, Minus,
-  FileText
+  Sparkles, Shield, Activity,
+  Globe, MapPin, Phone, Link2, Info,
+  AlertCircle, Briefcase, FileText,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-// ==========================================================
-// COMPOSANTS
+// FORM INPUT
 // ==========================================================
 
 const FormInput = ({
@@ -51,54 +25,44 @@ const FormInput = ({
   placeholder,
   required,
   error,
-  className = ''
+  className = '',
 }: any) => {
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
-    <motion.div
-      variants={fadeInUp}
-      className={`space-y-2 ${className}`}
-    >
+    <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2">
-          {Icon && <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />}
+        <label className="text-xs font-semibold text-[#14532D]/70 flex items-center gap-1.5">
+          {Icon && <Icon className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />}
           {label}
-          {required && <span className="text-rose-400">*</span>}
+          {required && <span className="text-rose-500">*</span>}
         </label>
         {error && (
-          <span className="text-[10px] sm:text-xs text-rose-400 flex items-center gap-1">
+          <span className="text-xs text-rose-500 flex items-center gap-1">
             <AlertCircle className="w-3 h-3" />
             {error}
           </span>
         )}
       </div>
 
-      <div className="relative group">
-        <input
-          type={type}
-          value={value}
-          onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          required={required}
-          placeholder={placeholder}
-          className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
-            error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
-          }`}
-        />
-        <motion.div
-          className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 transition-all duration-300 pointer-events-none"
-          animate={{
-            opacity: isFocused ? 0.05 : 0,
-          }}
-        />
-      </div>
-    </motion.div>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        required={required}
+        placeholder={placeholder}
+        className={`w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border text-sm transition-all outline-none font-medium placeholder-[#14532D]/30 ${
+          error
+            ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-100'
+            : 'border-[#16A34A]/20 focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10'
+        }`}
+      />
+    </div>
   );
 };
 
-// Composant FormTextarea pour gérer les zones de texte
+// ==========================================================
+// FORM TEXTAREA
+// ==========================================================
+
 const FormTextarea = ({
   icon: Icon,
   label,
@@ -108,66 +72,54 @@ const FormTextarea = ({
   required,
   error,
   rows = 4,
-  className = ''
+  className = '',
 }: any) => {
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
-    <motion.div
-      variants={fadeInUp}
-      className={`space-y-2 ${className}`}
-    >
+    <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2">
-          {Icon && <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />}
+        <label className="text-xs font-semibold text-[#14532D]/70 flex items-center gap-1.5">
+          {Icon && <Icon className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />}
           {label}
-          {required && <span className="text-rose-400">*</span>}
+          {required && <span className="text-rose-500">*</span>}
         </label>
         {error && (
-          <span className="text-[10px] sm:text-xs text-rose-400 flex items-center gap-1">
+          <span className="text-xs text-rose-500 flex items-center gap-1">
             <AlertCircle className="w-3 h-3" />
             {error}
           </span>
         )}
       </div>
 
-      <div className="relative group">
-        <textarea
-          value={value}
-          onChange={onChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          required={required}
-          rows={rows}
-          placeholder={placeholder}
-          className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none ${
-            error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
-          }`}
-        />
-        <motion.div
-          className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 transition-all duration-300 pointer-events-none"
-          animate={{
-            opacity: isFocused ? 0.05 : 0,
-          }}
-        />
-      </div>
-    </motion.div>
+      <textarea
+        value={value}
+        onChange={onChange}
+        required={required}
+        rows={rows}
+        placeholder={placeholder}
+        className={`w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border text-sm transition-all outline-none resize-none font-medium placeholder-[#14532D]/30 ${
+          error
+            ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-100'
+            : 'border-[#16A34A]/20 focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10'
+        }`}
+      />
+    </div>
   );
 };
 
+// ==========================================================
+// FORM SECTION
+// ==========================================================
+
 const FormSection = ({ title, icon: Icon, children }: any) => (
-  <motion.div
-    variants={fadeInUp}
-    className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-5 hover:border-slate-700 transition-all duration-300"
-  >
-    <div className="flex items-center gap-2 sm:gap-3 pb-3 border-b border-slate-800">
-      <div className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 shrink-0">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+  <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6 space-y-5">
+    <div className="flex items-center gap-3 pb-4 border-b border-[#16A34A]/10">
+      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)]">
+        <Icon className="w-5 h-5 text-white" />
       </div>
-      <h3 className="text-sm sm:text-base font-bold text-white truncate">{title}</h3>
+      <h3 className="text-base font-extrabold text-[#14532D] truncate">{title}</h3>
     </div>
     {children}
-  </motion.div>
+  </div>
 );
 
 // ==========================================================
@@ -177,7 +129,6 @@ const FormSection = ({ title, icon: Icon, children }: any) => (
 export const OrganizationCreatePage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -188,21 +139,6 @@ export const OrganizationCreatePage = () => {
     address: '',
     phone: '',
   });
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // QUERIES
@@ -232,8 +168,8 @@ export const OrganizationCreatePage = () => {
 
   const createMutation = useMutation({
     mutationFn: (data: typeof formData) => organizationApi.create(data),
-    onSuccess: (response) => {
-      toast.success('✅ Organisation créée avec succès !');
+    onSuccess: () => {
+      toast.success('Organisation créée');
       queryClient.invalidateQueries({ queryKey: ['myOrganizations'] });
       queryClient.invalidateQueries({ queryKey: ['orgJobs'] });
       setTimeout(() => {
@@ -241,9 +177,10 @@ export const OrganizationCreatePage = () => {
       }, 1000);
     },
     onError: (error: any) => {
-      const errorMessage = error.response?.data?.detail ||
-                           error.response?.data?.message ||
-                           'Erreur lors de la création';
+      const errorMessage =
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        'Erreur lors de la création';
       toast.error(errorMessage);
     },
   });
@@ -258,7 +195,7 @@ export const OrganizationCreatePage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      toast.error('Veuillez renseigner le nom de l\'organisation');
+      toast.error("Veuillez renseigner le nom de l'organisation");
       return;
     }
     createMutation.mutate(formData);
@@ -270,31 +207,12 @@ export const OrganizationCreatePage = () => {
 
   if (isCheckingOrg) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
-      >
-        <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 animate-spin text-amber-500" />
-        <p className="text-xs sm:text-sm text-slate-400">Vérification de votre organisation...</p>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-amber-500/50"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: i * 0.2,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+        <p className="text-sm text-[#14532D]/60 font-medium">
+          Vérification de votre organisation...
+        </p>
+      </div>
     );
   }
 
@@ -311,295 +229,224 @@ export const OrganizationCreatePage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 10,
-            y: mousePosition.y * 10,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
+    <div className="max-w-3xl mx-auto space-y-6">
+
+      {/* ======================================================
+          NAVIGATION
+      ====================================================== */}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button
+            onClick={handleGoBack}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="hidden sm:inline">Retour</span>
+          </button>
+
+          <button
+            onClick={handleGoHome}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <Home className="h-4 w-4 text-[#16A34A]" />
+            <span className="hidden sm:inline">Accueil</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)] self-start sm:self-auto">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+          </span>
+          <span className="text-xs text-[#14532D]/70 font-semibold">Créer une organisation</span>
+        </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+      {/* ======================================================
+          EN-TÊTE
+      ====================================================== */}
 
-        {/* ======================================================
-            NAVIGATION
-        ====================================================== */}
+      <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
 
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6"
-        >
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoBack}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-              <span className="hidden sm:inline">Retour</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoHome}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
-            >
-              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span className="hidden sm:inline">Accueil</span>
-            </motion.button>
-          </div>
-
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Créer une organisation</span>
-            <Sparkles className="w-3 h-3 text-amber-400" />
-          </div>
-        </motion.div>
-
-        {/* ======================================================
-            EN-TÊTE
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-            <motion.div
-              whileHover={{ rotate: 180 }}
-              transition={{ duration: 0.6, type: "spring" }}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center shrink-0"
-            >
-              <Building2 className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
-            </motion.div>
+        <div className="p-5 sm:p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)]">
+              <Building2 className="w-7 h-7 text-white" />
+            </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-white flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className="text-2xl md:text-3xl font-extrabold text-[#14532D] flex flex-wrap items-center gap-3">
                 Créer une Organisation
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
-                >
+                <span className="px-2.5 py-1 text-[10px] font-bold bg-[#FCD34D] text-[#14532D] rounded-full shrink-0">
                   NOUVEAU
-                </motion.span>
+                </span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                Remplissez les informations de votre entreprise au Niger
+              <p className="text-sm text-[#14532D]/60 mt-1">
+                Remplissez les informations de votre entreprise au Niger.
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* ======================================================
-            FORMULAIRE
-        ====================================================== */}
+      {/* ======================================================
+          FORMULAIRE
+      ====================================================== */}
 
-        <motion.form
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-          onSubmit={handleSubmit}
-          className="space-y-4 sm:space-y-6 mt-4 sm:mt-6"
-        >
+      <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Section: Informations générales */}
-          <FormSection title="Informations générales" icon={Info}>
+        {/* Section: Informations générales */}
+        <FormSection title="Informations générales" icon={Info}>
+          <FormInput
+            label="Nom de l'organisation"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="ex: TechCorp Niger"
+            required
+            icon={Building2}
+          />
+
+          <FormInput
+            label="Secteur d'activité"
+            value={formData.industry}
+            onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+            placeholder="ex: Tech, Finance, Santé, Éducation"
+            icon={Briefcase}
+          />
+
+          <FormTextarea
+            label="Description"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            placeholder="Présentation de votre organisation au Niger..."
+            icon={FileText}
+            rows={4}
+          />
+        </FormSection>
+
+        {/* Section: Contact et Localisation */}
+        <FormSection title="Contact & Localisation" icon={Globe}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormInput
-              label="Nom de l'organisation"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="ex: TechCorp Niger"
-              required
-              icon={Building2}
+              label="Site web"
+              type="url"
+              value={formData.website}
+              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+              placeholder="https://monentreprise.ne"
+              icon={Link2}
             />
 
             <FormInput
-              label="Secteur d'activité"
-              value={formData.industry}
-              onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-              placeholder="ex: Tech, Finance, Santé, Éducation"
-              icon={Briefcase}
+              label="Téléphone"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              placeholder="+227 XX XX XX XX"
+              icon={Phone}
             />
+          </div>
 
-            <FormTextarea
-              label="Description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Présentation de votre organisation au Niger..."
-              icon={FileText}
-              rows={4}
-            />
-          </FormSection>
-
-          {/* Section: Contact et Localisation */}
-          <FormSection title="Contact & Localisation" icon={Globe}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                label="Site web"
-                type="url"
-                value={formData.website}
-                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                placeholder="https://monentreprise.ne"
-                icon={Link2}
-              />
-
-              <FormInput
-                label="Téléphone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+227 XX XX XX XX"
-                icon={Phone}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                label="Ville"
-                value={formData.city}
-                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                placeholder="ex: Niamey, Zinder, Maradi"
-                icon={MapPin}
-              />
-
-              <FormInput
-                label="Pays"
-                value={formData.country}
-                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                placeholder="Niger"
-                icon={Globe}
-              />
-            </div>
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormInput
-              label="Adresse"
-              value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              placeholder="ex: Rue de l'Uranium, Quartier Plateau"
+              label="Ville"
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              placeholder="ex: Niamey, Zinder, Maradi"
               icon={MapPin}
             />
-          </FormSection>
 
-          {/* ======================================================
-              BOUTONS D'ACTION
-          ====================================================== */}
+            <FormInput
+              label="Pays"
+              value={formData.country}
+              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              placeholder="Niger"
+              icon={Globe}
+            />
+          </div>
 
-          <motion.div
-            variants={fadeInUp}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-slate-800"
-          >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+          <FormInput
+            label="Adresse"
+            value={formData.address}
+            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+            placeholder="ex: Rue de l'Uranium, Quartier Plateau"
+            icon={MapPin}
+          />
+        </FormSection>
+
+        {/* ======================================================
+            BOUTONS D'ACTION
+        ====================================================== */}
+
+        <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
               type="button"
               onClick={handleGoBack}
               disabled={createMutation.isPending}
-              className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 bg-slate-800 text-white rounded-xl text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-3.5 bg-white border border-[#16A34A]/20 text-[#14532D] rounded-xl text-sm font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <X className="w-4 h-4" />
               Annuler
-            </motion.button>
+            </button>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               type="submit"
               disabled={createMutation.isPending}
-              className="w-full sm:flex-1 px-5 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:flex-1 px-6 py-3.5 bg-[#16A34A] text-white rounded-xl text-sm font-bold hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {createMutation.isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                   Création en cours...
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Save className="w-5 h-5" />
                   Créer l'organisation
                 </>
               )}
-            </motion.button>
-          </motion.div>
-
-          {/* Indicateur d'information */}
-          <motion.div
-            variants={fadeInUp}
-            className="flex items-start sm:items-center gap-3 p-3 sm:p-4 bg-slate-900/60 border border-slate-800 rounded-xl"
-          >
-            <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 shrink-0">
-              <Info className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed">
-                <span className="font-semibold text-amber-400">Important</span> —
-                Après la création, vous pourrez publier des offres d'emploi et gérer vos candidatures au Niger.
-              </p>
-            </div>
-          </motion.div>
-
-        </motion.form>
-
-        {/* ======================================================
-            FOOTER
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 mt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-        >
-          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-            <span className="text-slate-500">
-              <span className="text-amber-400 font-medium">Création</span> • Organisation
-            </span>
-            <span className="hidden xs:block w-px h-4 bg-slate-800" />
-            <span className="flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé - Niger</span>
-            </span>
+            </button>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-amber-400" />
-              v1.0.0
-            </span>
-            <span className="w-px h-4 bg-slate-800" />
-            <span>Création d'organisation</span>
-          </div>
-        </motion.div>
 
+          {/* Info */}
+          <div className="mt-5 flex items-start gap-3 p-4 bg-[#F0FDF4] border border-[#16A34A]/15 rounded-xl">
+            <div className="p-2 rounded-lg bg-white shrink-0">
+              <Info className="w-4 h-4 text-[#16A34A]" />
+            </div>
+            <p className="text-xs text-[#14532D]/70 leading-relaxed">
+              <span className="font-bold text-[#16A34A]">Important</span> — Après la création, vous pourrez publier des offres d'emploi et gérer vos candidatures au Niger.
+            </p>
+          </div>
+        </div>
+
+      </form>
+
+      {/* ======================================================
+          FOOTER
+      ====================================================== */}
+
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">Création</span> • Organisation
+          </span>
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
+          <span className="flex items-center gap-1.5">
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            v1.0.0
+          </span>
+          <span className="w-px h-4 bg-[#16A34A]/20" />
+          <span>Création d'organisation</span>
+        </div>
       </div>
-    </motion.div>
+
+    </div>
   );
 };
 

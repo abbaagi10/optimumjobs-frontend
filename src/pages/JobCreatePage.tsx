@@ -1,52 +1,22 @@
 // src/pages/JobCreatePage.tsx
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { jobsApi } from '../api/jobs';
 import { organizationApi } from '../api/organization';
 import {
   Briefcase, Save, X, Loader2, ArrowLeft, Home,
-  Sparkles, Zap, Shield, Activity, Crown, ChevronRight,
+  Sparkles, Shield, Activity,
   Building2, MapPin, Globe, Calendar, Users, Award,
-  FileText, CheckCircle2, AlertCircle, Star, Eye,
-  Mail, Phone, Link2, Plus, Minus, Info,
-  TrendingUp, GraduationCap
+  FileText, CheckCircle2, AlertCircle, Plus, Info,
+  TrendingUp, GraduationCap,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Organization } from '../types';
 
 // ==========================================================
-// ANIMATION VARIANTS
-// ==========================================================
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
-
-const fadeInScale = {
-  initial: { opacity: 0, scale: 0.95 },
-  animate: { opacity: 1, scale: 1 }
-};
-
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.08
-    }
-  }
-};
-
-const slideInLeft = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 }
-};
-
-// ==========================================================
-// COMPOSANTS
+// FORM INPUT
 // ==========================================================
 
 const FormInput = ({
@@ -59,23 +29,18 @@ const FormInput = ({
   required,
   error,
   options,
-  className = ''
+  className = '',
 }: any) => {
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
-    <motion.div
-      variants={fadeInUp}
-      className={`space-y-2 ${className}`}
-    >
+    <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <label className="text-[10px] sm:text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2">
-          {Icon && <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />}
+        <label className="text-xs font-semibold text-[#14532D]/70 flex items-center gap-1.5">
+          {Icon && <Icon className="w-3.5 h-3.5 text-[#16A34A] shrink-0" />}
           {label}
-          {required && <span className="text-rose-400">*</span>}
+          {required && <span className="text-rose-500">*</span>}
         </label>
         {error && (
-          <span className="text-[10px] sm:text-xs text-rose-400 flex items-center gap-1">
+          <span className="text-xs text-rose-500 flex items-center gap-1">
             <AlertCircle className="w-3 h-3" />
             {error}
           </span>
@@ -87,13 +52,17 @@ const FormInput = ({
           value={value}
           onChange={onChange}
           required={required}
-          className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
-            error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
+          className={`w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border text-sm transition-all outline-none font-medium cursor-pointer ${
+            error
+              ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-100'
+              : 'border-[#16A34A]/20 focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10'
           }`}
         >
           <option value="">{placeholder || 'Sélectionner'}</option>
           {options?.map((opt: any) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
       ) : type === 'textarea' ? (
@@ -103,8 +72,10 @@ const FormInput = ({
           required={required}
           rows={4}
           placeholder={placeholder}
-          className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 resize-none ${
-            error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
+          className={`w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border text-sm transition-all outline-none resize-none font-medium placeholder-[#14532D]/30 ${
+            error
+              ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-100'
+              : 'border-[#16A34A]/20 focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10'
           }`}
         />
       ) : type === 'checkbox' ? (
@@ -113,49 +84,44 @@ const FormInput = ({
             type="checkbox"
             checked={value}
             onChange={onChange}
-            className="w-5 h-5 rounded bg-slate-950 border-slate-800 text-amber-500 focus:ring-amber-500 focus:ring-offset-0 transition-all duration-300 shrink-0"
+            className="w-5 h-5 rounded bg-white border-[#16A34A]/30 text-[#16A34A] focus:ring-[#16A34A] focus:ring-offset-0 transition-all shrink-0 accent-[#16A34A]"
           />
-          <span className="text-xs sm:text-sm text-slate-300">Oui, cette offre est en télétravail</span>
+          <span className="text-sm text-[#14532D]/80 font-medium">
+            Oui, cette offre est en télétravail
+          </span>
         </div>
       ) : (
-        <div className="relative group">
-          <input
-            type={type}
-            value={value}
-            onChange={onChange}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            required={required}
-            placeholder={placeholder}
-            className={`w-full bg-slate-950/80 text-white px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl border text-xs sm:text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/20 ${
-              error ? 'border-rose-500/50 focus:border-rose-500' : 'border-slate-800 focus:border-amber-500/80'
-            }`}
-          />
-          <motion.div
-            className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-500/0 via-amber-500/0 to-amber-500/0 transition-all duration-300 pointer-events-none"
-            animate={{
-              opacity: isFocused ? 0.05 : 0,
-            }}
-          />
-        </div>
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder={placeholder}
+          className={`w-full bg-white text-[#14532D] px-4 py-3 rounded-xl border text-sm transition-all outline-none font-medium placeholder-[#14532D]/30 ${
+            error
+              ? 'border-rose-300 focus:border-rose-500 focus:ring-4 focus:ring-rose-100'
+              : 'border-[#16A34A]/20 focus:border-[#16A34A] focus:ring-4 focus:ring-[#16A34A]/10'
+          }`}
+        />
       )}
-    </motion.div>
+    </div>
   );
 };
 
+// ==========================================================
+// FORM SECTION
+// ==========================================================
+
 const FormSection = ({ title, icon: Icon, children }: any) => (
-  <motion.div
-    variants={fadeInUp}
-    className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-5 hover:border-slate-700 transition-all duration-300"
-  >
-    <div className="flex items-center gap-2 sm:gap-3 pb-3 border-b border-slate-800">
-      <div className="p-1.5 sm:p-2 rounded-xl bg-amber-500/10 shrink-0">
-        <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+  <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6 space-y-5">
+    <div className="flex items-center gap-3 pb-4 border-b border-[#16A34A]/10">
+      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)]">
+        <Icon className="w-5 h-5 text-white" />
       </div>
-      <h3 className="text-sm sm:text-base font-bold text-white truncate">{title}</h3>
+      <h3 className="text-base font-extrabold text-[#14532D] truncate">{title}</h3>
     </div>
     {children}
-  </motion.div>
+  </div>
 );
 
 // ==========================================================
@@ -164,7 +130,6 @@ const FormSection = ({ title, icon: Icon, children }: any) => (
 
 export const JobCreatePage = () => {
   const navigate = useNavigate();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -181,21 +146,6 @@ export const JobCreatePage = () => {
     experience_level: '',
     education_level: '',
   });
-
-  // ==========================================================
-  // MOUSE PARALLAX
-  // ==========================================================
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 2;
-      const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      setMousePosition({ x, y });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    return () => document.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   // ==========================================================
   // QUERIES
@@ -216,14 +166,15 @@ export const JobCreatePage = () => {
       return jobsApi.create(data);
     },
     onSuccess: () => {
-      toast.success('Offre créée en brouillon avec succès !');
+      toast.success('Offre créée en brouillon');
       navigate('/organization/dashboard');
     },
     onError: (error: any) => {
       console.error('❌ Erreur création offre:', error);
-      const message = error.response?.data?.detail ||
-                     error.response?.data?.message ||
-                     'Erreur lors de la création de l\'offre';
+      const message =
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        "Erreur lors de la création de l'offre";
       toast.error(message);
     },
   });
@@ -281,31 +232,12 @@ export const JobCreatePage = () => {
 
   if (isLoadingOrgs) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col justify-center items-center min-h-[60vh] space-y-4"
-      >
-        <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
-        <p className="text-sm text-slate-400">Chargement de vos organisations...</p>
-        <div className="flex gap-1">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="w-2 h-2 rounded-full bg-amber-500/50"
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                delay: i * 0.2,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
+        <Loader2 className="w-12 h-12 animate-spin text-[#16A34A]" />
+        <p className="text-sm text-[#14532D]/60 font-medium">
+          Chargement de vos organisations...
+        </p>
+      </div>
     );
   }
 
@@ -317,43 +249,28 @@ export const JobCreatePage = () => {
 
   if (orgsList.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-3xl mx-auto px-3 sm:px-4 py-8"
-      >
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-12 text-center space-y-5 sm:space-y-6 backdrop-blur-xl">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20"
-          >
-            <Briefcase className="w-8 h-8 sm:w-10 sm:h-10 text-amber-400" />
-          </motion.div>
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="bg-white border border-[#16A34A]/10 rounded-3xl p-6 sm:p-12 text-center space-y-6">
+          <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)]">
+            <Briefcase className="w-10 h-10 text-white" />
+          </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white">Aucune organisation</h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-2">
-              Vous devez créer une organisation avant de publier une offre
+            <h2 className="text-2xl font-extrabold text-[#14532D]">
+              Aucune organisation
+            </h2>
+            <p className="text-sm text-[#14532D]/60 mt-2">
+              Vous devez créer une organisation avant de publier une offre.
             </p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <button
             onClick={() => navigate('/organization/create')}
-            className="px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center gap-2 mx-auto text-sm sm:text-base"
+            className="px-8 py-3.5 bg-[#16A34A] text-white rounded-xl font-bold hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all flex items-center gap-2 mx-auto"
           >
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <Plus className="w-5 h-5" />
             Créer une organisation
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -362,384 +279,323 @@ export const JobCreatePage = () => {
   // ==========================================================
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative"
-    >
-      {/* Background decoration with parallax */}
-      <div className="fixed inset-0 -z-10 bg-[#0a0a0f] overflow-hidden">
-        <motion.div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-amber-500/5 rounded-full blur-3xl"
-          animate={{
-            x: mousePosition.x * 20,
-            y: mousePosition.y * 20,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-blue-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 15,
-            y: -mousePosition.y * 15,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-purple-500/5 rounded-full blur-3xl"
-          animate={{
-            x: -mousePosition.x * 10,
-            y: mousePosition.y * 10,
-          }}
-          transition={{ type: "spring", damping: 30, stiffness: 50 }}
-        />
+    <div className="max-w-4xl mx-auto space-y-6">
+
+      {/* ======================================================
+          NAVIGATION
+      ====================================================== */}
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <button
+            onClick={handleGoBack}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="hidden sm:inline">Retour</span>
+          </button>
+
+          <button
+            onClick={handleGoHome}
+            className="group flex items-center gap-2 rounded-xl border border-[#16A34A]/15 bg-white px-4 py-2.5 text-sm font-semibold text-[#14532D]/70 transition-all hover:border-[#16A34A]/30 hover:bg-[#F0FDF4] hover:text-[#14532D]"
+          >
+            <Home className="h-4 w-4 text-[#16A34A]" />
+            <span className="hidden sm:inline">Accueil</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)] self-start sm:self-auto">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
+          </span>
+          <span className="text-xs text-[#14532D]/70 font-semibold">Nouvelle offre</span>
+          <Sparkles className="w-3 h-3 text-[#FCD34D]" />
+        </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-6">
+      {/* ======================================================
+          EN-TÊTE
+      ====================================================== */}
 
-        {/* ======================================================
-            NAVIGATION
-        ====================================================== */}
-
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-        >
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoBack}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl border border-slate-700 bg-slate-900/50 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-400 transition-all duration-300 hover:border-slate-600 hover:bg-slate-800 hover:text-white hover:shadow-lg"
-            >
-              <ArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:-translate-x-1" />
-              <span className="hidden sm:inline">Retour</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleGoHome}
-              className="group flex items-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-r from-amber-500/10 to-amber-600/10 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-amber-400 transition-all duration-300 hover:from-amber-500/20 hover:to-amber-600/20 hover:text-amber-300 border border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/10"
-            >
-              <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:scale-110" />
-              <span className="hidden sm:inline">Accueil</span>
-            </motion.button>
-          </div>
-
-          <div className="flex items-center gap-2 rounded-full bg-slate-900/50 px-3 sm:px-4 py-1.5 border border-slate-800 self-start sm:self-auto">
-            <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-            <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Nouvelle offre</span>
-            <Sparkles className="w-3 h-3 text-amber-400" />
-          </div>
-        </motion.div>
-
-        {/* ======================================================
-            EN-TÊTE
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900/80 border border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-xl hover:border-slate-700 transition-all duration-300"
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-            <motion.div
-              whileHover={{ rotate: 180 }}
-              transition={{ duration: 0.6, type: "spring" }}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center shrink-0"
-            >
-              <Briefcase className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
-            </motion.div>
+      <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="p-5 sm:p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)]">
+              <Briefcase className="w-7 h-7 text-white" />
+            </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-black text-white flex flex-wrap items-center gap-2 sm:gap-3">
+              <h1 className="text-2xl md:text-3xl font-extrabold text-[#14532D] flex flex-wrap items-center gap-3">
                 Publier une offre
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="px-2 py-0.5 text-[9px] sm:text-[10px] font-bold bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 rounded-full shrink-0"
-                >
+                <span className="px-2.5 py-1 text-[10px] font-bold bg-[#FCD34D] text-[#14532D] rounded-full shrink-0">
                   NOUVEAU
-                </motion.span>
+                </span>
               </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                Créez une nouvelle opportunité d'emploi pour votre organisation au Niger
+              <p className="text-sm text-[#14532D]/60 mt-1">
+                Créez une nouvelle opportunité d'emploi pour votre organisation au Niger.
               </p>
             </div>
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        {/* ======================================================
-            FORMULAIRE
-        ====================================================== */}
+      {/* ======================================================
+          FORMULAIRE
+      ====================================================== */}
 
-        <motion.form
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-          onSubmit={handleSubmit}
-          className="space-y-4 sm:space-y-6"
-        >
+      <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Section: Informations générales */}
-          <FormSection title="Informations générales" icon={Info}>
-            <div className="grid grid-cols-1 gap-4 sm:gap-5">
-              <FormInput
-                label="Titre de l'offre"
-                value={formData.title}
-                onChange={(e: any) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="ex: Développeur Fullstack"
-                required
-                icon={FileText}
-              />
-
-              <FormInput
-                type="select"
-                label="Organisation"
-                value={formData.organization}
-                onChange={(e: any) => setFormData({ ...formData, organization: e.target.value })}
-                placeholder="Sélectionner une organisation"
-                required
-                icon={Building2}
-                options={orgsList.map((org: Organization) => ({
-                  value: org.id,
-                  label: org.name
-                }))}
-              />
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormInput
-                  type="select"
-                  label="Type d'opportunité"
-                  value={formData.opportunity_type}
-                  onChange={(e: any) => setFormData({ ...formData, opportunity_type: e.target.value })}
-                  icon={Briefcase}
-                  options={[
-                    { value: 'job', label: '💼 Emploi' },
-                    { value: 'internship', label: '🎓 Stage' },
-                    { value: 'volunteer', label: '🤝 Volontariat' },
-                    { value: 'training', label: '📚 Formation' },
-                  ]}
-                />
-
-                <FormInput
-                  type="select"
-                  label="Type de contrat"
-                  value={formData.contract_type}
-                  onChange={(e: any) => setFormData({ ...formData, contract_type: e.target.value })}
-                  icon={FileText}
-                  options={[
-                    { value: '', label: 'Sélectionner' },
-                    { value: 'cdi', label: 'CDI' },
-                    { value: 'cdd', label: 'CDD' },
-                    { value: 'freelance', label: 'Freelance' },
-                    { value: 'internship', label: 'Stage' },
-                  ]}
-                />
-              </div>
-            </div>
-          </FormSection>
-
-          {/* Section: Localisation */}
-          <FormSection title="Localisation" icon={MapPin}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                label="Ville"
-                value={formData.city}
-                onChange={(e: any) => setFormData({ ...formData, city: e.target.value })}
-                placeholder="Niamey"
-                icon={MapPin}
-              />
-
-              <FormInput
-                label="Pays"
-                value={formData.country}
-                onChange={(e: any) => setFormData({ ...formData, country: e.target.value })}
-                placeholder="Niger"
-                icon={Globe}
-              />
-            </div>
-
+        {/* Section: Informations générales */}
+        <FormSection title="Informations générales" icon={Info}>
+          <div className="grid grid-cols-1 gap-5">
             <FormInput
-              type="checkbox"
-              label="Télétravail"
-              value={formData.is_remote}
-              onChange={(e: any) => setFormData({ ...formData, is_remote: e.target.checked })}
-            />
-          </FormSection>
-
-          {/* Section: Rémunération et prérequis */}
-          <FormSection title="Rémunération & prérequis" icon={Award}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                type="number"
-                label="Salaire minimum (FCFA)"
-                value={formData.salary_min}
-                onChange={(e: any) => setFormData({ ...formData, salary_min: e.target.value })}
-                placeholder="500000"
-                icon={TrendingUp}
-              />
-
-              <FormInput
-                type="number"
-                label="Salaire maximum (FCFA)"
-                value={formData.salary_max}
-                onChange={(e: any) => setFormData({ ...formData, salary_max: e.target.value })}
-                placeholder="900000"
-                icon={TrendingUp}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormInput
-                type="select"
-                label="Niveau d'expérience"
-                value={formData.experience_level}
-                onChange={(e: any) => setFormData({ ...formData, experience_level: e.target.value })}
-                icon={Users}
-                options={[
-                  { value: '', label: 'Sélectionner' },
-                  { value: 'entry', label: '🟢 Débutant' },
-                  { value: 'junior', label: '🟡 Junior' },
-                  { value: 'senior', label: '🟠 Senior' },
-                  { value: 'expert', label: '🔴 Expert' },
-                ]}
-              />
-
-              <FormInput
-                type="select"
-                label="Niveau d'étude"
-                value={formData.education_level}
-                onChange={(e: any) => setFormData({ ...formData, education_level: e.target.value })}
-                icon={GraduationCap}
-                options={[
-                  { value: '', label: 'Sélectionner' },
-                  { value: 'bachelor', label: '🎓 Licence' },
-                  { value: 'master', label: '🎓 Master' },
-                  { value: 'phd', label: '🎓 Doctorat' },
-                  { value: 'other', label: '📖 Autre' },
-                ]}
-              />
-            </div>
-          </FormSection>
-
-          {/* Section: Description */}
-          <FormSection title="Description du poste" icon={FileText}>
-            <FormInput
-              type="textarea"
-              label="Description"
-              value={formData.description}
-              onChange={(e: any) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Description détaillée du poste, missions, profil recherché..."
+              label="Titre de l'offre"
+              value={formData.title}
+              onChange={(e: any) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="ex: Développeur Fullstack"
               required
               icon={FileText}
             />
 
             <FormInput
-              type="textarea"
-              label="Prérequis (un par ligne)"
-              value={formData.requirements}
-              onChange={(e: any) => setFormData({ ...formData, requirements: e.target.value })}
-              placeholder="Diplôme en informatique&#10;5 ans d'expérience&#10;Maîtrise de React"
-              icon={CheckCircle2}
+              type="select"
+              label="Organisation"
+              value={formData.organization}
+              onChange={(e: any) => setFormData({ ...formData, organization: e.target.value })}
+              placeholder="Sélectionner une organisation"
+              required
+              icon={Building2}
+              options={orgsList.map((org: Organization) => ({
+                value: org.id,
+                label: org.name,
+              }))}
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                type="select"
+                label="Type d'opportunité"
+                value={formData.opportunity_type}
+                onChange={(e: any) =>
+                  setFormData({ ...formData, opportunity_type: e.target.value })
+                }
+                icon={Briefcase}
+                options={[
+                  { value: 'job', label: 'Emploi' },
+                  { value: 'internship', label: 'Stage' },
+                  { value: 'volunteer', label: 'Volontariat' },
+                  { value: 'training', label: 'Formation' },
+                ]}
+              />
+
+              <FormInput
+                type="select"
+                label="Type de contrat"
+                value={formData.contract_type}
+                onChange={(e: any) => setFormData({ ...formData, contract_type: e.target.value })}
+                icon={FileText}
+                options={[
+                  { value: '', label: 'Sélectionner' },
+                  { value: 'cdi', label: 'CDI' },
+                  { value: 'cdd', label: 'CDD' },
+                  { value: 'freelance', label: 'Freelance' },
+                  { value: 'internship', label: 'Stage' },
+                ]}
+              />
+            </div>
+          </div>
+        </FormSection>
+
+        {/* Section: Localisation */}
+        <FormSection title="Localisation" icon={MapPin}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormInput
+              label="Ville"
+              value={formData.city}
+              onChange={(e: any) => setFormData({ ...formData, city: e.target.value })}
+              placeholder="Niamey"
+              icon={MapPin}
             />
 
             <FormInput
-              type="date"
-              label="Date limite de candidature"
-              value={formData.application_deadline}
-              onChange={(e: any) => setFormData({ ...formData, application_deadline: e.target.value })}
-              icon={Calendar}
+              label="Pays"
+              value={formData.country}
+              onChange={(e: any) => setFormData({ ...formData, country: e.target.value })}
+              placeholder="Niger"
+              icon={Globe}
             />
-          </FormSection>
+          </div>
 
-          {/* ======================================================
-              BOUTONS D'ACTION
-          ====================================================== */}
+          <FormInput
+            type="checkbox"
+            label="Télétravail"
+            value={formData.is_remote}
+            onChange={(e: any) => setFormData({ ...formData, is_remote: e.target.checked })}
+          />
+        </FormSection>
 
-          <motion.div
-            variants={fadeInUp}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t border-slate-800"
-          >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+        {/* Section: Rémunération */}
+        <FormSection title="Rémunération & prérequis" icon={Award}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormInput
+              type="number"
+              label="Salaire minimum (FCFA)"
+              value={formData.salary_min}
+              onChange={(e: any) => setFormData({ ...formData, salary_min: e.target.value })}
+              placeholder="500000"
+              icon={TrendingUp}
+            />
+
+            <FormInput
+              type="number"
+              label="Salaire maximum (FCFA)"
+              value={formData.salary_max}
+              onChange={(e: any) => setFormData({ ...formData, salary_max: e.target.value })}
+              placeholder="900000"
+              icon={TrendingUp}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormInput
+              type="select"
+              label="Niveau d'expérience"
+              value={formData.experience_level}
+              onChange={(e: any) =>
+                setFormData({ ...formData, experience_level: e.target.value })
+              }
+              icon={Users}
+              options={[
+                { value: '', label: 'Sélectionner' },
+                { value: 'entry', label: 'Débutant' },
+                { value: 'junior', label: 'Junior' },
+                { value: 'senior', label: 'Senior' },
+                { value: 'expert', label: 'Expert' },
+              ]}
+            />
+
+            <FormInput
+              type="select"
+              label="Niveau d'étude"
+              value={formData.education_level}
+              onChange={(e: any) =>
+                setFormData({ ...formData, education_level: e.target.value })
+              }
+              icon={GraduationCap}
+              options={[
+                { value: '', label: 'Sélectionner' },
+                { value: 'bachelor', label: 'Licence' },
+                { value: 'master', label: 'Master' },
+                { value: 'phd', label: 'Doctorat' },
+                { value: 'other', label: 'Autre' },
+              ]}
+            />
+          </div>
+        </FormSection>
+
+        {/* Section: Description */}
+        <FormSection title="Description du poste" icon={FileText}>
+          <FormInput
+            type="textarea"
+            label="Description"
+            value={formData.description}
+            onChange={(e: any) => setFormData({ ...formData, description: e.target.value })}
+            placeholder="Description détaillée du poste, missions, profil recherché..."
+            required
+            icon={FileText}
+          />
+
+          <FormInput
+            type="textarea"
+            label="Prérequis (un par ligne)"
+            value={formData.requirements}
+            onChange={(e: any) => setFormData({ ...formData, requirements: e.target.value })}
+            placeholder={'Diplôme en informatique\n5 ans d\'expérience\nMaîtrise de React'}
+            icon={CheckCircle2}
+          />
+
+          <FormInput
+            type="date"
+            label="Date limite de candidature"
+            value={formData.application_deadline}
+            onChange={(e: any) =>
+              setFormData({ ...formData, application_deadline: e.target.value })
+            }
+            icon={Calendar}
+          />
+        </FormSection>
+
+        {/* ======================================================
+            BOUTONS D'ACTION
+        ====================================================== */}
+
+        <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
               type="button"
               onClick={() => navigate('/organization/dashboard')}
-              className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-3.5 bg-slate-800 text-white rounded-xl text-sm font-semibold hover:bg-slate-700 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 bg-white border border-[#16A34A]/20 text-[#14532D] rounded-xl text-sm font-semibold hover:bg-[#F0FDF4] hover:border-[#16A34A]/40 transition-all flex items-center justify-center gap-2"
             >
               <X className="w-4 h-4" />
               Annuler
-            </motion.button>
+            </button>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               type="submit"
               disabled={createMutation.isPending}
-              className="w-full sm:flex-1 px-5 sm:px-6 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:flex-1 px-6 py-3.5 bg-[#16A34A] text-white rounded-xl text-sm font-bold hover:bg-[#15803D] shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {createMutation.isPending ? (
-                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
-                <Save className="w-4 h-4 sm:w-5 sm:h-5" />
+                <Save className="w-5 h-5" />
               )}
               Créer en brouillon
-            </motion.button>
-          </motion.div>
-
-          {/* Indicateur de brouillon */}
-          <motion.div
-            variants={fadeInUp}
-            className="flex items-start sm:items-center gap-3 p-3 sm:p-4 bg-slate-900/60 border border-slate-800 rounded-xl"
-          >
-            <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 shrink-0">
-              <Info className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed">
-                <span className="font-semibold text-amber-400">Brouillon</span> —
-                Votre offre sera enregistrée en brouillon. Vous pourrez la modifier et la soumettre à modération ultérieurement.
-              </p>
-            </div>
-          </motion.div>
-
-        </motion.form>
-
-        {/* ======================================================
-            FOOTER
-        ====================================================== */}
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-slate-800/50 text-[10px] sm:text-xs text-slate-600"
-        >
-          <div className="flex flex-wrap items-center justify-center xs:justify-start gap-2 sm:gap-4">
-            <span className="text-slate-500">
-              <span className="text-amber-400 font-medium">Nouvelle offre</span> • Création
-            </span>
-            <span className="hidden xs:block w-px h-4 bg-slate-800" />
-            <span className="flex items-center gap-1.5">
-              <Shield className="w-3 h-3 text-emerald-400" />
-              <span className="text-emerald-400/70">Sécurisé - Niger</span>
-            </span>
+            </button>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-amber-400" />
-              v1.0.0
-            </span>
-            <span className="w-px h-4 bg-slate-800" />
-            <span>Création d'offre</span>
-          </div>
-        </motion.div>
 
+          {/* Indicateur brouillon */}
+          <div className="mt-5 flex items-start gap-3 p-4 bg-[#F0FDF4] border border-[#16A34A]/15 rounded-xl">
+            <div className="p-2 rounded-lg bg-white shrink-0">
+              <Info className="w-4 h-4 text-[#16A34A]" />
+            </div>
+            <p className="text-xs text-[#14532D]/70 leading-relaxed">
+              <span className="font-bold text-[#16A34A]">Brouillon</span> — Votre offre sera
+              enregistrée en brouillon. Vous pourrez la modifier et la soumettre à modération
+              ultérieurement.
+            </p>
+          </div>
+        </div>
+
+      </form>
+
+      {/* ======================================================
+          FOOTER
+      ====================================================== */}
+
+      <div className="flex flex-col xs:flex-row items-center justify-between gap-3 pt-6 border-t border-[#16A34A]/10 text-xs text-[#14532D]/50">
+        <div className="flex flex-wrap items-center justify-center xs:justify-start gap-4">
+          <span>
+            <span className="text-[#16A34A] font-bold">Nouvelle offre</span> • Création
+          </span>
+          <span className="hidden xs:block w-px h-4 bg-[#16A34A]/20" />
+          <span className="flex items-center gap-1.5">
+            <Shield className="w-3 h-3 text-[#16A34A]" />
+            <span className="text-[#16A34A]/70 font-medium">Sécurisé - Niger</span>
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            v1.0.0
+          </span>
+          <span className="w-px h-4 bg-[#16A34A]/20" />
+          <span>Création d'offre</span>
+        </div>
       </div>
-    </motion.div>
+
+    </div>
   );
 };
 
