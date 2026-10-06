@@ -25,8 +25,8 @@ const TopBar = () => {
     <div className="bg-[#14532D] text-white text-sm">
       <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-center relative">
         <p className="text-center font-medium text-xs sm:text-sm">
-          🎉 <strong className="text-[#FCD34D]">500 nouvelles offres</strong> publiées ce mois-ci.{' '}
-          <a href="#" className="underline font-semibold hover:text-[#FCD34D] transition-colors">
+          🎉 <strong className="text-[#FB923C]">500 nouvelles offres</strong> publiées ce mois-ci.{' '}
+          <a href="#" className="underline font-semibold hover:text-[#FB923C] transition-colors">
             Découvrez-les
           </a>
         </p>
@@ -66,7 +66,7 @@ const NotificationBell = () => {
         aria-label="Notifications"
       >
         <Bell className="w-5 h-5" strokeWidth={1.75} />
-        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FCD34D] rounded-full ring-2 ring-white" />
+        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FB923C] rounded-full ring-2 ring-white" />
       </button>
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white border border-[#16A34A]/10 rounded-xl shadow-xl overflow-hidden z-50">
@@ -172,8 +172,8 @@ const Footer = () => {
 
           <div>
             <Link to="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-[#FCD34D] flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-[#14532D]" strokeWidth={2.5} />
+              <div className="w-9 h-9 rounded-lg bg-[#FB923C] flex items-center justify-center">
+                <Briefcase className="w-5 h-5 text-white" strokeWidth={2.5} />
               </div>
               <span className="font-extrabold text-white tracking-tight">
                 OptimaPlus-Jobs
@@ -191,32 +191,32 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-bold text-white mb-5">Candidats</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Rechercher un emploi</a></li>
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Créer mon profil</a></li>
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Mes candidatures</a></li>
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Conseils carrière</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Rechercher un emploi</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Créer mon profil</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Mes candidatures</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Conseils carrière</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-sm font-bold text-white mb-5">Recruteurs</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Publier une offre</a></li>
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Gérer mes annonces</a></li>
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Consulter les candidats</a></li>
-              <li><a href="#" className="text-sm text-white/70 hover:text-[#FCD34D] transition-colors">Solutions entreprise</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Publier une offre</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Gérer mes annonces</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Consulter les candidats</a></li>
+              <li><a href="#" className="text-sm text-white/70 hover:text-[#FB923C] transition-colors">Solutions entreprise</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-sm font-bold text-white mb-5">Restez informé</h4>
-            <div className="flex items-center bg-white/10 rounded-lg p-1 focus-within:ring-2 focus-within:ring-[#FCD34D]/50 transition-all">
+            <div className="flex items-center bg-white/10 rounded-lg p-1 focus-within:ring-2 focus-within:ring-[#FB923C]/50 transition-all">
               <input
                 type="email"
                 placeholder="Votre email"
                 className="flex-1 bg-transparent px-3 py-2 text-sm text-white placeholder-white/50 focus:outline-none"
               />
-              <button className="bg-[#FCD34D] text-[#14532D] text-xs font-bold px-4 py-2 rounded-md transition-colors hover:bg-white">
+              <button className="bg-[#FB923C] text-white text-xs font-bold px-4 py-2 rounded-md transition-colors hover:bg-white hover:text-[#FB923C]">
                 OK
               </button>
             </div>
@@ -226,7 +226,7 @@ const Footer = () => {
                 <a
                   key={i}
                   href={s.href}
-                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#FCD34D] hover:text-[#14532D] flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#FB923C] hover:text-white flex items-center justify-center transition-colors"
                 >
                   <s.icon className="w-4 h-4" />
                 </a>
@@ -316,11 +316,11 @@ export const Layout = ({ children }: LayoutProps) => {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)] group-hover:scale-105 group-hover:shadow-[0_6px_16px_-2px_rgba(22,163,74,0.4)] transition-all duration-300">
                   <Briefcase className="w-5 h-5 text-white" strokeWidth={2.5} />
                 </div>
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#FCD34D] rounded-full border-2 border-white" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-[#FB923C] rounded-full border-2 border-white" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-base font-extrabold text-[#14532D] tracking-tight">
-                  OptimaPlus<span className="text-[#FCD34D]">-Jobs</span>
+                  OptimaPlus<span className="text-[#FB923C]">-Jobs</span>
                 </span>
                 <span className="text-[9px] font-semibold text-[#16A34A] tracking-wider uppercase mt-0.5">
                   Niger

@@ -43,7 +43,7 @@ const PARTNERS = ['TechCorp', 'Sahel Group', 'Niamey Digital', 'Africa Bank', 'N
 // COMPOSANT — COMPTEUR ANIMÉ
 // ==========================================================
 
-const AnimatedCounter = ({ value, label, icon: Icon, duration = 2000 }: any) => {
+const AnimatedCounter = ({ value, label, icon: Icon, suffix = '', duration = 2000 }: any) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
@@ -79,7 +79,7 @@ const AnimatedCounter = ({ value, label, icon: Icon, duration = 2000 }: any) => 
       </div>
       <div className="min-w-0">
         <div className="text-3xl sm:text-4xl font-extrabold text-[#14532D] tracking-tight leading-none tabular-nums">
-          {formatted}
+          {formatted}{suffix}
         </div>
         <div className="text-xs text-[#14532D]/60 mt-1.5 uppercase tracking-wider font-semibold">
           {label}
@@ -125,7 +125,7 @@ const GeometricDecoration = () => (
       </div>
       <div>
         <p className="text-xs font-extrabold text-[#14532D] leading-none">4.9/5</p>
-        <p className="text-[10px] text-[#14532D]/60 leading-none mt-1">2 500 avis</p>
+        <p className="text-[10px] text-[#14532D]/60 leading-none mt-1">500 avis</p>
       </div>
     </div>
 
@@ -146,7 +146,7 @@ const GeometricDecoration = () => (
         <Building2 className="w-4 h-4 text-[#16A34A]" />
       </div>
       <div>
-        <p className="text-xs font-extrabold text-[#14532D] leading-none">+500</p>
+        <p className="text-xs font-extrabold text-[#14532D] leading-none">+150</p>
         <p className="text-[10px] text-[#14532D]/60 leading-none mt-1">Entreprises</p>
       </div>
     </div>
@@ -201,7 +201,7 @@ export const HomePage = () => {
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
                 </span>
                 <span className="text-xs font-bold text-[#14532D]">
-                  500+ nouvelles offres ce mois-ci
+                  120+ nouvelles offres ce mois-ci
                 </span>
               </div>
 
@@ -465,10 +465,10 @@ export const HomePage = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
 
-            <AnimatedCounter value="2245341" label="Membres actifs" icon={Users} />
-            <AnimatedCounter value="46328" label="Entreprises" icon={Building2} />
-            <AnimatedCounter value="845341" label="Candidatures" icon={Briefcase} />
-            <AnimatedCounter value="1926436" label="Recrutements" icon={Award} />
+            <AnimatedCounter value="2500" suffix="+" label="Candidats actifs" icon={Users} />
+            <AnimatedCounter value="150" suffix="+" label="Entreprises" icon={Building2} />
+            <AnimatedCounter value="850" suffix="+" label="Candidatures" icon={Briefcase} />
+            <AnimatedCounter value="320" suffix="+" label="Recrutements" icon={Award} />
           </div>
         </div>
       </section>
