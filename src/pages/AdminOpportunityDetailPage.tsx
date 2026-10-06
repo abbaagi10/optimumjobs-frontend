@@ -31,8 +31,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     'pending_review': {
       icon: <Clock className="w-3 h-3 animate-pulse" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D] animate-pulse'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C] animate-pulse'
     },
     'approved': {
       icon: <CheckCircle2 className="w-3 h-3" />,
@@ -114,7 +114,7 @@ const ActionButton = ({
   const variants = {
     primary: 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)]',
     success: 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-[0_4px_12px_-2px_rgba(22,163,74,0.4)] hover:shadow-[0_8px_16px_-4px_rgba(22,163,74,0.5)]',
-    amber: 'bg-[#FCD34D] hover:bg-[#EAB308] text-[#14532D] shadow-[0_4px_12px_-2px_rgba(252,211,77,0.5)] hover:shadow-[0_8px_16px_-4px_rgba(252,211,77,0.6)]',
+    amber: 'bg-[#FB923C] hover:bg-[#F97316] text-white shadow-[0_4px_12px_-2px_rgba(251,146,60,0.5)] hover:shadow-[0_8px_16px_-4px_rgba(251,146,60,0.6)]',
     danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-[0_4px_12px_-2px_rgba(244,63,94,0.4)]',
     secondary: 'bg-white border border-[#16A34A]/20 text-[#14532D] hover:bg-[#F0FDF4] hover:border-[#16A34A]/40',
   };
@@ -318,7 +318,7 @@ export const AdminOpportunityDetailPage = () => {
           </button>
 
           <div className="hidden sm:flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-3 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
-            <Crown className="w-3 h-3 text-[#FCD34D]" />
+            <Crown className="w-3 h-3 text-[#FB923C]" />
             <span className="text-xs text-[#14532D]/70 font-semibold">Admin Niger</span>
           </div>
         </div>
@@ -330,7 +330,7 @@ export const AdminOpportunityDetailPage = () => {
 
       <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
         {/* Bordure top colorée */}
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
         <div className="p-5 sm:p-6">
           <div className="flex flex-col gap-5">
@@ -615,7 +615,7 @@ export const AdminOpportunityDetailPage = () => {
                     year: 'numeric',
                   })}
                   icon={Calendar}
-                  color="text-[#FCD34D]"
+                  color="text-[#FB923C]"
                 />
               )}
             </div>
@@ -642,7 +642,7 @@ export const AdminOpportunityDetailPage = () => {
           {/* Actions rapides */}
           <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
             <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Zap className="w-4 h-4 text-[#FCD34D]" />
+              <Zap className="w-4 h-4 text-[#FB923C]" />
               Actions rapides
             </h2>
             <div className="space-y-2">
@@ -682,7 +682,7 @@ export const AdminOpportunityDetailPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             Statut : <span className="font-semibold text-[#14532D]">{job.status}</span>
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

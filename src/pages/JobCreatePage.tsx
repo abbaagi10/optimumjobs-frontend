@@ -310,7 +310,7 @@ export const JobCreatePage = () => {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16A34A]" />
           </span>
           <span className="text-xs text-[#14532D]/70 font-semibold">Nouvelle offre</span>
-          <Sparkles className="w-3 h-3 text-[#FCD34D]" />
+          <Sparkles className="w-3 h-3 text-[#FB923C]" />
         </div>
       </div>
 
@@ -319,7 +319,7 @@ export const JobCreatePage = () => {
       ====================================================== */}
 
       <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
         <div className="p-5 sm:p-6 md:p-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shrink-0 shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)]">
@@ -328,7 +328,7 @@ export const JobCreatePage = () => {
             <div className="flex-1 min-w-0">
               <h1 className="text-2xl md:text-3xl font-extrabold text-[#14532D] flex flex-wrap items-center gap-3">
                 Publier une offre
-                <span className="px-2.5 py-1 text-[10px] font-bold bg-[#FCD34D] text-[#14532D] rounded-full shrink-0">
+                <span className="px-2.5 py-1 text-[10px] font-bold bg-[#FB923C] text-white rounded-full shrink-0">
                   NOUVEAU
                 </span>
               </h1>
@@ -587,7 +587,7 @@ export const JobCreatePage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

@@ -88,7 +88,7 @@ const ProfileDisplayValue: React.FC<{
 const InfoCard = ({ icon: Icon, label, value, color = 'green' }: any) => {
   const colors: any = {
     green: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
-    amber: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
+    amber: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
     blue: 'bg-blue-50 text-blue-600 border-blue-200',
     purple: 'bg-purple-50 text-purple-600 border-purple-200',
     emerald: 'bg-[#F0FDF4] text-[#16A34A] border-[#16A34A]/20',
@@ -304,7 +304,7 @@ export const AdminProfilePage: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)] self-start xs:self-auto">
-          <Crown className="w-3 h-3 text-[#FCD34D]" />
+          <Crown className="w-3 h-3 text-[#FB923C]" />
           <span className="text-xs text-[#14532D]/70 font-semibold">Admin Niger</span>
         </div>
       </div>
@@ -315,7 +315,7 @@ export const AdminProfilePage: React.FC = () => {
 
       <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
         {/* Bordure top gradient */}
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
         <div className="p-5 sm:p-6 md:p-8">
           <div className="flex flex-col gap-5">
@@ -657,7 +657,7 @@ export const AdminProfilePage: React.FC = () => {
           {/* Actions rapides */}
           <div className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
             <h2 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Zap className="w-4 h-4 text-[#FCD34D]" />
+              <Zap className="w-4 h-4 text-[#FB923C]" />
               Actions rapides
             </h2>
             <div className="space-y-2">
@@ -735,7 +735,7 @@ export const AdminProfilePage: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

@@ -56,11 +56,11 @@ const StatCard = ({
       shadow: 'shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]',
     },
     amber: {
-      bar: 'bg-[#FCD34D]',
-      iconBg: 'bg-gradient-to-br from-[#FCD34D] to-[#EAB308]',
-      soft: 'bg-[#FEF3C7]',
-      text: 'text-[#B88400]',
-      shadow: 'shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)]',
+      bar: 'bg-[#FB923C]',
+      iconBg: 'bg-gradient-to-br from-[#FB923C] to-[#F97316]',
+      soft: 'bg-[#FFEDD5]',
+      text: 'text-[#C2410C]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(251,146,60,0.4)]',
     },
     blue: {
       bar: 'bg-blue-500',
@@ -138,8 +138,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     'pending_review': {
       icon: <Clock className="w-3 h-3 animate-pulse" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D] animate-pulse'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C] animate-pulse'
     },
     'approved': {
       icon: <CheckCircle2 className="w-3 h-3" />,
@@ -486,7 +486,7 @@ export const AdminDashboardPage = () => {
             <div className="bg-gradient-to-br from-[#16A34A] to-[#15803D] p-3 rounded-2xl shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)]">
               <ShieldAlert className="w-7 h-7 text-white" />
             </div>
-            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#FCD34D] border-2 border-white" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#FB923C] border-2 border-white" />
           </div>
 
           <div className="min-w-0 flex-1">
@@ -497,7 +497,7 @@ export const AdminDashboardPage = () => {
               </span>
             </h1>
             <p className="text-[#14532D]/60 text-sm mt-1.5 flex flex-wrap items-center gap-2">
-              <Sparkle className="w-3.5 h-3.5 text-[#FCD34D] shrink-0" />
+              <Sparkle className="w-3.5 h-3.5 text-[#FB923C] shrink-0" />
               <span>Gérez la modération, les entreprises et les utilisateurs au Niger.</span>
             </p>
           </div>
@@ -644,7 +644,7 @@ export const AdminDashboardPage = () => {
             <>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-[#14532D]/60 flex items-center gap-2 font-medium">
-                  <Zap className="w-4 h-4 text-[#FCD34D]" />
+                  <Zap className="w-4 h-4 text-[#FB923C]" />
                   <span className="text-[#14532D] font-bold">{pendingJobs.results.length}</span>
                   offre{pendingJobs.results.length > 1 ? 's' : ''} en attente de modération
                 </span>
@@ -654,10 +654,10 @@ export const AdminDashboardPage = () => {
                 {pendingJobs.results.map((job) => (
                   <div
                     key={job.id}
-                    className="group relative bg-white border border-[#FCD34D]/30 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#FCD34D]/60 hover:shadow-[0_12px_32px_-8px_rgba(252,211,77,0.25)] hover:-translate-y-1"
+                    className="group relative bg-white border border-[#FB923C]/30 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#FB923C]/60 hover:shadow-[0_12px_32px_-8px_rgba(251,146,60,0.25)] hover:-translate-y-1"
                   >
-                    {/* Bordure top ambre */}
-                    <div className="h-1 bg-[#FCD34D]" />
+                    {/* Bordure top orange */}
+                    <div className="h-1 bg-[#FB923C]" />
 
                     <div className="p-5 sm:p-6">
                       <div className="flex flex-col lg:flex-row lg:items-start gap-5">
@@ -665,7 +665,7 @@ export const AdminDashboardPage = () => {
                         <div className="flex-1 min-w-0">
                           {/* Badges */}
                           <div className="flex flex-wrap items-center gap-2 mb-3">
-                            <span className="text-[10px] sm:text-xs text-[#B88400] uppercase font-bold bg-[#FEF3C7] px-2.5 py-1 rounded-full border border-[#FCD34D]/40">
+                            <span className="text-[10px] sm:text-xs text-[#C2410C] uppercase font-bold bg-[#FFEDD5] px-2.5 py-1 rounded-full border border-[#FB923C]/40">
                               {job.opportunity_type}
                             </span>
                             <StatusBadge status={job.status} />
@@ -997,7 +997,7 @@ export const AdminDashboardPage = () => {
                               <Award className="w-3 h-3" /> Vérifiée
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-[#FFEDD5] text-[#C2410C] border border-[#FB923C]/40">
                               <Clock className="w-3 h-3" /> Non vérifiée
                             </span>
                           )}
@@ -1107,7 +1107,7 @@ export const AdminDashboardPage = () => {
                           <span
                             className={`text-xs px-3 py-1 rounded-full font-semibold ${
                               user.role === 'admin'
-                                ? 'bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40'
+                                ? 'bg-[#FFEDD5] text-[#C2410C] border border-[#FB923C]/40'
                                 : user.role === 'org_admin'
                                 ? 'bg-blue-50 text-blue-700 border border-blue-200'
                                 : 'bg-slate-100 text-slate-600 border border-slate-200'
@@ -1186,7 +1186,7 @@ export const AdminDashboardPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 font-medium">
-            <Shield className="w-3 h-3 text-[#FCD34D]" />
+            <Shield className="w-3 h-3 text-[#FB923C]" />
             Sécurisé
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

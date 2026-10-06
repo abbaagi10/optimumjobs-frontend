@@ -86,10 +86,10 @@ export const Register = () => {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)] group-hover:scale-105 transition-transform">
                 <Briefcase className="w-4 h-4 text-white" strokeWidth={2.5} />
               </div>
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FCD34D] rounded-full border-2 border-white" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FB923C] rounded-full border-2 border-white" />
             </div>
             <span className="text-base font-extrabold text-[#14532D] tracking-tight">
-              OptimaPlus<span className="text-[#FCD34D]">-Jobs</span>
+              OptimaPlus<span className="text-[#FB923C]">-Jobs</span>
             </span>
           </Link>
         </header>
@@ -158,13 +158,13 @@ export const Register = () => {
                   onClick={() => setRole('organization')}
                   className={`group relative flex flex-col items-center text-center gap-3 py-5 px-3 border-2 rounded-2xl transition-all duration-300 ${
                     role === 'organization'
-                      ? 'bg-[#FEF3C7] border-[#FCD34D] shadow-[0_8px_24px_-8px_rgba(252,211,77,0.4)]'
-                      : 'bg-white border-[#16A34A]/15 hover:border-[#FCD34D]/60 hover:bg-[#FEF3C7]/30'
+                      ? 'bg-[#FFEDD5] border-[#FB923C] shadow-[0_8px_24px_-8px_rgba(251,146,60,0.4)]'
+                      : 'bg-white border-[#16A34A]/15 hover:border-[#FB923C]/60 hover:bg-[#FFEDD5]/30'
                   }`}
                 >
                   {role === 'organization' && (
-                    <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#FCD34D] flex items-center justify-center">
-                      <svg viewBox="0 0 24 24" className="w-3 h-3 text-[#14532D]" fill="none" stroke="currentColor" strokeWidth={3}>
+                    <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-[#FB923C] flex items-center justify-center">
+                      <svg viewBox="0 0 24 24" className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth={3}>
                         <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
@@ -172,8 +172,8 @@ export const Register = () => {
 
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
                     role === 'organization'
-                      ? 'bg-[#FCD34D] text-[#14532D] shadow-[0_4px_12px_-2px_rgba(252,211,77,0.5)]'
-                      : 'bg-[#FEF3C7] text-[#B88400] group-hover:bg-[#FCD34D]/30'
+                      ? 'bg-[#FB923C] text-white shadow-[0_4px_12px_-2px_rgba(251,146,60,0.5)]'
+                      : 'bg-[#FFEDD5] text-[#C2410C] group-hover:bg-[#FB923C]/30'
                   }`}>
                     <Building2 className="w-6 h-6" />
                   </div>
@@ -250,7 +250,7 @@ export const Register = () => {
                 disabled={loading}
                 className={`group w-full mt-2 py-3.5 px-4 text-sm font-bold rounded-xl shadow-[0_8px_24px_-6px_rgba(22,163,74,0.4)] hover:shadow-[0_12px_32px_-8px_rgba(22,163,74,0.5)] hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:hover:translate-y-0 flex items-center justify-center gap-2 ${
                   role === 'organization'
-                    ? 'bg-[#FCD34D] text-[#14532D] hover:bg-[#EAB308]'
+                    ? 'bg-[#FB923C] text-white hover:bg-[#F97316]'
                     : 'bg-[#16A34A] text-white hover:bg-[#15803D]'
                 }`}
               >
@@ -324,9 +324,9 @@ export const Register = () => {
 
         {/* Formes décoratives */}
         <div className="absolute top-20 -right-20 w-80 h-80 rounded-full border-[40px] border-white/5" />
-        <div className="absolute bottom-10 -left-20 w-96 h-96 rounded-full border-[30px] border-[#FCD34D]/10" />
-        <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-2xl bg-[#FCD34D]/10 rotate-45" />
-        <div className="absolute top-12 right-1/4 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+        <div className="absolute bottom-10 -left-20 w-96 h-96 rounded-full border-[30px] border-[#FB923C]/10" />
+        <div className="absolute top-1/3 right-1/4 w-24 h-24 rounded-2xl bg-[#FB923C]/10 rotate-45" />
+        <div className="absolute top-12 right-1/4 w-3 h-3 rounded-full bg-[#FB923C]/60" />
         <div className="absolute bottom-1/4 left-1/4 w-2 h-2 rounded-full bg-white/40" />
 
         {/* Grid pattern */}
@@ -337,7 +337,7 @@ export const Register = () => {
           {/* Header */}
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#FCD34D]" />
+              <Sparkles className="w-5 h-5 text-[#FB923C]" />
             </div>
             <span className="text-xs font-bold tracking-wider uppercase text-white/80">
               {role === 'organization' ? 'Espace recruteur' : 'Espace candidat'}
@@ -352,7 +352,7 @@ export const Register = () => {
                 <h2 className="text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.15] tracking-tight">
                   Recrutez les
                   <br />
-                  <span className="text-[#FCD34D]">
+                  <span className="text-[#FB923C]">
                     meilleurs
                   </span>
                   <br />
@@ -372,7 +372,7 @@ export const Register = () => {
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center shrink-0">
-                        <item.icon className="w-4 h-4 text-[#FCD34D]" />
+                        <item.icon className="w-4 h-4 text-[#FB923C]" />
                       </div>
                       <span className="text-sm text-white/85">{item.text}</span>
                     </div>
@@ -384,7 +384,7 @@ export const Register = () => {
                 <h2 className="text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.15] tracking-tight">
                   Trouvez le job
                   <br />
-                  <span className="text-[#FCD34D]">
+                  <span className="text-[#FB923C]">
                     qui vous
                   </span>
                   <br />
@@ -404,7 +404,7 @@ export const Register = () => {
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center shrink-0">
-                        <item.icon className="w-4 h-4 text-[#FCD34D]" />
+                        <item.icon className="w-4 h-4 text-[#FB923C]" />
                       </div>
                       <span className="text-sm text-white/85">{item.text}</span>
                     </div>
@@ -425,7 +425,7 @@ export const Register = () => {
                   <img
                     src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&h=100&fit=crop&crop=faces&q=80"
                     alt="Fatouma"
-                    className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FCD34D]/30"
+                    className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FB923C]/30"
                   />
                   <div>
                     <p className="text-xs font-bold text-white">Fatouma Amadou</p>
@@ -442,7 +442,7 @@ export const Register = () => {
                   <img
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces&q=80"
                     alt="Ibrahim"
-                    className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FCD34D]/30"
+                    className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FB923C]/30"
                   />
                   <div>
                     <p className="text-xs font-bold text-white">Ibrahim Souley</p>

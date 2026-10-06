@@ -26,9 +26,9 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle, trend }: any) => 
       shadow: 'shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]',
     },
     amber: {
-      bar: 'bg-[#FCD34D]',
-      iconBg: 'bg-gradient-to-br from-[#FCD34D] to-[#EAB308]',
-      shadow: 'shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)]',
+      bar: 'bg-[#FB923C]',
+      iconBg: 'bg-gradient-to-br from-[#FB923C] to-[#F97316]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(251,146,60,0.4)]',
     },
     blue: {
       bar: 'bg-blue-500',
@@ -87,8 +87,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     'submitted': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D] animate-pulse'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C] animate-pulse'
     },
     'under_review': {
       icon: <Clock className="w-3 h-3" />,
@@ -317,7 +317,7 @@ export const CandidateDashboard = () => {
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <div className="flex items-center gap-2 rounded-full bg-white border border-[#16A34A]/15 px-4 py-1.5 shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
-            <Crown className="w-3 h-3 text-[#FCD34D]" />
+            <Crown className="w-3 h-3 text-[#FB923C]" />
             <span className="text-xs text-[#14532D]/70 font-semibold">Dashboard</span>
           </div>
         </div>
@@ -591,7 +591,7 @@ export const CandidateDashboard = () => {
                   <div className={`h-1 ${
                     app.status === 'accepted' ? 'bg-[#16A34A]' :
                     app.status === 'rejected' ? 'bg-rose-500' :
-                    app.status === 'submitted' ? 'bg-[#FCD34D]' :
+                    app.status === 'submitted' ? 'bg-[#FB923C]' :
                     app.status === 'under_review' ? 'bg-blue-500' :
                     app.status === 'shortlisted' ? 'bg-purple-500' :
                     app.status === 'interview' ? 'bg-indigo-500' :
@@ -693,7 +693,7 @@ export const CandidateDashboard = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

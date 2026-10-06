@@ -24,8 +24,8 @@ const StatusBadge = ({ status }: { status: Application['status'] }) => {
     'submitted': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D] animate-pulse'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C] animate-pulse'
     },
     'under_review': {
       icon: <Clock className="w-3 h-3" />,
@@ -113,7 +113,7 @@ const ApplicationCard = ({
         isWithdrawn ? 'bg-slate-300' :
         app.status === 'accepted' ? 'bg-[#16A34A]' :
         app.status === 'rejected' ? 'bg-rose-500' :
-        app.status === 'submitted' ? 'bg-[#FCD34D]' :
+        app.status === 'submitted' ? 'bg-[#FB923C]' :
         app.status === 'under_review' ? 'bg-blue-500' :
         app.status === 'shortlisted' ? 'bg-purple-500' :
         app.status === 'interview' ? 'bg-indigo-500' :
@@ -556,7 +556,7 @@ export const CandidateApplicationsPage = () => {
                 app.status === 'withdrawn' ? 'bg-slate-300' :
                 app.status === 'accepted' ? 'bg-[#16A34A]' :
                 app.status === 'rejected' ? 'bg-rose-500' :
-                app.status === 'submitted' ? 'bg-[#FCD34D]' :
+                app.status === 'submitted' ? 'bg-[#FB923C]' :
                 'bg-[#16A34A]'
               }`} />
 
@@ -621,7 +621,7 @@ export const CandidateApplicationsPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

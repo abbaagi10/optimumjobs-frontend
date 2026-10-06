@@ -345,15 +345,15 @@ export const OpportunityEditPage = () => {
   if (!canEdit) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="bg-white border border-[#FCD34D]/40 rounded-3xl p-8 sm:p-12 text-center">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#FEF3C7] flex items-center justify-center border border-[#FCD34D]/40">
-            <AlertCircle className="w-10 h-10 text-[#B88400]" />
+        <div className="bg-white border border-[#FB923C]/40 rounded-3xl p-8 sm:p-12 text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-[#FFEDD5] flex items-center justify-center border border-[#FB923C]/40">
+            <AlertCircle className="w-10 h-10 text-[#C2410C]" />
           </div>
           <h2 className="text-2xl font-extrabold text-[#14532D]">
             Modification non autorisée
           </h2>
           <p className="text-sm text-[#14532D]/60 mt-2">
-            Cette offre est en statut <strong className="text-[#B88400]">{job.status}</strong> et ne peut pas être modifiée.
+            Cette offre est en statut <strong className="text-[#C2410C]">{job.status}</strong> et ne peut pas être modifiée.
           </p>
           <button
             onClick={handleGoBack}
@@ -410,7 +410,7 @@ export const OpportunityEditPage = () => {
       ====================================================== */}
 
       <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
         <div className="p-5 sm:p-6 md:p-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -425,7 +425,7 @@ export const OpportunityEditPage = () => {
                 <span
                   className={`px-2.5 py-1 text-xs font-bold rounded-full shrink-0 ${
                     job.status === 'draft'
-                      ? 'bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40'
+                      ? 'bg-[#FFEDD5] text-[#C2410C] border border-[#FB923C]/40'
                       : 'bg-blue-50 text-blue-700 border border-blue-200'
                   }`}
                 >
@@ -680,7 +680,7 @@ export const OpportunityEditPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

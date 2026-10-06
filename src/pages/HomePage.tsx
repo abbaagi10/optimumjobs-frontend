@@ -101,10 +101,10 @@ const GeometricDecoration = () => (
 
     {/* 3 cercles concentriques */}
     <div className="absolute w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] rounded-full border-2 border-[#16A34A]/20 animate-[spin_40s_linear_infinite]" />
-    <div className="absolute w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] rounded-full border-2 border-dashed border-[#FCD34D]/60 animate-[spin_30s_linear_infinite_reverse]" />
+    <div className="absolute w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] rounded-full border-2 border-dashed border-[#FB923C]/60 animate-[spin_30s_linear_infinite_reverse]" />
     <div className="absolute w-[120px] h-[120px] sm:w-[160px] sm:h-[160px] rounded-full border-2 border-[#16A34A]/30" />
 
-    {/* Hexagone ambre central */}
+    {/* Hexagone central */}
     <div className="relative z-10 w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center animate-float">
       <div
         className="w-full h-full bg-gradient-to-br from-[#16A34A] to-[#15803D] shadow-[0_20px_40px_-10px_rgba(22,163,74,0.4)]"
@@ -120,8 +120,8 @@ const GeometricDecoration = () => (
 
     {/* Badge flottant — Note */}
     <div className="absolute top-8 right-4 sm:top-12 sm:right-12 bg-white rounded-xl p-3 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.1)] border border-[#16A34A]/10 flex items-center gap-2 z-20 animate-float" style={{ animationDelay: '0.5s' }}>
-      <div className="w-9 h-9 rounded-lg bg-[#FCD34D] flex items-center justify-center shrink-0">
-        <Star className="w-4 h-4 text-[#14532D] fill-current" />
+      <div className="w-9 h-9 rounded-lg bg-[#FB923C] flex items-center justify-center shrink-0">
+        <Star className="w-4 h-4 text-white fill-current" />
       </div>
       <div>
         <p className="text-xs font-extrabold text-[#14532D] leading-none">4.9/5</p>
@@ -152,9 +152,9 @@ const GeometricDecoration = () => (
     </div>
 
     {/* Petits points décoratifs */}
-    <div className="absolute top-16 left-8 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+    <div className="absolute top-16 left-8 w-3 h-3 rounded-full bg-[#FB923C]/60" />
     <div className="absolute bottom-24 right-16 w-2 h-2 rounded-full bg-[#16A34A]/40" />
-    <div className="absolute top-1/3 left-4 w-2 h-2 rounded-full bg-[#FCD34D]/40" />
+    <div className="absolute top-1/3 left-4 w-2 h-2 rounded-full bg-[#FB923C]/40" />
   </div>
 );
 
@@ -187,7 +187,7 @@ export const HomePage = () => {
       <section className="bg-[#F0FDF4] relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-soft opacity-40 pointer-events-none" />
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#16A34A]/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#FCD34D]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-[#FB923C]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -214,7 +214,7 @@ export const HomePage = () => {
                   <span className="text-[#16A34A]">
                     au Niger.
                   </span>
-                  <span className="absolute bottom-1 left-0 right-0 h-2 bg-[#FCD34D] -z-10 rounded-sm" />
+                  <span className="absolute bottom-1 left-0 right-0 h-2 bg-[#FB923C] -z-10 rounded-sm" />
                 </span>
               </h1>
 
@@ -335,14 +335,14 @@ export const HomePage = () => {
             </div>
 
             {/* Carte 2 — Entreprises (Populaire) */}
-            <div className="group relative bg-white rounded-2xl overflow-hidden border border-[#FCD34D]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-8px_rgba(252,211,77,0.25)]">
-              <div className="h-1 bg-[#FCD34D]" />
-              <div className="absolute top-4 right-4 px-2.5 py-1 bg-[#FCD34D] text-[#14532D] text-[10px] font-bold rounded-full">
+            <div className="group relative bg-white rounded-2xl overflow-hidden border border-[#FB923C]/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_32px_-8px_rgba(251,146,60,0.25)]">
+              <div className="h-1 bg-[#FB923C]" />
+              <div className="absolute top-4 right-4 px-2.5 py-1 bg-[#FB923C] text-white text-[10px] font-bold rounded-full">
                 POPULAIRE
               </div>
               <div className="p-8">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FCD34D] to-[#EAB308] flex items-center justify-center mb-5 shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)] group-hover:scale-105 transition-transform">
-                  <Building2 className="w-7 h-7 text-[#14532D]" />
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FB923C] to-[#F97316] flex items-center justify-center mb-5 shadow-[0_8px_16px_-4px_rgba(251,146,60,0.4)] group-hover:scale-105 transition-transform">
+                  <Building2 className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-xl font-extrabold text-[#14532D] mb-3">
                   Entreprises
@@ -427,7 +427,7 @@ export const HomePage = () => {
                   <div className="w-20 h-20 rounded-2xl bg-white border-2 border-[#16A34A]/15 flex items-center justify-center shadow-[0_8px_24px_-8px_rgba(22,163,74,0.2)] relative z-10">
                     <step.icon className="w-8 h-8 text-[#16A34A]" />
                   </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#FCD34D] flex items-center justify-center text-xs font-extrabold text-[#14532D] border-2 border-white shadow-md z-20">
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#FB923C] flex items-center justify-center text-xs font-extrabold text-white border-2 border-white shadow-md z-20">
                     {step.num}
                   </div>
                 </div>
@@ -481,9 +481,9 @@ export const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FCD34D]/20 rounded-full mb-4">
-              <Star className="w-3.5 h-3.5 text-[#B88400] fill-current" />
-              <span className="text-xs font-bold text-[#7A5800] uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FB923C]/20 rounded-full mb-4">
+              <Star className="w-3.5 h-3.5 text-[#C2410C] fill-current" />
+              <span className="text-xs font-bold text-[#9A3412] uppercase tracking-wider">
                 Témoignages
               </span>
             </div>
@@ -508,7 +508,7 @@ export const HomePage = () => {
                 {/* Étoiles */}
                 <div className="flex items-center gap-0.5 mb-4">
                   {[...Array(5)].map((_, k) => (
-                    <Star key={k} className="w-4 h-4 text-[#FCD34D] fill-current" />
+                    <Star key={k} className="w-4 h-4 text-[#FB923C] fill-current" />
                   ))}
                 </div>
 
@@ -547,16 +547,16 @@ export const HomePage = () => {
           <div className="relative rounded-3xl bg-gradient-to-br from-[#16A34A] via-[#15803D] to-[#14532D] overflow-hidden px-8 sm:px-12 lg:px-20 py-16 sm:py-20 text-center">
 
             {/* Formes abstraites */}
-            <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#FCD34D]/10 blur-3xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#FB923C]/10 blur-3xl" />
             <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white/5 blur-3xl" />
             <div className="absolute top-8 left-12 w-16 h-16 rounded-2xl border-2 border-white/10 rotate-45" />
-            <div className="absolute bottom-12 right-16 w-12 h-12 rounded-full border-2 border-[#FCD34D]/30" />
-            <div className="absolute top-1/2 left-8 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+            <div className="absolute bottom-12 right-16 w-12 h-12 rounded-full border-2 border-[#FB923C]/30" />
+            <div className="absolute top-1/2 left-8 w-3 h-3 rounded-full bg-[#FB923C]/60" />
             <div className="absolute bottom-1/3 right-1/3 w-2 h-2 rounded-full bg-white/40" />
 
             <div className="relative">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/10 backdrop-blur rounded-full mb-6 border border-white/20">
-                <Sparkles className="w-3.5 h-3.5 text-[#FCD34D]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#FB923C]" />
                 <span className="text-xs font-bold text-white">
                   Rejoignez-nous
                 </span>
@@ -573,7 +573,7 @@ export const HomePage = () => {
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   to={isAuthenticated ? '/candidate/dashboard' : '/register'}
-                  className="group inline-flex items-center gap-2 px-7 py-4 bg-white text-[#14532D] text-sm font-bold rounded-xl hover:bg-[#FCD34D] shadow-[0_12px_32px_-8px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300"
+                  className="group inline-flex items-center gap-2 px-7 py-4 bg-white text-[#14532D] text-sm font-bold rounded-xl hover:bg-[#FB923C] hover:text-white shadow-[0_12px_32px_-8px_rgba(0,0,0,0.3)] hover:-translate-y-1 transition-all duration-300"
                 >
                   {isAuthenticated ? 'Accéder à mon espace' : 'Démarrer maintenant'}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -589,15 +589,15 @@ export const HomePage = () => {
               {/* Trust */}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs text-white/70">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FCD34D]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FB923C]" />
                   Inscription gratuite
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FCD34D]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FB923C]" />
                   Sans engagement
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FCD34D]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#FB923C]" />
                   Accès immédiat
                 </span>
               </div>

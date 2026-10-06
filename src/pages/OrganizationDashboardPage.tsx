@@ -59,10 +59,10 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle, trend }: any) => 
   // Mapping des couleurs vers la palette light
   const colorMap: Record<string, { bg: string; text: string; iconBg: string; bar: string }> = {
     amber: {
-      bg: 'bg-[#FCD34D]/10',
-      text: 'text-[#B88400]',
-      iconBg: 'bg-[#FCD34D]/20 text-[#B88400]',
-      bar: 'from-[#FCD34D]',
+      bg: 'bg-[#FB923C]/10',
+      text: 'text-[#C2410C]',
+      iconBg: 'bg-[#FB923C]/20 text-[#C2410C]',
+      bar: 'from-[#FB923C]',
     },
     emerald: {
       bg: 'bg-[#16A34A]/10',
@@ -145,8 +145,8 @@ const getStatusBadge = (status: string) => {
     pending_review: {
       icon: <Clock className="w-3 h-3 animate-pulse" />,
       label: 'En attente',
-      className: 'bg-[#FCD34D]/15 text-[#B88400] border-[#FCD34D]/30',
-      dotColor: 'bg-[#FCD34D] animate-pulse',
+      className: 'bg-[#FB923C]/15 text-[#C2410C] border-[#FB923C]/30',
+      dotColor: 'bg-[#FB923C] animate-pulse',
     },
     approved: {
       icon: <CheckCircle className="w-3 h-3" />,
@@ -545,7 +545,7 @@ export const OrganizationDashboardPage = () => {
           transition={{ type: 'spring', damping: 30, stiffness: 50 }}
         />
         <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#FCD34D]/10 rounded-full blur-3xl"
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#FB923C]/10 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,
@@ -598,7 +598,7 @@ export const OrganizationDashboardPage = () => {
           <div className="flex items-center gap-2 rounded-full bg-white px-3 sm:px-4 py-1.5 border border-[#16A34A]/15 self-start sm:self-auto shadow-[0_2px_8px_-2px_rgba(22,163,74,0.1)]">
             <div className="h-2 w-2 rounded-full bg-[#16A34A] animate-pulse" />
             <span className="text-[10px] sm:text-xs text-[#14532D]/60 font-medium">Dashboard</span>
-            <Crown className="w-3 h-3 text-[#B88400]" />
+            <Crown className="w-3 h-3 text-[#C2410C]" />
           </div>
         </motion.div>
 
@@ -976,7 +976,7 @@ export const OrganizationDashboardPage = () => {
                               })}
                             </span>
                             {job.status === 'pending_review' && (
-                              <span className="text-[#B88400] text-[10px] flex items-center gap-1 animate-pulse">
+                              <span className="text-[#C2410C] text-[10px] flex items-center gap-1 animate-pulse">
                                 <Clock className="w-3 h-3" />
                                 En attente de validation
                               </span>
@@ -1006,7 +1006,7 @@ export const OrganizationDashboardPage = () => {
                                   }
                                 }}
                                 disabled={submitForReviewMutation.isPending}
-                                className="flex-1 xs:flex-none px-3 py-2 bg-[#FCD34D] text-[#14532D] rounded-xl text-[10px] sm:text-xs font-bold hover:bg-[#EAB308] transition-all duration-300 flex items-center justify-center gap-1.5 disabled:opacity-50"
+                                className="flex-1 xs:flex-none px-3 py-2 bg-[#FB923C] text-white rounded-xl text-[10px] sm:text-xs font-bold hover:bg-[#F97316] transition-all duration-300 flex items-center justify-center gap-1.5 disabled:opacity-50"
                               >
                                 {submitForReviewMutation.isPending ? (
                                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1188,7 +1188,7 @@ export const OrganizationDashboardPage = () => {
                         {job.status === 'draft' && (
                           <Link
                             to={`/organization/opportunities/${job.id}/edit`}
-                            className="px-3 py-1.5 bg-[#FCD34D]/20 text-[#B88400] rounded-lg text-[10px] sm:text-xs font-medium hover:bg-[#FCD34D]/30 transition-colors"
+                            className="px-3 py-1.5 bg-[#FB923C]/20 text-[#C2410C] rounded-lg text-[10px] sm:text-xs font-medium hover:bg-[#FB923C]/30 transition-colors"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </Link>

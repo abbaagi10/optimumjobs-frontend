@@ -26,8 +26,8 @@ const StatusBadge = ({ status }: { status: ApplicationStatus }) => {
     'submitted': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D] animate-pulse'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C] animate-pulse'
     },
     'under_review': {
       icon: <Clock className="w-3 h-3" />,
@@ -95,9 +95,9 @@ const StatCard = ({ title, value, icon: Icon, color }: any) => {
       shadow: 'shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]',
     },
     amber: {
-      bar: 'bg-[#FCD34D]',
-      iconBg: 'bg-gradient-to-br from-[#FCD34D] to-[#EAB308]',
-      shadow: 'shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)]',
+      bar: 'bg-[#FB923C]',
+      iconBg: 'bg-gradient-to-br from-[#FB923C] to-[#F97316]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(251,146,60,0.4)]',
     },
     blue: {
       bar: 'bg-blue-500',
@@ -392,7 +392,7 @@ export const OpportunityApplicationsPage = () => {
       ====================================================== */}
 
       <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
         <div className="p-5 sm:p-6 md:p-8 space-y-6">
 
@@ -412,7 +412,7 @@ export const OpportunityApplicationsPage = () => {
                   </span>
                 )}
                 {opportunity.status === 'pending_review' && (
-                  <span className="text-xs font-bold bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40 px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <span className="text-xs font-bold bg-[#FFEDD5] text-[#C2410C] border border-[#FB923C]/40 px-2.5 py-1 rounded-full flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     En attente
                   </span>
@@ -491,7 +491,7 @@ export const OpportunityApplicationsPage = () => {
                 <button
                   onClick={handleClose}
                   disabled={closeOpportunityMutation.isPending}
-                  className="px-4 py-2.5 bg-[#FEF3C7] text-[#B88400] border border-[#FCD34D]/40 rounded-xl text-sm font-bold hover:bg-[#FCD34D]/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="px-4 py-2.5 bg-[#FFEDD5] text-[#C2410C] border border-[#FB923C]/40 rounded-xl text-sm font-bold hover:bg-[#FB923C]/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {closeOpportunityMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -838,7 +838,7 @@ export const OpportunityApplicationsPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

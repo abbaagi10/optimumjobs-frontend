@@ -198,9 +198,9 @@ const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => {
       shadow: 'shadow-[0_8px_16px_-4px_rgba(22,163,74,0.3)]',
     },
     amber: {
-      bar: 'bg-[#FCD34D]',
-      iconBg: 'bg-gradient-to-br from-[#FCD34D] to-[#EAB308]',
-      shadow: 'shadow-[0_8px_16px_-4px_rgba(252,211,77,0.4)]',
+      bar: 'bg-[#FB923C]',
+      iconBg: 'bg-gradient-to-br from-[#FB923C] to-[#F97316]',
+      shadow: 'shadow-[0_8px_16px_-4px_rgba(251,146,60,0.4)]',
     },
     blue: {
       bar: 'bg-blue-500',
@@ -243,7 +243,7 @@ const LevelBadge = ({ level }: { level: LanguageLevel }) => {
     basic: { label: 'Notions', color: 'text-slate-600 bg-slate-100 border-slate-200' },
     intermediate: { label: 'Intermédiaire', color: 'text-blue-700 bg-blue-50 border-blue-200' },
     fluent: { label: 'Courant', color: 'text-[#16A34A] bg-[#F0FDF4] border-[#16A34A]/20' },
-    native: { label: 'Maternelle', color: 'text-[#B88400] bg-[#FEF3C7] border-[#FCD34D]/40' },
+    native: { label: 'Maternelle', color: 'text-[#C2410C] bg-[#FFEDD5] border-[#FB923C]/40' },
   };
 
   const config = levels[level] || levels.intermediate;
@@ -762,7 +762,7 @@ export const CandidateProfilePage = () => {
       ====================================================== */}
 
       <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
         <div className="p-5 sm:p-6 md:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center gap-6">
@@ -1572,7 +1572,7 @@ export const CandidateProfilePage = () => {
           {/* Actions rapides */}
           <section className="bg-white border border-[#16A34A]/10 rounded-2xl p-5 sm:p-6">
             <h3 className="text-xs font-bold text-[#14532D]/50 uppercase tracking-wider flex items-center gap-2 mb-4">
-              <Zap className="w-4 h-4 text-[#FCD34D]" />
+              <Zap className="w-4 h-4 text-[#FB923C]" />
               Actions rapides
             </h3>
             <div className="space-y-2">
@@ -1619,7 +1619,7 @@ export const CandidateProfilePage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             V1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

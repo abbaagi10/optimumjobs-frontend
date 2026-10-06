@@ -268,7 +268,7 @@ export const OrganizationCreatePage = () => {
       ====================================================== */}
 
       <div className="bg-white border border-[#16A34A]/10 rounded-3xl overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+        <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
         <div className="p-5 sm:p-6 md:p-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -278,7 +278,7 @@ export const OrganizationCreatePage = () => {
             <div className="flex-1 min-w-0">
               <h1 className="text-2xl md:text-3xl font-extrabold text-[#14532D] flex flex-wrap items-center gap-3">
                 Créer une Organisation
-                <span className="px-2.5 py-1 text-[10px] font-bold bg-[#FCD34D] text-[#14532D] rounded-full shrink-0">
+                <span className="px-2.5 py-1 text-[10px] font-bold bg-[#FB923C] text-white rounded-full shrink-0">
                   NOUVEAU
                 </span>
               </h1>
@@ -438,7 +438,7 @@ export const OrganizationCreatePage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

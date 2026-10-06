@@ -52,10 +52,10 @@ const statCardVariants = {
 const StatCard = ({ title, value, icon: Icon, color, subtitle }: any) => {
   const colorMap: Record<string, { bg: string; text: string; iconBg: string; bar: string }> = {
     amber: {
-      bg: 'bg-[#FCD34D]/10',
-      text: 'text-[#B88400]',
-      iconBg: 'bg-[#FCD34D]/20 text-[#B88400]',
-      bar: 'from-[#FCD34D]',
+      bg: 'bg-[#FB923C]/10',
+      text: 'text-[#C2410C]',
+      iconBg: 'bg-[#FB923C]/20 text-[#C2410C]',
+      bar: 'from-[#FB923C]',
     },
     emerald: {
       bg: 'bg-[#16A34A]/10',
@@ -142,7 +142,7 @@ const LevelBadge = ({ level }: { level: string }) => {
     },
     native: {
       label: 'Maternelle',
-      color: 'text-[#B88400] bg-[#FCD34D]/15 border-[#FCD34D]/30',
+      color: 'text-[#C2410C] bg-[#FFEDD5] border-[#FB923C]/30',
     },
   };
 
@@ -361,7 +361,7 @@ export const PublicProfilePage = () => {
           transition={{ type: 'spring', damping: 30, stiffness: 50 }}
         />
         <motion.div
-          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#FCD34D]/10 rounded-full blur-3xl"
+          className="absolute bottom-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#FB923C]/10 rounded-full blur-3xl"
           animate={{
             x: -mousePosition.x * 15,
             y: -mousePosition.y * 15,

@@ -91,10 +91,10 @@ export const Login = () => {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center shadow-[0_4px_12px_-2px_rgba(22,163,74,0.3)] group-hover:scale-105 transition-transform">
                 <Briefcase className="w-4 h-4 text-white" strokeWidth={2.5} />
               </div>
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FCD34D] rounded-full border-2 border-white" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FB923C] rounded-full border-2 border-white" />
             </div>
             <span className="text-base font-extrabold text-[#14532D] tracking-tight">
-              OptimaPlus<span className="text-[#FCD34D]">-Jobs</span>
+              OptimaPlus<span className="text-[#FB923C]">-Jobs</span>
             </span>
           </Link>
         </header>
@@ -220,11 +220,11 @@ export const Login = () => {
 
         {/* Formes décoratives */}
         <div className="absolute top-20 -right-20 w-80 h-80 rounded-full border-[40px] border-white/5" />
-        <div className="absolute bottom-10 -left-20 w-96 h-96 rounded-full border-[30px] border-[#FCD34D]/10" />
-        <div className="absolute top-1/3 left-20 w-24 h-24 rounded-2xl bg-[#FCD34D]/10 rotate-45" />
-        <div className="absolute top-12 left-1/4 w-3 h-3 rounded-full bg-[#FCD34D]/60" />
+        <div className="absolute bottom-10 -left-20 w-96 h-96 rounded-full border-[30px] border-[#FB923C]/10" />
+        <div className="absolute top-1/3 left-20 w-24 h-24 rounded-2xl bg-[#FB923C]/10 rotate-45" />
+        <div className="absolute top-12 left-1/4 w-3 h-3 rounded-full bg-[#FB923C]/60" />
         <div className="absolute bottom-1/4 right-1/4 w-2 h-2 rounded-full bg-white/40" />
-        <div className="absolute top-2/3 right-12 w-4 h-4 rounded-full bg-[#FCD34D]/40" />
+        <div className="absolute top-2/3 right-12 w-4 h-4 rounded-full bg-[#FB923C]/40" />
 
         {/* Grid pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:32px_32px] opacity-40" />
@@ -235,7 +235,7 @@ export const Login = () => {
           {/* Header */}
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#FCD34D]" />
+              <Sparkles className="w-5 h-5 text-[#FB923C]" />
             </div>
             <span className="text-xs font-bold tracking-wider uppercase text-white/80">
               Bienvenue à nouveau
@@ -247,7 +247,7 @@ export const Login = () => {
             <h2 className="text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.15] tracking-tight">
               Votre prochaine
               <br />
-              <span className="text-[#FCD34D]">
+              <span className="text-[#FB923C]">
                 opportunité
               </span>
               {" "}commence
@@ -268,7 +268,7 @@ export const Login = () => {
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center shrink-0">
-                    <item.icon className="w-4 h-4 text-[#FCD34D]" />
+                    <item.icon className="w-4 h-4 text-[#FB923C]" />
                   </div>
                   <span className="text-sm text-white/85">{item.text}</span>
                 </div>
@@ -285,7 +285,7 @@ export const Login = () => {
               <img
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces&q=80"
                 alt="Amina"
-                className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FCD34D]/30"
+                className="w-9 h-9 rounded-full object-cover ring-2 ring-[#FB923C]/30"
               />
               <div>
                 <p className="text-xs font-bold text-white">Amina Diallo</p>

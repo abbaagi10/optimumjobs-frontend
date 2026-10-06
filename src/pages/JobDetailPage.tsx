@@ -24,8 +24,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     'submitted': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D] animate-pulse'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C] animate-pulse'
     },
     'under_review': {
       icon: <Clock className="w-3 h-3" />,
@@ -279,7 +279,7 @@ export const JobDetailPage = () => {
 
           {/* En-tête de l'offre */}
           <div className="bg-white border border-[#16A34A]/10 rounded-2xl overflow-hidden">
-            <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FCD34D] to-[#16A34A]" />
+            <div className="h-1 bg-gradient-to-r from-[#16A34A] via-[#FB923C] to-[#16A34A]" />
 
             <div className="p-5 sm:p-6">
               <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -573,7 +573,7 @@ export const JobDetailPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />

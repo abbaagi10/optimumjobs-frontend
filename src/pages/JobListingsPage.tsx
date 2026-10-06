@@ -34,8 +34,8 @@ const StatusBadge = ({ status }: { status: string }) => {
     'pending_review': {
       icon: <Clock className="w-3 h-3" />,
       label: 'En attente',
-      className: 'bg-[#FEF3C7] text-[#B88400] border-[#FCD34D]/40',
-      dotColor: 'bg-[#FCD34D]'
+      className: 'bg-[#FFEDD5] text-[#C2410C] border-[#FB923C]/40',
+      dotColor: 'bg-[#FB923C]'
     },
     'closed': {
       icon: <X className="w-3 h-3" />,
@@ -598,8 +598,8 @@ const JobListingsPage = () => {
                     ))}
                   </select>
                 ) : (
-                  <div className="bg-[#FEF3C7] border border-[#FCD34D]/40 rounded-xl p-3">
-                    <p className="text-xs text-[#B88400] font-medium">
+                  <div className="bg-[#FFEDD5] border border-[#FB923C]/40 rounded-xl p-3">
+                    <p className="text-xs text-[#C2410C] font-medium">
                       Aucun CV trouvé. Téléversez-en un depuis votre profil.
                     </p>
                     <Link
@@ -681,7 +681,7 @@ const JobListingsPage = () => {
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1">
-            <Activity className="w-3 h-3 text-[#FCD34D]" />
+            <Activity className="w-3 h-3 text-[#FB923C]" />
             v1.0.0
           </span>
           <span className="w-px h-4 bg-[#16A34A]/20" />
